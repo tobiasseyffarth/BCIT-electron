@@ -1,4 +1,4 @@
-import main from "./main";
+import dialogHelper from "./../../helpers/fileopen_dialogs";
 
 /*****
  * Basic config
@@ -28,7 +28,7 @@ class complianceView{
   }
 
   xmlUploadOnClick(){
-    let data = main.xmlFileOpenDialog();
+    let data = dialogHelper.xmlFileOpenDialog();
     console.log("xml upload clicked");
     console.log(data);
   }

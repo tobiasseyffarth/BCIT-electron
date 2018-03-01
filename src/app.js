@@ -14,6 +14,10 @@ import complianceView from "./app/main/compliance-view";
 let bpmnViewer        = new bpmnView({document});
 let complianceViewer  = new complianceView({document});
 
+console.log(bpmnViewer.getViewer());
+
+bpmnViewer.on('rendered', (data) => console.log('Done rendering', data));
+
 // ----------------------------------------------------------------------------
 // Everything below is just to show you how it works. You can delete all of it.
 // ----------------------------------------------------------------------------

@@ -1,8 +1,8 @@
-//Viewer anlegen und im HTML Element hinterlegen
+const EventEmitter = require('events');
+
 import BpmnJS from "bpmn-js";
-import BpnmNavigateViewer from "bpmn-js/dist/bpmn-navigated-viewer.development";
 import BpmnModeler from "bpmn-js/dist/bpmn-modeler.development";
-import main from "./main";
+import dialogHelper from "./../../helpers/fileopen_dialogs";
 
 /*****
  * Basic config
@@ -13,7 +13,7 @@ const baseConfig = {
   bpmnUploadButton: "#uploadBpmn"
 };
 
-class bpmnViewer{
+class bpmnViewer extends EventEmitter{
   /**
    * Init bpmnViewer class with options
    * @param options typeof Object
@@ -21,6 +21,8 @@ class bpmnViewer{
    **** bpmnUploadButton html element for upload button
    */
   constructor(options){
+    super();
+
     if(!options) options = {};
 
     this.bpmnContainer    = options.bpmnContainer || baseConfig.bpmnContainer;
@@ -54,7 +56,7 @@ class bpmnViewer{
   }
 
   async bpmnUploadOnClick(){
-    let data = await main.bpmnFileOpenDialog();
+    let data = await dialogHelper.bpmnFileOpenDialog();
     console.log("bpmn upload clicked");
     console.log(data);
 
@@ -65,7 +67,8 @@ class bpmnViewer{
     if (err) {
       console.error('error rendering', err);
     } else {
-      console.log('rendered');
+      this.emit('rendered', true);
+
       this.bpmnFitViewport();
       this.hookEventBus();
     }
@@ -106,6 +109,10 @@ class bpmnViewer{
     let id = element.id;
     let bpmnElement = elementRegistry(id);
      */
+  }
+
+  getViewer(){
+    return this.viewer;
   }
 }
 
