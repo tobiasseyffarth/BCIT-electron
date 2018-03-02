@@ -56,22 +56,21 @@ class bpmnViewer extends EventEmitter{
   }
 
   async bpmnUploadOnClick(){
+    let _this = this;
     let data = await dialogHelper.bpmnFileOpenDialog();
     console.log("bpmn upload clicked");
     console.log(data);
 
-    this.viewer.importXML(data, () => this.importXmlDone());
-  }
+    this.viewer.importXML(data, function(err){
+      if (err) {
+        console.error('error rendering', err);
+      } else {
+        _this.emit('rendered', {done: true});
 
-  importXmlDone(err){
-    if (err) {
-      console.error('error rendering', err);
-    } else {
-      this.emit('rendered', true);
-
-      this.bpmnFitViewport();
-      this.hookEventBus();
-    }
+        _this.bpmnFitViewport();
+        _this.hookEventBus();
+      }
+    });
   }
 
   bpmnFitViewport(){
@@ -94,7 +93,8 @@ class bpmnViewer extends EventEmitter{
     ];
      */
 
-    eventBus.on('element.click', (e) => this.hookOnClick(e))
+    eventBus.on('element.click', (e) => this.hookOnClick(e));
+    eventBus.on('element.hover', (elem) => { console.log("Hover", e.element.id); });
   }
 
   hookOnClick(e){
