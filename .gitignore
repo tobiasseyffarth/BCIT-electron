@@ -12,4 +12,3 @@ Thumbs.db
 /app/**/*.map
 
 .idea
-/node_modules
