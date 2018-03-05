@@ -112,3 +112,6 @@ module.exports = {
   klasse: bbb,
   plus1
 };
+
+import cs from "../data/compliance/compliancesource";
+let y=new cs;
