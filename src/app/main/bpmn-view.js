@@ -3,8 +3,8 @@ const EventEmitter = require('events');
 import BpmnJS from "bpmn-js";
 import BpmnModeler from "bpmn-js/dist/bpmn-modeler.development";
 import dialogHelper from "./../../helpers/fileopen_dialogs";
-import queryprocess from "./../control/queryprocess";
-import fs from "fs";
+import processio from "./../control/processio";
+import queryprocess from "./../control/queryprocess"
 
 /*****
  * Basic config
@@ -15,7 +15,6 @@ const baseConfig = {
   bpmnUploadButton: "#uploadBpmn"
 };
 
-
 class bpmnViewer extends EventEmitter {
   /**
    * Init bpmnViewer class with options
@@ -25,7 +24,6 @@ class bpmnViewer extends EventEmitter {
    */
   constructor(options) {
     super();
-
     if (!options) options = {};
 
     this.bpmnContainer = options.bpmnContainer || baseConfig.bpmnContainer;
@@ -34,10 +32,22 @@ class bpmnViewer extends EventEmitter {
     this.viewer = null;
     this.selectedElement = null;
     this.initViewer();
+    this.loadBpmn('./resources/process/sample_process.bpmn');
+  }
 
-    console.log(queryprocess.getOut('hallo'));
+  async loadBpmn(url) {
+    let _this = this;
+    let data = await processio.readFile(url);
 
-    queryprocess.readFile("C:\\Users\\Tobias Seyffarth\\Desktop\\Import Kolloquium\\businessprocess kolloquium.bpmn");
+    this.viewer.importXML(data, function (err) {
+      if (err) {
+        console.error('error rendering', err);
+      } else {
+        _this.emit('rendered', {done: true});
+        _this.bpmnFitViewport();
+        _this.hookEventBus();
+      }
+    });
 
   }
 
@@ -65,9 +75,6 @@ class bpmnViewer extends EventEmitter {
   async bpmnUploadOnClick() {
     let _this = this;
     let data = await dialogHelper.bpmnFileOpenDialog();
-    console.log("bpmn upload clicked");
-    console.log(data);
-
 
     this.viewer.importXML(data, function (err) {
       if (err) {
@@ -80,7 +87,6 @@ class bpmnViewer extends EventEmitter {
       }
     });
   }
-
 
   bpmnFitViewport() {
     let canvas = this.viewer.get('canvas');
@@ -108,92 +114,37 @@ class bpmnViewer extends EventEmitter {
 
   hookOnClick(e) {
     this.document.querySelector('.selected-element-id').textContent = e.element.id;
-    console.log('onClick', e.element);
 
-    let process = getProcess(this.viewer, e);
-    let processelement = getElement(this.viewer, e);
-    let elements = [];
-    elements = getFlowElementsOfProcess(process);
+    let p = queryprocess.getProcess(this.viewer);
+    console.log(p);
 
-    console.log(process.id, 'Anzahl der FlowElements', elements.length);
-    for (let i = 0; i < elements.length; i++) {
-      console.log(elements[i].id);
-      console.log(getElementOfRegistry(this.viewer, elements[i].id));
+    let flowElements = [];
+    let flowNodes = [];
+    let sequenceFlows=[];
 
-      //properties ändern, variante 1
-      getElementOfRegistry(this.viewer, elements[i].id).name = 'test';
+    flowElements=queryprocess.getFlowElementsOfProcess(p);
+    flowNodes=queryprocess.getFlowNodesOfProcess(p);
+    sequenceFlows=queryprocess.getSequenceFlowsofProcess(p);
 
-      /*
-      //properties ändern, variante 2
-      let modeling = this.viewer.get('modeling');
-
-      modeling.updateProperties(getElementOfRegistry(this.viewer, elements[i].id), {
-        id: i
-      });
-*/
+    console.log('Flow Elements');
+    for(let i=0; i<flowElements.length;i++){
+      console.log(flowElements[i]);
     }
 
-  }
+    console.log('Flow Nodes');
+    for(let i=0; i<flowNodes.length;i++){
+      console.log(flowNodes[i]);
+    }
 
+    console.log('Sequence Flow');
+    for(let i=0; i<sequenceFlows.length;i++){
+      console.log(sequenceFlows[i]);
+    }
+  }
 
   getViewer() {
     return this.viewer;
   }
 }
-
-
-function getElement(viewer, e) {
-  return e.element;
-}
-
-function getDirectPredecessor(element) {
-
-}
-
-function getDirectSucessor(element) {
-
-}
-
-//Überladen, wenn eingabe einmal der Viewr und einmal ein Node ist??
-function getProcess(viewer, e) {
-  let elementRegistry = viewer.get('elementRegistry');
-  let nodeElement = elementRegistry.get(e.element.id);
-  let node = nodeElement.businessObject;
-  let process = elementRegistry.get(node.$parent.id);
-
-  return process;
-}
-
-function getElementOfRegistry(viewer, id) {
-  let elementRegistry = viewer.get('elementRegistry');
-  let element = elementRegistry.get(id);
-
-  return element.businessObject;
-}
-
-
-function getNodesOfRegistry(flowelements) {
-
-}
-
-function getSequenceflowsofRegistry(flowelements) {
-
-}
-
-//funktioniert nicht
-function getFlowElementsOfProcess(process) {
-  let flowElements = [];
-
-  for (let i = 0; i < process.businessObject.flowElements.length; i++) {
-    flowElements.push(process.businessObject.flowElements[i]);
-  }
-
-  return flowElements;
-}
-
-function getFlowElementById(flowelements, id) {
-
-}
-
 
 module.exports = bpmnViewer;

@@ -1,32 +1,108 @@
-import fs from "fs";
-
 module.exports = {
-  getOut,
-  readFile
+  getElement,
+  getProcess,
+  getElementOfRegistry,
+  getFlowElementsOfProcess,
+  getFlowNodesOfProcess,
+  getSequenceFlowsofProcess
 };
 
-
-function getOut(input) {
-  return input;
+//final
+function getElement(viewer, e) {
+  return e.element;
 }
 
-function readFile(url) {
-  let content;
-  fs.readFile(url, "utf8", function read(err, data) {
-    if (err) {
-      throw err;
+function getDirectPredecessor(element) {
+
+}
+
+function getDirectSucessor(element) {
+
+}
+
+//Überladen, wenn eingabe einmal der Viewer und einmal ein Node ist??
+function getProcess(viewer, e) {
+
+  if (e == null) {
+    let elementRegistry = viewer.get('elementRegistry');
+    let nodes = [];
+    nodes = elementRegistry.getAll();
+
+    for(let i=0; i<nodes.length;i++){
+      if(nodes[i].businessObject.$type=='bpmn:Process'){
+        return nodes[i].businessObject;
+      }
     }
-    return data;
-  });
+
+  } else {
+    let elementRegistry = viewer.get('elementRegistry');
+    let nodeElement = elementRegistry.get(e.element.id);
+    let node = nodeElement.businessObject;
+    let process = elementRegistry.get(node.$parent.id);
+
+    return process;
+  }
 }
 
-function writeBpmn(viewer) {
-  this.viewer.saveXML({format: true}, function (err, xml) {
-    return xml;
-  });
+//final
+function getElementOfRegistry(viewer, id) {
+  let elementRegistry = viewer.get('elementRegistry');
+  let element = elementRegistry.get(id);
+
+  return element.businessObject;
 }
 
-function readBpmn(filename){
+//final
+function getFlowNodesOfProcess(process) {
+  let flowElements=[];
+  let nodes=[];
 
+  flowElements=getFlowElementsOfProcess(process);
+
+  for(let i=0;i<flowElements.length;i++){
+    if(!flowElements[i].$type.includes('SequenceFlow')){
+      nodes.push(flowElements[i]);
+    }
+  }
+
+  return nodes;
 }
 
+//final
+function getSequenceFlowsofProcess(process) {
+  let flowElements=[];
+  let sequence=[];
+
+  flowElements=getFlowElementsOfProcess(process);
+
+  for(let i=0;i<flowElements.length;i++){
+    if(flowElements[i].$type.includes('SequenceFlow')){
+      sequence.push(flowElements[i]);
+    }
+  }
+
+  return sequence;
+}
+
+//final
+function getFlowElementsOfProcess(process) {
+  let flowElements = [];
+
+  for (let i = 0; i < process.flowElements.length; i++) {
+    flowElements.push(process.flowElements[i]);
+  }
+
+  return flowElements;
+}
+
+function getFlowElementById(process, id) {
+
+  let flowElements=[];
+
+  flowElements=getFlowElementsOfProcess(process);
+
+  for(let i=0;i<flowElements.length;i++){
+
+  }
+
+}
