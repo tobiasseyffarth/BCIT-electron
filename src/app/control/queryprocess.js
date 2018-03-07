@@ -4,7 +4,8 @@ module.exports = {
   getElementOfRegistry,
   getFlowElementsOfProcess,
   getFlowNodesOfProcess,
-  getSequenceFlowsofProcess
+  getSequenceFlowsofProcess,
+  getFlowElementById
 };
 
 //final
@@ -95,14 +96,15 @@ function getFlowElementsOfProcess(process) {
   return flowElements;
 }
 
+//final
 function getFlowElementById(process, id) {
-
   let flowElements=[];
-
   flowElements=getFlowElementsOfProcess(process);
 
   for(let i=0;i<flowElements.length;i++){
-
+    if(flowElements[i].id==id){
+      return flowElements[i];
+    }
   }
-
+  return null;
 }

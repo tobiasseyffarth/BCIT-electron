@@ -33,6 +33,7 @@ class bpmnViewer extends EventEmitter {
     this.selectedElement = null;
     this.initViewer();
     this.loadBpmn('./resources/process/sample_process.bpmn');
+
   }
 
   async loadBpmn(url) {
@@ -140,6 +141,10 @@ class bpmnViewer extends EventEmitter {
     for(let i=0; i<sequenceFlows.length;i++){
       console.log(sequenceFlows[i]);
     }
+
+    console.log('Suche nach der ID');
+    let node=queryprocess.getFlowElementById(p,'StartEvent_1');
+    console.log(node);
   }
 
   getViewer() {
