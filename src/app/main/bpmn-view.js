@@ -1,10 +1,15 @@
 const EventEmitter = require('events');
 
 import BpmnJS from "bpmn-js";
+import propertiesPanelModule from "bpmn-js-properties-panel";
+import propertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
+
 import BpmnModeler from "bpmn-js/dist/bpmn-modeler.development";
 import dialogHelper from "./../../helpers/fileopen_dialogs";
 import processio from "./../control/processio";
 import queryprocess from "./../control/queryprocess"
+
+import log from "./../../helpers/logs";
 
 /*****
  * Basic config
@@ -12,7 +17,8 @@ import queryprocess from "./../control/queryprocess"
  */
 const baseConfig = {
   bpmnContainer: ".bpmn-io",
-  bpmnUploadButton: "#uploadBpmn"
+  bpmnUploadButton: "#uploadBpmn",
+  propertiesPanel: ".container-properties"
 };
 
 class bpmnViewer extends EventEmitter {
@@ -27,6 +33,7 @@ class bpmnViewer extends EventEmitter {
     if (!options) options = {};
 
     this.bpmnContainer = options.bpmnContainer || baseConfig.bpmnContainer;
+    this.propertiesPanel = options.propertiesPanel || baseConfig.propertiesPanel;
     this.bpmnUploadButton = options.bpmnUploadButton || baseConfig.bpmnUploadButton;
     this.document = options.document;
     this.viewer = null;
@@ -36,25 +43,16 @@ class bpmnViewer extends EventEmitter {
 
   }
 
-  async loadBpmn(url) {
-    let _this = this;
-    let data = await processio.readFile(url);
-
-    this.viewer.importXML(data, function (err) {
-      if (err) {
-        console.error('error rendering', err);
-      } else {
-        _this.emit('rendered', {done: true});
-        _this.bpmnFitViewport();
-        _this.hookEventBus();
-      }
-    });
-
-  }
-
   initViewer() {
     this.viewer = new BpmnModeler({
-      container: this.bpmnContainer
+      container: this.bpmnContainer,
+      propertiesPanel: {
+        parent: this.propertiesPanel
+      },
+      additionalModules: [
+        propertiesPanelModule,
+        propertiesProviderModule
+      ]
     });
 
     /*
@@ -74,17 +72,26 @@ class bpmnViewer extends EventEmitter {
   }
 
   async bpmnUploadOnClick() {
-    let _this = this;
     let data = await dialogHelper.bpmnFileOpenDialog();
+    this.renderBpmnXml(data)
+  }
 
-    this.viewer.importXML(data, function (err) {
+  async loadBpmn(url) {
+    let data = await processio.readFile(url);
+    this.renderBpmnXml(data);
+  }
+
+  renderBpmnXml(xml){
+    let _this = this;
+    this.viewer.importXML(xml, function (err) {
       if (err) {
         console.error('error rendering', err);
       } else {
         _this.emit('rendered', {done: true});
-
         _this.bpmnFitViewport();
         _this.hookEventBus();
+
+        log.info("BPMN file rendered");
       }
     });
   }

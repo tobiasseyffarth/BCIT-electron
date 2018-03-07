@@ -6,22 +6,33 @@
 </head>
 <body>
 
-<section class="container-compliance">
-  <div class="ctrls">
+<section class="ctrls">
+  <div class="uBpmn">
+    <button type="button" class="btn btn-success" id="uploadBpmn">Upload BPMN</button>
+  </div>
+  <div class="uCompliance">
     <button type="button" class="btn btn-success" id="uploadComplianceXML">Upload XML</button>
   </div>
+  <div class="uInfrastructure">
+    <button type="button" class="btn btn-success" id="uploadInfrasturcture">Upload XML</button>
+  </div>
+  <div></div>
 </section>
 
 <section class="container-process">
-  <div class="ctrls">
-    <button type="button" class="btn btn-success" id="uploadBpmn">Upload BPMN</button>
-  </div>
   <div class="bpmn-io"></div>
   <div class="selected-element-id"></div>
 </section>
 
-<section class="container-infrastructure"></section>
+<section class="sub-container">
+  <div class="container-compliance"></div>
+  <div class="container-infrastructure"></div>
+  <div class="container-properties properties-panel-parent"></div>
+</section>
 
+<section class="container-log">
+  <textarea class="log-content"></textarea>
+</section>
 <!--
   <div id="app" class="container" style="display: none;">
     <h1 id="greet"></h1>
