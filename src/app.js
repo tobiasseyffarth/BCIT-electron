@@ -1,5 +1,6 @@
 import "./stylesheets/main.css";
 import "./stylesheets/bootstrap.css";
+import "./stylesheets/property-panel.css";
 
 // Small helpers you might want to keep
 import "./helpers/context_menu.js";

@@ -13,6 +13,8 @@ const processProps = require('./parts/ProcessProps'),
   executableProps = require('./parts/ExecutableProps');
 */
 
+const idProps     = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/IdProps');
+
 function createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate) {
   /*
   let generalGroup = {
@@ -48,6 +50,8 @@ function createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate
     label: translate('ComplianceGrp'),
     entries: []
   };
+
+  idProps(compliance, element, translate);
 
   return [
     compliance

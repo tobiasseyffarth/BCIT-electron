@@ -63,7 +63,7 @@ a {
 }
 
 .container-compliance{
-  flex: 25%;
+  flex: 30%;
 
   position: relative;
 
@@ -74,12 +74,12 @@ a {
 }
 
 .container-infrastructure{
-  flex: 25%;
+  flex: 30%;
   border-right: 1.5px gray dashed;
 }
 
 .container-properties{
-  flex: 50%;
+  flex: 40%;
   overflow: auto;
 }
 

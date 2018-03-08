@@ -2,8 +2,7 @@ const EventEmitter = require('events');
 
 import BpmnJS from "bpmn-js";
 import propertiesPanelModule from "bpmn-js-properties-panel";
-import propertiesProviderTobus from "./../data/compliance/bpmnCompliance";
-import propertiesProviderBpmn from "bpmn-js-properties-panel/lib/provider/bpmn";
+import propertiesProviderTobus from "./../data/bpmnjsComplianceProvider";
 
 import BpmnModeler from "bpmn-js/dist/bpmn-modeler.development";
 import dialogHelper from "./../../helpers/fileopen_dialogs";
@@ -52,7 +51,6 @@ class bpmnViewer extends EventEmitter {
       },
       additionalModules: [
         propertiesPanelModule,
-        propertiesProviderBpmn,
         propertiesProviderTobus
       ]
     });
