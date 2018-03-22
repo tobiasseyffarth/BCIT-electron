@@ -5,7 +5,7 @@ module.exports = {
   getFlowElementsOfProcess,
   getFlowNodesOfProcess,
   getSequenceFlowsofProcess,
-  getFlowElementById
+  getFlowElementById,
 };
 
 //final
