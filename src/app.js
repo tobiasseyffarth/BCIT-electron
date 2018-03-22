@@ -11,9 +11,11 @@ import "./helpers/external_links.js";
  */
 import bpmnView from "./app/main/bpmn-view.js";
 import complianceView from "./app/main/compliance-view";
+import infrastructureView from "./app/main/infrastructure-view";
 
-let bpmnViewer        = new bpmnView({document});
-let complianceViewer  = new complianceView({document});
+let bpmnViewer = new bpmnView({document});
+let complianceViewer = new complianceView({document});
+let infrastructureViewer = new infrastructureView({document});
 
 console.log(bpmnViewer.getViewer());
 
@@ -23,7 +25,7 @@ bpmnViewer.on('rendered', (data) => console.log('Done rendering', data));
 // Everything below is just to show you how it works. You can delete all of it.
 // ----------------------------------------------------------------------------
 
-import { remote } from "electron";
+import {remote} from "electron";
 import jetpack from "fs-jetpack";
 import env from "env";
 
@@ -40,7 +42,7 @@ const osMap = {
   linux: "Linux"
 };
 
-try{
+try {
   document.querySelector("#app").style.display = "block";
   document.querySelector("#os").innerHTML = osMap[process.platform];
   document.querySelector("#author").innerHTML = manifest.author;
@@ -48,4 +50,6 @@ try{
   document.querySelector("#electron-version").innerHTML =
     process.versions.electron;
 }
-catch(ex) { console.log("Nothing special"); }
+catch (ex) {
+  console.log("Nothing special");
+}
