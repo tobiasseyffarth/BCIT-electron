@@ -61,19 +61,21 @@ let jsonMitFunction = {
 };
 
 jsonMitFunction.head;
-jsonMitFunction.test=12;
+jsonMitFunction.test = 12;
 
-let json2={
+let json2 = {
   name: "Max",
   nachnamen: "Muster",
   alter: 42,
-  test: function(){
+  test: function () {
     console.log('ausgabe der fun');
   },
-  alter2: function() {this.alter*2;}
+  alter2: function () {
+    this.alter * 2;
+  }
 }
 
-json2.alter=42;
+json2.alter = 42;
 
 console.log(json2.nachnamen);
 console.log(json2.alter);
@@ -118,11 +120,22 @@ function test(input1, input2) {
 console.log(test(1, 2));
 
 /***
+ * eigene Callbacks
+ */
+function add(number, cb) {
+  number = number * 2;
+  cb(number);
+}
+
+add(12, function (xy) {
+  console.log(xy);
+});
+
+/***
  * Klassen
  */
 
 class EineKLasse {
-
 
   constructor(name) {
     this.name = name;
@@ -150,7 +163,7 @@ console.log(bbb.name);
 console.log(bbb.z);
 bbb.x = 2;
 
-let query =require("../app/control/queryprocess");
+let query = require("../app/control/queryprocess");
 //query.getFlowElementById();
 
 /***
@@ -158,21 +171,21 @@ let query =require("../app/control/queryprocess");
 
 
 
-//import bpmnjs from "bpmn-js";
-//import fileOpen from "./../../helpers/fileopen_dialogs";
-//import { bpmnFileOpenDialog } from "./../../helpers/fileopen_dialogs";
+ //import bpmnjs from "bpmn-js";
+ //import fileOpen from "./../../helpers/fileopen_dialogs";
+ //import { bpmnFileOpenDialog } from "./../../helpers/fileopen_dialogs";
 
-//fileOpen.bpmnFileOpenDialog();
-//bpmnFileOpenDialog();
+ //fileOpen.bpmnFileOpenDialog();
+ //bpmnFileOpenDialog();
 
-let bpmnjs2 = require("bpmn-js");
+ let bpmnjs2 = require("bpmn-js");
 
-module.exports = {
+ module.exports = {
   klasse: bbb,
   plus1
 };
-/*
-import cs from "../data/compliance/compliancesource";
-let y=new cs;
-*/
+ /*
+ import cs from "../data/compliance/compliancesource";
+ let y=new cs;
+ */
 
