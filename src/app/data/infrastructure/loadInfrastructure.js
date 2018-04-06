@@ -1,9 +1,7 @@
 let convert = require('xml-js');
 
 module.exports = {
-  getJSON,
-  getElement,
-  getSuccessor
+  getJSON
 }
 
 let infra = {
