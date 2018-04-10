@@ -23,13 +23,14 @@ async function loadXml(url) {
   //jsonObj = fastXmlParser.convertToJson(tObj);
   getAttributeRelations(jsonObj);
   getArchiElements(jsonObj);
+  getSequenceFlows(jsonObj);
 }
 
 function getArchiElements(archiObject){
   if(!archiObject)
     throw "Empty Archimate XML";
 
-  console.log('Archie Object', archiObject);
+  //console.log('Archie Object', archiObject);
 
   let elems = archiObject.model.elements.element;
   for(let i = -1; ++i < elems.length;){
@@ -49,11 +50,10 @@ function getArchiElements(archiObject){
       });
       }
     }
-
     elements.push({id, name, props, type: "node"});
   }
 
-  console.log('Archi new objects', elements);
+  //console.log('Archi new objects', elements);
 }
 
 let propDefintions = {};
@@ -63,14 +63,14 @@ function getAttributeRelations(obj){
   for(let i = -1; ++i < attrRels.length;){
     let attrRel = attrRels[i];
     let propid = "";
-    console.log(attrRel.attr);
+   // console.log(attrRel.attr);
     if(attrRel.attr)
       propid = attrRel.attr["@_identifier"];
 
     propDefintions[propid] = attrRel.name;
   }
 
-  console.log("props", propDefintions);
+ // console.log("props", propDefintions);
 }
 
 let sequenceFLows = [];
@@ -120,5 +120,5 @@ var options = {
 };
 
 module.exports = {
-  loadXml
+  loadXml,elements
 };
