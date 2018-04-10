@@ -1,73 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/qdc/2008/02/11/dc.xsd" identifier="id-908a08f5-6005-4ff7-9b42-427565387b09">
-  <name xml:lang="de">TestModel</name>
-  <metadata>
-    <schema>Dublin Core</schema>
-    <schemaversion>1.1</schemaversion>
-    <dc:title>MeinerstesModell</dc:title>
-    <dc:creator>Tobias</dc:creator>
-  </metadata>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd" identifier="id-908a08f5-6005-4ff7-9b42-427565387b09">
+  <name xml:lang="en">TestModel</name>
   <elements>
     <element identifier="id-3ba10639-3a3c-4090-b3a5-09d30d92882c" xsi:type="ApplicationService">
-      <name xml:lang="de">Customer administration service</name>
+      <name xml:lang="en">Customer administration service</name>
     </element>
     <element identifier="id-0a2dc1db-7eda-428e-808f-860c427cba67" xsi:type="ApplicationService">
-      <name xml:lang="de">Claims administration service</name>
+      <name xml:lang="en">Claims administration service</name>
     </element>
     <element identifier="id-eecde799-c450-4bcb-966f-6e1016b14a6a" xsi:type="ApplicationService">
-      <name xml:lang="de">Payment service</name>
+      <name xml:lang="en">Payment service</name>
     </element>
     <element identifier="id-73d4884c-dbd6-4f28-afc7-bc160325b28e" xsi:type="ApplicationComponent">
-      <name xml:lang="de">CRM system</name>
+      <name xml:lang="en">CRM system</name>
       <properties>
         <property propertyDefinitionRef="propid-1">
-          <value xml:lang="de">Pay per use</value>
+          <value xml:lang="en">Pay per use</value>
         </property>
         <property propertyDefinitionRef="propid-2">
-          <value xml:lang="de">SAP</value>
+          <value xml:lang="en">SAP</value>
         </property>
         <property propertyDefinitionRef="propid-3">
-          <value xml:lang="de">10.1</value>
+          <value xml:lang="en">10.1</value>
         </property>
       </properties>
     </element>
     <element identifier="id-247c90e3-45c6-47fd-a479-d6190db6da7e" xsi:type="ApplicationComponent">
-      <name xml:lang="de">Policy administration</name>
+      <name xml:lang="en">Policy administration</name>
     </element>
     <element identifier="id-ff757ce9-f1c4-4271-92f4-dc777bee7669" xsi:type="ApplicationComponent">
-      <name xml:lang="de">Financial administration</name>
+      <name xml:lang="en">Financial administration</name>
     </element>
     <element identifier="id-6f726f4b-cfcc-4a47-aa30-ea20bc33c2cf" xsi:type="ApplicationService">
-      <name xml:lang="de">Customer information service</name>
+      <name xml:lang="en">Customer information service</name>
+      <properties>
+        <property propertyDefinitionRef="propid-3">
+          <value xml:lang="en">11</value>
+        </property>
+      </properties>
     </element>
     <element identifier="id-5bc47e6f-6d41-4f34-bf20-d0df733dca90" xsi:type="ApplicationService">
-      <name xml:lang="de">Claim information service</name>
+      <name xml:lang="en">Claim information service</name>
     </element>
     <element identifier="id-6a0c73c5-505e-47c5-95d9-cb9cd5fedad3" xsi:type="ApplicationEvent">
-      <name xml:lang="de">Application Event</name>
+      <name xml:lang="en">Application Event</name>
     </element>
     <element identifier="id-e4518d53-b481-4383-9d55-0772cd5248fa" xsi:type="SystemSoftware">
-      <name xml:lang="de">Windows Server</name>
+      <name xml:lang="en">Windows Server</name>
       <properties>
         <property propertyDefinitionRef="propid-1">
-          <value xml:lang="de">Payed</value>
+          <value xml:lang="en">Payed</value>
         </property>
         <property propertyDefinitionRef="propid-3">
-          <value xml:lang="de">2016</value>
+          <value xml:lang="en">2016</value>
         </property>
       </properties>
     </element>
     <element identifier="id-81494170-d976-4a26-91e3-5acfdfe7d8e9" xsi:type="Device">
-      <name xml:lang="de">Hardware</name>
+      <name xml:lang="en">Hardware</name>
       <properties>
         <property propertyDefinitionRef="propid-4">
-          <value xml:lang="de">Leipzig</value>
+          <value xml:lang="en">Leipzig</value>
         </property>
         <property propertyDefinitionRef="propid-2">
-          <value xml:lang="de">IBM</value>
+          <value xml:lang="en">IBM</value>
         </property>
         <property propertyDefinitionRef="propid-5">
-          <value xml:lang="de">ThinkServer</value>
+          <value xml:lang="en">ThinkServer</value>
         </property>
       </properties>
     </element>
@@ -76,7 +75,7 @@
     <relationship identifier="id-8e55c90f-9af7-423f-bce7-84b169124d1c" source="id-73d4884c-dbd6-4f28-afc7-bc160325b28e" target="id-3ba10639-3a3c-4090-b3a5-09d30d92882c" xsi:type="Realization">
       <properties>
         <property propertyDefinitionRef="propid-6">
-          <value xml:lang="de">eine Eigenschaft der Kante</value>
+          <value xml:lang="en">eine Eigenschaft der Kante</value>
         </property>
       </properties>
     </relationship>
@@ -112,110 +111,167 @@
   <views>
     <diagrams>
       <view identifier="id-10bf702f-3254-4e2c-b9d7-337cef625cef" xsi:type="Diagram">
-        <name xml:lang="de">Default View</name>
+        <name xml:lang="en">Default View</name>
         <node identifier="id-2b18a99b-f4d2-4a9f-8970-a11d31bd2aa1" elementRef="id-3ba10639-3a3c-4090-b3a5-09d30d92882c" xsi:type="Element" x="96" y="60" w="120" h="55">
           <style>
             <fillColor r="181" g="255" b="255" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-2bfaafe4-3c67-4d47-bb54-cf1383ecf214" elementRef="id-0a2dc1db-7eda-428e-808f-860c427cba67" xsi:type="Element" x="360" y="60" w="120" h="55">
           <style>
             <fillColor r="181" g="255" b="255" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-34151620-a6e8-442d-b87d-fb1a7f78b0c5" elementRef="id-eecde799-c450-4bcb-966f-6e1016b14a6a" xsi:type="Element" x="636" y="60" w="120" h="55">
           <style>
             <fillColor r="181" g="255" b="255" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-0570457c-b01d-4612-8a72-8afba25e17c5" elementRef="id-73d4884c-dbd6-4f28-afc7-bc160325b28e" xsi:type="Element" x="96" y="312" w="120" h="55">
           <style>
             <fillColor r="181" g="255" b="255" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-5b0678e7-bf0a-4cf5-8ba7-4ca7ddac3edd" elementRef="id-247c90e3-45c6-47fd-a479-d6190db6da7e" xsi:type="Element" x="360" y="307" w="120" h="55">
           <style>
             <fillColor r="181" g="255" b="255" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-1f79139f-2f7b-4847-960e-05ac643ddc15" elementRef="id-ff757ce9-f1c4-4271-92f4-dc777bee7669" xsi:type="Element" x="636" y="307" w="120" h="55">
           <style>
             <fillColor r="181" g="255" b="255" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-37120e83-8237-4756-bee5-94b608005a2a" elementRef="id-6f726f4b-cfcc-4a47-aa30-ea20bc33c2cf" xsi:type="Element" x="180" y="216" w="120" h="55">
           <style>
             <fillColor r="181" g="255" b="255" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-aa8c5c42-3dfa-4d0d-8f69-45fc465d652f" elementRef="id-5bc47e6f-6d41-4f34-bf20-d0df733dca90" xsi:type="Element" x="444" y="216" w="120" h="55">
           <style>
             <fillColor r="181" g="255" b="255" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-8b09d67f-aa97-4894-b698-86601619a803" elementRef="id-e4518d53-b481-4383-9d55-0772cd5248fa" xsi:type="Element" x="96" y="444" w="120" h="55">
           <style>
             <fillColor r="201" g="231" b="183" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <node identifier="id-1b77f486-766f-4f6f-8748-c02741c338ba" elementRef="id-81494170-d976-4a26-91e3-5acfdfe7d8e9" xsi:type="Element" x="96" y="588" w="120" h="55">
           <style>
             <fillColor r="201" g="231" b="183" />
             <lineColor r="92" g="92" b="92" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </node>
         <connection identifier="id-3b6c982c-0df9-4e22-b29d-ca41734c602a" relationshipRef="id-8e55c90f-9af7-423f-bce7-84b169124d1c" xsi:type="Relationship" source="id-0570457c-b01d-4612-8a72-8afba25e17c5" target="id-2b18a99b-f4d2-4a9f-8970-a11d31bd2aa1">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
         <connection identifier="id-1aaa8945-1119-4df7-af48-aef1781dbbda" relationshipRef="id-889fbfe0-5637-4f5e-97f1-1bcda38db181" xsi:type="Relationship" source="id-0570457c-b01d-4612-8a72-8afba25e17c5" target="id-37120e83-8237-4756-bee5-94b608005a2a">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
         <connection identifier="id-90f25d4b-82de-43eb-8100-ee9cbfabcbc7" relationshipRef="id-89b821e3-f6ff-4e59-b0c2-775558e3a274" xsi:type="Relationship" source="id-5b0678e7-bf0a-4cf5-8ba7-4ca7ddac3edd" target="id-2bfaafe4-3c67-4d47-bb54-cf1383ecf214">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
         <connection identifier="id-59ee300f-c14b-4d05-813b-01249120bd8d" relationshipRef="id-c8255543-63fc-4909-a822-d286c4a43425" xsi:type="Relationship" source="id-5b0678e7-bf0a-4cf5-8ba7-4ca7ddac3edd" target="id-aa8c5c42-3dfa-4d0d-8f69-45fc465d652f">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
         <connection identifier="id-da1ad2ef-0fc2-4f0b-ba2c-eb1c73b8048b" relationshipRef="id-9f9ab9ac-f2b4-4b33-ba13-fda81efe2d89" xsi:type="Relationship" source="id-1f79139f-2f7b-4847-960e-05ac643ddc15" target="id-34151620-a6e8-442d-b87d-fb1a7f78b0c5">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
         <connection identifier="id-53846053-d651-4a1e-9670-a35ec360743f" relationshipRef="id-ccf108b7-bea1-4ac8-8fe8-d250da31162b" xsi:type="Relationship" source="id-37120e83-8237-4756-bee5-94b608005a2a" target="id-5b0678e7-bf0a-4cf5-8ba7-4ca7ddac3edd">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
         <connection identifier="id-7a3ad13b-4885-4d9b-b7b7-f8348c2f3413" relationshipRef="id-97a402b0-0104-46cf-a8eb-5d36648b31d8" xsi:type="Relationship" source="id-aa8c5c42-3dfa-4d0d-8f69-45fc465d652f" target="id-1f79139f-2f7b-4847-960e-05ac643ddc15">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
         <connection identifier="id-710f7ae8-9498-4b7c-b4af-ae924b4ecec3" relationshipRef="id-e83c0626-9c2e-4977-bc35-931e0d42c4ec" xsi:type="Relationship" source="id-8b09d67f-aa97-4894-b698-86601619a803" target="id-0570457c-b01d-4612-8a72-8afba25e17c5">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
         <connection identifier="id-fe66f8f6-204f-45f5-9708-c4bb599e4712" relationshipRef="id-35c19b48-c4d7-413c-8e06-0c7c07dae113" xsi:type="Relationship" source="id-1b77f486-766f-4f6f-8748-c02741c338ba" target="id-8b09d67f-aa97-4894-b698-86601619a803">
           <style>
             <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
           </style>
         </connection>
       </view>
