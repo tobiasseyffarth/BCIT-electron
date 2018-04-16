@@ -93,9 +93,11 @@ function getCompliance(helpObj) {
                   r.text = getPlainText(s);
                   let cs = new source();
                   cs.norm = helpObj.dokumente.norm[i].metadaten.jurabk._text;
-                  cs.paragraph = helpObj.dokumente.norm[i].metadaten.enbez._text;
+                  cs.paragraph = getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
                   cs.section = Number(j) + 1;
+                  cs.id = 'source_' + cs.norm + '_' + cs.paragraph + '_' + cs.section;
                   r.source = cs;
+                  r.id = 'requirement_' + cs.norm + '_' + cs.paragraph + '_' + cs.section;
                   result.requirement.push(r);
                 }
               }
@@ -109,8 +111,10 @@ function getCompliance(helpObj) {
                 r.text = getPlainText(s);
                 let cs = new source();
                 cs.norm = helpObj.dokumente.norm[i].metadaten.jurabk._text;
-                cs.paragraph = helpObj.dokumente.norm[i].metadaten.enbez._text;
+                cs.paragraph = getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
                 r.source = cs;
+                cs.id = 'source_' + cs.norm + '_' + cs.paragraph;
+                r.id = 'requirement_' + cs.norm + '_' + cs.paragraph;
                 result.requirement.push(r);
               }
             }
@@ -135,4 +139,8 @@ function getPlainText(input) {
     }
   }
   return s.substring(j, s.length);
+}
+
+function getPlainParagraph(input) {
+  return input.substring(2, input.length);
 }

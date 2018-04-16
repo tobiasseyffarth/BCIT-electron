@@ -15,14 +15,7 @@ import infrastructureView from "./app/main/infrastructure-view";
 
 let bpmnViewer = new bpmnView({document});
 let complianceViewer = new complianceView({document});
-let infrastructureViewer = require('./app/main/infrastructure-view');
-
-let infra= infrastructureViewer.loadXml();
-console.log('START');
-console.log(infrastructureViewer.elements.length);
-for (let i in infra){
-  console.log(infra[i].id);
-}
+let infrastructureViewer = new infrastructureView({document});
 
 console.log(bpmnViewer.getViewer());
 

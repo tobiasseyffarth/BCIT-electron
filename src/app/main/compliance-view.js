@@ -7,7 +7,8 @@ import loadCompliance from "../data/compliance/loadCompliance";
  * used when nothing else is given to constructor
  */
 const baseConfig = {
-  xmlUploadButton: "#uploadComplianceXML"
+  xmlUploadButton: "#uploadComplianceXML",
+  infraContainer: "container-infrastructure"
 };
 
 class complianceView {
@@ -18,6 +19,7 @@ class complianceView {
     this.xmlUploadButton = options.xmlUploadButton || baseConfig.xmlUploadButton;
 
     this.initComplianceView();
+    //this.loadGraph();
   }
 
   initComplianceView() {
@@ -34,6 +36,28 @@ class complianceView {
     let xml = await processio.readFile('./resources/compliance/hgb.xml');
     let compliance = loadCompliance.getJSON(xml);
     console.log(compliance);
+  }
+
+
+  loadGraph() {
+
+    //dem Graphen den infraContainer übergeben
+
+    let infraContainer = this.document.querySelector('.container-infrastructure');
+
+    let graph = cytoscape({
+      // very commonly used options
+      container: infraContainer
+    });
+
+    graph.add([
+      {group: "nodes", data: {id: "n0"}, position: {x: 100, y: 100}},
+      {group: "nodes", data: {id: "n1"}, position: {x: 200, y: 200}},
+      {group: "nodes", data: {id: "n2"}, position: {x: 200, y: 200}},
+      {group: "edges", data: {id: "e0", source: "n0", target: "n1"}},
+      {group: "edges", data: {id: "e1", source: "n1", target: "n2"}}
+    ]);
+
   }
 }
 
