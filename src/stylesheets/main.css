@@ -63,7 +63,7 @@ a {
 }
 
 .container-compliance{
-  flex: 30%;
+  flex: 40%;
 
   position: relative;
 
@@ -73,13 +73,39 @@ a {
   border-right: 1.5px gray dashed;
 }
 
+.container-compliance .input-search-requirement{
+  width: 99%;
+  margin: 2px;
+}
+
+.container-compliance .requirement{
+  height: 50%;
+  width: 99%;
+  margin: 2px;
+}
+
+
 .container-infrastructure{
-  flex: 30%;
+  flex: 40%;
   border-right: 1.5px gray dashed;
+  position: relative;
+  flex-direction: column;
+}
+
+.container-infrastructure .infra-io{
+  height: 90%;
+  width: 99%;
+  margin: 2px;
+}
+
+.container-infrastructure .selected-infra-element{
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
 }
 
 .container-properties{
-  flex: 40%;
+  flex: 20%;
   overflow: auto;
 }
 

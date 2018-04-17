@@ -40,10 +40,9 @@ class bpmnViewer extends EventEmitter {
     this.selectedElement = null;
     this.initViewer();
     this.loadBpmn('./resources/process/sample_process.bpmn');
-
   }
 
-  initViewer() {
+  initViewer() { //hier noch die Moodle Extension einbauen: https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension#plugging-everything-together
     this.viewer = new BpmnModeler({
       container: this.bpmnContainer,
       propertiesPanel: {
@@ -81,7 +80,7 @@ class bpmnViewer extends EventEmitter {
     this.renderBpmnXml(data);
   }
 
-  renderBpmnXml(xml){
+  renderBpmnXml(xml) {
     let _this = this;
     this.viewer.importXML(xml, function (err) {
       if (err) {
@@ -128,29 +127,29 @@ class bpmnViewer extends EventEmitter {
 
     let flowElements = [];
     let flowNodes = [];
-    let sequenceFlows=[];
+    let sequenceFlows = [];
 
-    flowElements=queryprocess.getFlowElementsOfProcess(p);
-    flowNodes=queryprocess.getFlowNodesOfProcess(p);
-    sequenceFlows=queryprocess.getSequenceFlowsofProcess(p);
+    flowElements = queryprocess.getFlowElementsOfProcess(p);
+    flowNodes = queryprocess.getFlowNodesOfProcess(p);
+    sequenceFlows = queryprocess.getSequenceFlowsofProcess(p);
 
     console.log('Flow Elements');
-    for(let i=0; i<flowElements.length;i++){
+    for (let i = 0; i < flowElements.length; i++) {
       console.log(flowElements[i]);
     }
 
     console.log('Flow Nodes');
-    for(let i=0; i<flowNodes.length;i++){
+    for (let i = 0; i < flowNodes.length; i++) {
       console.log(flowNodes[i]);
     }
 
     console.log('Sequence Flow');
-    for(let i=0; i<sequenceFlows.length;i++){
+    for (let i = 0; i < sequenceFlows.length; i++) {
       console.log(sequenceFlows[i]);
     }
 
     console.log('Suche nach der ID');
-    let node=queryprocess.getFlowElementById(p,'StartEvent_1');
+    let node = queryprocess.getFlowElementById(p, 'StartEvent_1');
     console.log(node);
   }
 

@@ -13,7 +13,8 @@ const processProps = require('./parts/ProcessProps'),
   executableProps = require('./parts/ExecutableProps');
 */
 
-const idProps     = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/IdProps');
+const idProps = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/IdProps');
+const nameProps = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/NameProps');
 
 function createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate) {
   /*
@@ -52,6 +53,7 @@ function createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate
   };
 
   idProps(compliance, element, translate);
+  nameProps(compliance, element, translate);
 
   return [
     compliance
@@ -63,14 +65,14 @@ function TobusPropertiesProvider(eventBus, bpmnFactory, elementRegistry, transla
 
   PropertiesActivator.call(this, eventBus);
 
-  this.getTabs = function(element) {
+  this.getTabs = function (element) {
 
     /*
-    let generalTab = {
-      id: 'general',
-      label: translate('General'),
-      groups: createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate)
-    };
+        let generalTab = {
+          id: 'general',
+          label: translate('General'),
+          groups: createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate)
+        };
     */
 
     let complianceTab = {
@@ -86,12 +88,12 @@ function TobusPropertiesProvider(eventBus, bpmnFactory, elementRegistry, transla
   };
 }
 
-TobusPropertiesProvider.$inject = [ 'eventBus', 'bpmnFactory', 'elementRegistry', 'translate' ];
+TobusPropertiesProvider.$inject = ['eventBus', 'bpmnFactory', 'elementRegistry', 'translate'];
 
 inherits(TobusPropertiesProvider, PropertiesActivator);
 
 module.exports = {
-  __init__: [ 'propertiesProvider' ],
-  propertiesProvider: [ 'type', TobusPropertiesProvider ]
+  __init__: ['propertiesProvider'],
+  propertiesProvider: ['type', TobusPropertiesProvider]
 };
 

@@ -14,7 +14,7 @@
     <button type="button" class="btn btn-success" id="uploadComplianceXML">Upload Compliance</button>
   </div>
   <div class="uInfrastructure">
-    <button type="button" class="btn btn-success" id="uploadInfrasturcture">Upload Infrastructure</button>
+    <button type="button" class="btn btn-success" id="uploadInfra">Upload Infrastructure</button>
   </div>
   <div></div>
 </section>
@@ -25,10 +25,18 @@
 </section>
 
 <section class="sub-container">
-  <div class="container-compliance"></div>
-  <div class="container-infrastructure"></div>
+  <div class="container-compliance">
+    <input class="input-search-requirement" id="search-requirement"></input>
+    <select multiple class="requirement" id="select-requirement"></select>
+    <textarea class="requirement" id="show-requirement"></textarea>
+  </div>
+  <div class="container-infrastructure">
+    <div class="infra-io"></div>
+    <div class="selected-infra-element"></div>
+  </div>
   <div class="container-properties properties-panel-parent"></div>
 </section>
+
 
 <section class="container-log">
   <textarea class="log-content"></textarea>
@@ -51,6 +59,6 @@
   </div>
 -->
 
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

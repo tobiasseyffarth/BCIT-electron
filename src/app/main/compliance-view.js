@@ -1,14 +1,14 @@
 import dialogHelper from "./../../helpers/fileopen_dialogs";
 import processio from "../control/processio";
 import loadCompliance from "../data/compliance/loadCompliance";
+import log from "./../../helpers/logs";
 
 /*****
  * Basic config
  * used when nothing else is given to constructor
  */
 const baseConfig = {
-  xmlUploadButton: "#uploadComplianceXML",
-  infraContainer: "container-infrastructure"
+  xmlUploadButton: "#uploadComplianceXML"
 };
 
 class complianceView {
@@ -34,7 +34,7 @@ class complianceView {
     //let data = dialogHelper.xmlFileOpenDialog();
     let xml = await processio.readFile('./resources/compliance/hgb.xml');
     let compliance = loadCompliance.getJSON(xml);
-    console.log(compliance);
+    log.info('compliance imported');
   }
 
 }
