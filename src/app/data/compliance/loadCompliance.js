@@ -1,7 +1,7 @@
 let convert = require('xml-js');
 
 module.exports = {
-  getJSON
+  getJSON, getProm
 }
 
 let compliance = {
@@ -25,7 +25,7 @@ let compliance = {
     }
     return result;
   },
-  getRequirementBySource(paragraph, section) {
+  getRequirementBySource: function (paragraph, section) {
     let result = [];
 
     if (section == undefined) {
@@ -48,6 +48,13 @@ let compliance = {
       }
     }
     return result;
+  },
+  getRequirementById: function (id) {
+    for (let i in this.requirement) {
+      if (this.requirement[i].id == id) {
+        return requirement[i];
+      }
+    }
   }
 };
 
@@ -69,7 +76,13 @@ class source {
   }
 }
 
-function getJSON(xml) {
+function getProm(xml) {
+  return new Promise(function (resolve, reject) {
+    resolve(getJSON(xml));
+  })
+};
+
+function getJSON(xml) { //ToDo: hier mit Promise arbeiten, da es sehr lange dauert?
   let helpObj = JSON.parse(convert.xml2json(xml, {compact: true, spaces: 2}));
   return getCompliance(helpObj);
 }

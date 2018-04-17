@@ -22,7 +22,7 @@ class infrastructureView {
     this.document = options.document;
     this.xmlUploadButton = options.xmlUploadButton || baseConfig.xmlUploadButton;
     this.infraContainer = this.document.querySelector('.infra-io');
-    this.infraElement = this.document.querySelector('.selected-infra-element');
+    this.infraElement = this.document.getElementById('selected-infra-element');
     this.infraElement.textContent = "test";
     this.graph = cytoscape({
       container: this.infraContainer,
@@ -82,9 +82,12 @@ class infrastructureView {
   }
 
   clickGraph() { //weitere Events: http://js.cytoscape.org/#events/user-input-device-events
+    let _this=this;
     this.graph.on('tap', 'node', function (evt) {
       let node = evt.target;
-      console.log(node.id());
+      _this.infraElement.textContent=node.id() + ", " + node.data('name');
+      console.log(node.data('name'));
+      console.log(node.data('id'));
     });
   }
 

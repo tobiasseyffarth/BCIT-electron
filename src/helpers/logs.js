@@ -6,6 +6,7 @@ let logbox = document.querySelector('.log-content');
 
 module.exports = {
   info: function (txt) {
-    logbox.value += "\n" + new Date().toJSON() + ": " + txt;
+    let old = logbox.value;
+    logbox.value=new Date().toJSON() + ": " + txt + "\n" + old;
   }
 };
