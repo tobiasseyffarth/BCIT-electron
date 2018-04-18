@@ -115,8 +115,6 @@ a {
  */
 .container-process{
   flex: 35%;
-  border-top: 1.5px gray dashed;
-  border-bottom: 1.5px gray dashed;
 
   position: relative;
 
