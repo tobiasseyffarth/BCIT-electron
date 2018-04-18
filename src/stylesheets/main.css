@@ -1,13 +1,16 @@
 /*******************************************************
 CONTENT
 
-1. Main layout
+0. Main layout
+1. Controls
 2. Process
+3. Sub Container
+4. Log
 
  */
 
 /********************************************************
-1. Main layout
+0.a) Main layout
  */
 
 html,
@@ -35,8 +38,50 @@ a {
   text-align: center;
 }
 
+/********************************************************
+0.b) Menu layout
+ */
+
+/* The side navigation menu */
+.menu {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0;
+  left: 0;
+  background-color: #111; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.menu a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.menu a:hover{
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.menu .btnClose {
+  position: fixed;
+  top: 0px;
+  left: 20px;
+  /*font-size: 10px;*/
+  margin-left: 50px;
+}
+
 /**************************************************
-2. a)
+1.) Section controls
  */
 
 .ctrls{
@@ -50,67 +95,16 @@ a {
   justify-content: space-evenly;
 }
 
-
-
-/**************************************************
-1. b) Sub Container
- */
-
-.sub-container{
-  flex: 55%;
-  display: flex;
-  flex-direction: row;
-}
-
-.container-compliance{
-  flex: 40%;
-
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-
-  border-right: 1.5px gray dashed;
-}
-
-.container-compliance .input-search-requirement{
-  width: 99%;
-  margin: 2px;
-}
-
-.container-compliance .requirement{
-  height: 50%;
-  width: 99%;
-  margin: 2px;
-}
-
-
-.container-infrastructure{
-  flex: 40%;
-  border-right: 1.5px gray dashed;
-  position: relative;
-  flex-direction: column;
-}
-
-.container-infrastructure .infra-io{
-  height: 90%;
-  width: 99%;
-  margin: 2px;
-}
-
-.container-infrastructure .selected-infra-element{
+#menu{
+  background-color:  #ffffff;
+  border-color:  #cb3837;
+  color: #cb3837;
   position: absolute;
-  bottom: 10px;
-  left: 10px;
-}
-
-.container-properties{
-  flex: 20%;
-  overflow: auto;
+  left: 5px;
 }
 
 /**************************************************
-2. Process container
+2. Section Process container
  */
 .container-process{
   flex: 35%;
@@ -141,8 +135,76 @@ a {
   left: 10px;
 }
 
-/******
-3. Log container
+/**************************************************
+3. Section Sub
+ */
+
+.sub-container{
+  flex: 55%;
+  display: flex;
+  flex-direction: row;
+}
+
+/**************************************************
+3.a) Compliance-Container
+ */
+
+.container-compliance{
+  flex: 20%;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  border-right: 1.5px gray dashed;
+}
+
+.container-compliance .input-search-requirement{
+  width: 99%;
+  margin: 2px;
+}
+
+.container-compliance .requirement{
+  height: 50%;
+  width: 99%;
+  margin: 2px;
+}
+
+/**************************************************
+3.b) Infra-Container
+ */
+
+.container-infrastructure{
+  flex: 60%;
+  border-right: 1.5px gray dashed;
+  position: relative;
+  flex-direction: column;
+}
+
+.container-infrastructure .infra-io{
+  height: 90%;
+  width: 99%;
+  margin: 2px;
+}
+
+.container-infrastructure .selected-infra-element{
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+/**************************************************
+3.c) Properties Container
+ */
+
+.container-properties{
+  flex: 20%;
+  overflow: auto;
+}
+
+/**************************************************
+4.) Section Log
  */
 
 .container-log{

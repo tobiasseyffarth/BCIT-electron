@@ -29,8 +29,8 @@ function getProcess(viewer, e) {
     let nodes = [];
     nodes = elementRegistry.getAll();
 
-    for(let i=0; i<nodes.length;i++){
-      if(nodes[i].businessObject.$type=='bpmn:Process'){
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].businessObject.$type == 'bpmn:Process') {
         return nodes[i].businessObject;
       }
     }
@@ -55,13 +55,13 @@ function getElementOfRegistry(viewer, id) {
 
 //final
 function getFlowNodesOfProcess(process) {
-  let flowElements=[];
-  let nodes=[];
+  let flowElements = [];
+  let nodes = [];
 
-  flowElements=getFlowElementsOfProcess(process);
+  flowElements = getFlowElementsOfProcess(process);
 
-  for(let i=0;i<flowElements.length;i++){
-    if(!flowElements[i].$type.includes('SequenceFlow')){
+  for (let i = 0; i < flowElements.length; i++) {
+    if (!flowElements[i].$type.includes('SequenceFlow')) {
       nodes.push(flowElements[i]);
     }
   }
@@ -71,13 +71,13 @@ function getFlowNodesOfProcess(process) {
 
 //final
 function getSequenceFlowsofProcess(process) {
-  let flowElements=[];
-  let sequence=[];
+  let flowElements = [];
+  let sequence = [];
 
-  flowElements=getFlowElementsOfProcess(process);
+  flowElements = getFlowElementsOfProcess(process);
 
-  for(let i=0;i<flowElements.length;i++){
-    if(flowElements[i].$type.includes('SequenceFlow')){
+  for (let i = 0; i < flowElements.length; i++) {
+    if (flowElements[i].$type.includes('SequenceFlow')) {
       sequence.push(flowElements[i]);
     }
   }
@@ -98,11 +98,11 @@ function getFlowElementsOfProcess(process) {
 
 //final
 function getFlowElementById(process, id) {
-  let flowElements=[];
-  flowElements=getFlowElementsOfProcess(process);
+  let flowElements = [];
+  flowElements = getFlowElementsOfProcess(process);
 
-  for(let i=0;i<flowElements.length;i++){
-    if(flowElements[i].id==id){
+  for (let i = 0; i < flowElements.length; i++) {
+    if (flowElements[i].id == id) {
       return flowElements[i];
     }
   }
