@@ -12,10 +12,12 @@ import "./helpers/external_links.js";
 import bpmnView from "./app/main/bpmn-view.js";
 import complianceView from "./app/main/compliance-view";
 import infrastructureView from "./app/main/infrastructure-view";
+import menuView from "./app/main/menu-view";
 
 let bpmnViewer = new bpmnView({document});
 let complianceViewer = new complianceView({document});
 let infrastructureViewer = new infrastructureView({document});
+let menuViewer = new menuView({document});
 
 console.log(bpmnViewer.getViewer());
 

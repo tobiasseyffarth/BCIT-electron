@@ -15,6 +15,7 @@ const processProps = require('./parts/ProcessProps'),
 
 const idProps = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/IdProps');
 const nameProps = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/NameProps');
+const extProps = require('bpmn-js-properties-panel/lib/provider/camunda/parts/PropertiesProps.js');
 
 function createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate) {
   /*
@@ -54,6 +55,7 @@ function createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate
 
   idProps(compliance, element, translate);
   nameProps(compliance, element, translate);
+  extProps(compliance, element,bpmnFactory, translate);
 
   return [
     compliance

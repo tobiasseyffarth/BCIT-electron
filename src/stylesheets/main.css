@@ -1,13 +1,16 @@
 /*******************************************************
 CONTENT
 
-1. Main layout
+0. Main layout
+1. Controls
 2. Process
+3. Sub Container
+4. Log
 
  */
 
 /********************************************************
-1. Main layout
+0.a) Main layout
  */
 
 html,
@@ -35,8 +38,50 @@ a {
   text-align: center;
 }
 
+/********************************************************
+0.b) Menu layout
+ */
+
+/* The side navigation menu */
+.menu {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0;
+  left: 0;
+  background-color: #111; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.menu a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.menu a:hover{
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.menu .btnClose {
+  position: fixed;
+  top: 0px;
+  left: 20px;
+  /*font-size: 10px;*/
+  margin-left: 50px;
+}
+
 /**************************************************
-2. a)
+1.) Section controls
  */
 
 .ctrls{
@@ -57,10 +102,48 @@ a {
   justify-content: space-evenly;
 }
 
-
+#menu{
+  background-color:  #ffffff;
+  border-color:  #cb3837;
+  color: #cb3837;
+  position: absolute;
+  left: 5px;
+}
 
 /**************************************************
-1. b) Sub Container
+2. Section Process container
+ */
+.container-process{
+  flex: 35%;
+  border-top: 1.5px gray dashed;
+  border-bottom: 1.5px gray dashed;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.container-process .ctrls{
+  height: 5em;
+  text-align: center;
+  padding: 10px;
+}
+
+.container-process .bpmn-io{
+  flex: auto;
+  height: 100%;
+  width: 100%;
+}
+
+.container-process .selected-element-id{
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+/**************************************************
+3. Section Sub
  */
 
 .sub-container{
@@ -70,6 +153,10 @@ a {
   margin-top: 6px;
   box-shadow: 0 2px 10px grey;
 }
+
+/**************************************************
+3.a) Compliance-Container
+ */
 
 .container-compliance{
   flex: 40%;
@@ -102,6 +189,9 @@ a {
   height: 100%;
 }
 
+/**************************************************
+3.b) Infra-Container
+ */
 
 .container-infrastructure{
   flex: 40%;
@@ -120,6 +210,10 @@ a {
   bottom: 10px;
   left: 10px;
 }
+
+/**************************************************
+3.c) Properties Container
+ */
 
 .container-properties{
   overflow: auto;

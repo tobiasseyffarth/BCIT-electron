@@ -23,7 +23,7 @@ class infrastructureView {
     this.xmlUploadButton = options.xmlUploadButton || baseConfig.xmlUploadButton;
     this.infraContainer = this.document.querySelector('.infra-io');
     this.infraElement = this.document.getElementById('selected-infra-element');
-    this.infraElement.textContent = "test";
+
     this.graph = cytoscape({
       container: this.infraContainer,
       style: [ // the stylesheet for the graph
@@ -46,8 +46,8 @@ class infrastructureView {
           }
         }
       ],
-    });
-    this.infra = null;
+    }); // create an enmpty graph and define its style
+    this.infra = null; // stores our infrastructure model
 
     this.initInfrastructureView();
     this.clickGraph();
@@ -60,34 +60,28 @@ class infrastructureView {
       //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
       uploadXML.addEventListener("click", () => this.xmlUploadOnClick());
     }
-    let xml = await processio.readFile('./resources/it-architecture/architecture.xml');
-    this.infra = loadInfraKai.getInfra(xml);
-    this.renderGraph();
+    let xml = await processio.readFile('./resources/it-architecture/architecture.xml'); //read file
+    this.infra = loadInfraKai.getInfra(xml); //parsing file
+    this.renderGraph(); //render infra to gui
   }
 
   async xmlUploadOnClick() {
     //let data = dialogHelper.xmlFileOpenDialog();
-
-    console.log(this.infraContainer.clientHeight);
-    console.log(this.infraContainer.clientWidth);
-    this.infraElement.textContent = "test2";
   }
 
   renderGraph() {
     creategraph.createGraphFromInfra(this.graph, this.infra);
     let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
     layout.run();
-    this.graph.autolock(false);
+    this.graph.autolock(false); //elements can not be moved by the user
     log.info('infrastructure rendered');
   }
 
   clickGraph() { //weitere Events: http://js.cytoscape.org/#events/user-input-device-events
-    let _this=this;
+    let _this = this;
     this.graph.on('tap', 'node', function (evt) {
       let node = evt.target;
-      _this.infraElement.textContent=node.id() + ", " + node.data('name');
-      console.log(node.data('name'));
-      console.log(node.data('id'));
+      _this.infraElement.textContent = node.id() + ", " + node.data('name');
     });
   }
 

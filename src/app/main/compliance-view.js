@@ -20,7 +20,8 @@ class complianceView {
     this.searchRequirement = this.document.querySelector('.input-search-requirement');
     this.listRequirement = this.document.getElementById('select-requirement');
     this.showRequirement = this.document.getElementById('show-requirement');
-    this.compliance = null;
+
+    this.compliance = null; //stores our compliance model
 
     this.initComplianceView();
   }
@@ -85,7 +86,7 @@ class complianceView {
     let search = this.searchRequirement.value;
     let compliance = this.compliance;
 
-    if (event.which != 13) {
+   // if (event.which != 13) {
       if (search.length > 0) {
         this.removeListRequirement(this.listRequirement);
         let result = [];
@@ -95,7 +96,7 @@ class complianceView {
         this.removeListRequirement(this.listRequirement);
         this.addListRequirement(compliance);
       }
-    }
+    //}
   }
 
   searchOnClick() {
