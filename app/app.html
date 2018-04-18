@@ -8,33 +8,61 @@
 
 <section class="ctrls">
   <div class="uBpmn">
-    <button type="button" class="btn btn-success" id="uploadBpmn">Upload BPMN</button>
+    <button type="button" class="btn btn-outline-success" id="uploadBpmn">Upload BPMN</button>
   </div>
   <div class="uCompliance">
-    <button type="button" class="btn btn-success" id="uploadComplianceXML">Upload Compliance</button>
+    <button type="button" class="btn btn-outline-success" id="uploadComplianceXML">Upload Compliance</button>
   </div>
   <div class="uInfrastructure">
-    <button type="button" class="btn btn-success" id="uploadInfra">Upload Infrastructure</button>
+    <button type="button" class="btn btn-outline-success" id="uploadInfra">Upload Infrastructure</button>
   </div>
-  <div></div>
 </section>
 
 <section class="container-process">
-  <div class="bpmn-io"></div>
-  <div class="selected-element-id"></div>
+  <div class="bpmn-container">
+    <div class="bpmn-io"></div>
+    <div class="selected-element-id"></div>
+  </div>
+  <div class="container-properties properties-panel-parent"></div>
+</section>
+
+<section class="sub-container">
+  <div class="container-infrastructure">
+    <div class="infra-io"></div>
+    <div class="selected-infra-element" id="selected-infra-element"></div>
+  </div>
+  <div class="container-properties">
+    <div class="bpp-properties-group" data-group="complianceGrp">
+      <span class="group-toggle"></span>
+      <span class="group-label">Infrastructure</span>
+      <div class="bpp-properties-entry bpp-textfield" data-entry="id">
+        <label for="camunda-id">Id</label>
+        <div class="bpp-field-wrapper">
+          <input id="camunda-id" type="text" name="id">
+          <button class="clear" data-action="clear" data-show="canClear"><span>X</span></button>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-textbox" data-entry="name">
+        <label for="camunda-name">Name</label>
+        <div class="bpp-field-wrapper">
+          <div contenteditable="true" id="camunda-name" name="name"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="sub-container">
   <div class="container-compliance">
     <input class="input-search-requirement" id="search-requirement"></input>
     <select multiple class="requirement" id="select-requirement"></select>
-    <textarea class="requirement" id="show-requirement"></textarea>
   </div>
-  <div class="container-infrastructure">
-    <div class="infra-io"></div>
-    <div class="selected-infra-element" id="selected-infra-element"></div>
+  <div class="requirement">
+    <textarea id="show-requirement"></textarea>
   </div>
-  <div class="container-properties properties-panel-parent"></div>
+  <div class="requirement">
+    <textarea id="show-requirement2"></textarea>
+  </div>
 </section>
 
 <section class="container-log">

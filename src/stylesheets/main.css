@@ -40,12 +40,19 @@ a {
  */
 
 .ctrls{
-  height: 7em;
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px grey;
+
+  height: auto;
   width: 100%;
   display: flex;
+  text-align: center;
+  align-items: center;
+  padding: 5px;
 }
 
 .ctrls>*{
+  margin: 10px;
   flex: 1;
   justify-content: space-evenly;
 }
@@ -57,9 +64,11 @@ a {
  */
 
 .sub-container{
-  flex: 55%;
+  flex: 50%;
   display: flex;
   flex-direction: row;
+  margin-top: 6px;
+  box-shadow: 0 2px 10px grey;
 }
 
 .container-compliance{
@@ -69,25 +78,33 @@ a {
 
   display: flex;
   flex-direction: column;
-
-  border-right: 1.5px gray dashed;
 }
 
 .container-compliance .input-search-requirement{
-  width: 99%;
+  flex: 33%;
   margin: 2px;
 }
 
 .container-compliance .requirement{
-  height: 50%;
-  width: 99%;
+  height: 100%;
+  flex: 33%;
   margin: 2px;
+}
+
+.sub-container .requirement{
+  height: 100%;
+  flex: 33%;
+  margin: 2px;
+}
+
+.requirement > textarea{
+  width: 99%;
+  height: 100%;
 }
 
 
 .container-infrastructure{
   flex: 40%;
-  border-right: 1.5px gray dashed;
   position: relative;
   flex-direction: column;
 }
@@ -105,17 +122,24 @@ a {
 }
 
 .container-properties{
-  flex: 20%;
   overflow: auto;
+  width: 260px;
+  background-color: #f8f8f8;
+  border-left: 1px solid #ccc;
 }
 
 /**************************************************
 2. Process container
  */
 .container-process{
-  flex: 35%;
-  border-top: 1.5px gray dashed;
-  border-bottom: 1.5px gray dashed;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 2px 10px grey;
+  flex: 50%;
+}
+
+.bpmn-container{
+  flex: auto;
 
   position: relative;
 
@@ -123,19 +147,19 @@ a {
   flex-direction: column;
 }
 
-.container-process .ctrls{
+.bpmn-container .ctrls{
   height: 5em;
   text-align: center;
   padding: 10px;
 }
 
-.container-process .bpmn-io{
+.bpmn-container .bpmn-io{
   flex: auto;
   height: 100%;
   width: 100%;
 }
 
-.container-process .selected-element-id{
+.bpmn-container .selected-element-id{
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -147,8 +171,9 @@ a {
 
 .container-log{
   flex: 10%;
-  min-height: 10em;
+  min-height: 6em;
   width: 100%;
+  max-height: 10em;
 }
 
 .log-content{
