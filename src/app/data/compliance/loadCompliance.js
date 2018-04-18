@@ -1,25 +1,31 @@
 let convert = require('xml-js');
 
 module.exports = {
-  getJSON, getProm
+  getJSON
 }
 
 let compliance = {
   requirement: [],
 
-  getRequirementContainsTitle: function (title) {
+  getRequirementContainsTitle: function (input) {
     let result = [];
     for (let i in this.requirement) {
-      if (this.requirement[i].title != undefined && this.requirement[i].title.includes(title)) { //lowercase einbauen
-        result.push(this.requirement[i]);
+      if (this.requirement[i].title != undefined) {
+        let low_title = this.requirement[i].title.toLowerCase();
+        let low_input = input.toLowerCase();
+        if (low_title.includes(low_input)) {
+          result.push(this.requirement[i]);
+        }
       }
     }
     return result;
   },
-  getRequirementContainsText: function (text) {
+  getRequirementContainsText: function (input) {
     let result = [];
     for (let i in this.requirement) {
-      if (this.requirement[i].text.includes(text)) { //lowercase einbauen
+      let low_req = this.requirement[i].text.toLowerCase();
+      let low_input = input.toLowerCase();
+      if (low_req.includes(low_input)) {
         result.push(this.requirement[i]);
       }
     }
@@ -52,9 +58,13 @@ let compliance = {
   getRequirementById: function (id) {
     for (let i in this.requirement) {
       if (this.requirement[i].id == id) {
-        return requirement[i];
+        return this.requirement[i];
       }
     }
+  },
+  toString: function (id) {
+    let requirement = this.getRequirementById(id);
+    return "ID: " + requirement.id + "\n" + "Source: " + requirement.source.norm + ", § " + requirement.source.paragraph + ", Section " + requirement.source.section + "\nTitle: " + requirement.title + "\n" + requirement.text;
   }
 };
 
@@ -75,12 +85,6 @@ class source {
     this.section = undefined;
   }
 }
-
-function getProm(xml) {
-  return new Promise(function (resolve, reject) {
-    resolve(getJSON(xml));
-  })
-};
 
 function getJSON(xml) { //ToDo: hier mit Promise arbeiten, da es sehr lange dauert?
   let helpObj = JSON.parse(convert.xml2json(xml, {compact: true, spaces: 2}));
