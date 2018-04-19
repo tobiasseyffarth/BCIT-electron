@@ -15,8 +15,8 @@ function createGraphFromInfra(graph, infra) {
   console.log('Anzahl Edge: ', sequences.length);
 */
   for (let i in nodes) {
-    graph.add({group: "nodes", data: {id: nodes[i].id, name: nodes[i].name}});
-    //console.log('node', nodes[i].id);
+    graph.add({group: "nodes", data: {id: nodes[i].id, name: nodes[i].name, props: nodes[i].props, type: 'infra'}});
+    console.log('node', nodes[i].props);
   }
 
   for (let i in sequences) {
@@ -29,5 +29,13 @@ function createGraphFromInfra(graph, infra) {
 }
 
 function createGraphFromProcess(process) {
+
+}
+
+function createGraphFromCompliance(){
+
+}
+
+function addNodesToComplianceGraph(graph, source, target){
 
 }

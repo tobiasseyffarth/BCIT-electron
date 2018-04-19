@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Electron Boilerplate</title>
+  <title>Project Sydney</title>
 </head>
 <body>
 
@@ -17,7 +17,7 @@
 
 <section class="ctrls">
   <div class="uMenu">
-    <button type="button" class="btn btn-success" id="menu">&#9776</button>
+    <button type="button" class="btn btn-outline-danger" id="menu">&#9776</button>
   </div>
   <div class="uBpmn">
     <button type="button" class="btn btn-outline-success" id="uploadBpmn">Upload BPMN</button>
@@ -48,16 +48,22 @@
       <span class="group-toggle"></span>
       <span class="group-label">Infrastructure</span>
       <div class="bpp-properties-entry bpp-textfield" data-entry="id">
-        <label for="camunda-id">Id</label>
+        <label for="infra-id">Id</label>
         <div class="bpp-field-wrapper">
-          <input id="camunda-id" type="text" name="id">
-          <button class="clear" data-action="clear" data-show="canClear"><span>X</span></button>
+          <input id="infra-id" type="text" name="id">
+          <button class="clear" data-action="clear" data-show="canClear" id="btnClear"><span>X</span></button>
         </div>
       </div>
       <div class="bpp-properties-entry bpp-textbox" data-entry="name">
-        <label for="camunda-name">Name</label>
+        <label for="infra-name">Name</label>
         <div class="bpp-field-wrapper">
-          <div contenteditable="true" id="camunda-name" name="name"></div>
+          <div contenteditable="true" id="infra-name" name="name"></div>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-textbox" data-entry="name">
+        <label for="infra-props">Properties</label>
+        <div class="bpp-field-wrapper">
+          <div contenteditable="true" id="infra-props" name="name"></div>
         </div>
       </div>
     </div>
@@ -67,7 +73,8 @@
 <section class="sub-container">
   <div class="container-compliance">
     <input class="input-search-requirement" id="search-requirement"></input>
-    <select multiple class="requirement" id="select-requirement"></select>
+    <select multiple class="list-requirement" id="select-requirement"></select>
+    <textarea id="preview-requirement"></textarea>
   </div>
   <div class="requirement">
     <textarea id="show-requirement"></textarea>

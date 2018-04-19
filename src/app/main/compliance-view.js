@@ -110,7 +110,6 @@ class complianceView {
     id = this.listRequirement.options[this.listRequirement.selectedIndex].text;
     this.showRequirement.value = compliance.toString(id);
   }
-
 }
 
 module.exports = complianceView;

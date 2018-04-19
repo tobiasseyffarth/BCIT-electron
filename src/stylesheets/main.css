@@ -103,9 +103,6 @@ a {
 }
 
 #menu{
-  background-color: rgba(0, 0, 0, 0.05);
-  border-color:  #cb3837;
-  color: #cb3837;
   position: absolute;
   left: 5px;
   top: 2px;
@@ -172,7 +169,7 @@ a {
   margin: 2px;
 }
 
-.container-compliance .requirement{
+.container-compliance .list-requirement{
   height: 100%;
   flex: 33%;
   margin: 2px;

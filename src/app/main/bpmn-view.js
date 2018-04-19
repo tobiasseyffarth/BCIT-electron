@@ -103,7 +103,6 @@ class bpmnViewer extends EventEmitter {
     });
   }
 
-
   bpmnFitViewport() {
     let canvas = this.viewer.get('canvas');
     canvas.zoom('fit-viewport');
@@ -134,7 +133,6 @@ class bpmnViewer extends EventEmitter {
     let element = queryprocess.getFlowElementById(this.process, e.element.id);
 
     //editprocess.addElements(this.viewer, this.process);
-
 
     console.log(element);
 
@@ -168,7 +166,6 @@ class bpmnViewer extends EventEmitter {
         console.log(node);
       */
   }
-
 
   getViewer() {
     return this.viewer;
