@@ -28,7 +28,7 @@ function getProcess(viewer, e) {
     let elementRegistry = viewer.get('elementRegistry');
     let nodes = [];
     nodes = elementRegistry.getAll();
-
+    console.log(nodes.length);
     for (let i = 0; i < nodes.length; i++) {
       if (nodes[i].businessObject.$type == 'bpmn:Process') {
         return nodes[i].businessObject;

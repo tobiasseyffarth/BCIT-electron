@@ -16,7 +16,7 @@ function createGraphFromInfra(graph, infra) {
 */
   for (let i in nodes) {
     graph.add({group: "nodes", data: {id: nodes[i].id, name: nodes[i].name}});
-    console.log('node', nodes[i].id);
+    //console.log('node', nodes[i].id);
   }
 
   for (let i in sequences) {

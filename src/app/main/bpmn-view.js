@@ -7,7 +7,8 @@ import propertiesProviderTobus from "./../data/bpmnjsComplianceProvider";
 import BpmnModeler from "bpmn-js/dist/bpmn-modeler.development";
 import dialogHelper from "./../../helpers/fileopen_dialogs";
 import processio from "./../control/processio";
-import queryprocess from "./../control/queryprocess"
+import queryprocess from "./../control/queryprocess";
+import editprocess from "./../control/editprocess"
 
 import log from "./../../helpers/logs";
 
@@ -38,6 +39,7 @@ class bpmnViewer extends EventEmitter {
     this.document = options.document;
     this.viewer = null;
     this.selectedElement = null;
+    this.process = null;
     this.initViewer();
     this.loadBpmn('./resources/process/sample_process.bpmn');
   }
@@ -90,10 +92,17 @@ class bpmnViewer extends EventEmitter {
         _this.bpmnFitViewport();
         _this.hookEventBus();
 
+        //console.log('Element registry');
+        //console.log(_this.viewer.get('elementRegistry'));
+
+        _this.process = queryprocess.getProcess(_this.viewer);
+        //console.log(_this.process);
+
         log.info("BPMN file rendered");
       }
     });
   }
+
 
   bpmnFitViewport() {
     let canvas = this.viewer.get('canvas');
@@ -122,36 +131,44 @@ class bpmnViewer extends EventEmitter {
   hookOnClick(e) {
     this.document.querySelector('.selected-element-id').textContent = e.element.id;
 
-    let p = queryprocess.getProcess(this.viewer);
-    console.log(p);
+    let element = queryprocess.getFlowElementById(this.process, e.element.id);
+
+    //editprocess.addElements(this.viewer, this.process);
+
+
+    console.log(element);
 
     let flowElements = [];
     let flowNodes = [];
     let sequenceFlows = [];
 
-    flowElements = queryprocess.getFlowElementsOfProcess(p);
-    flowNodes = queryprocess.getFlowNodesOfProcess(p);
-    sequenceFlows = queryprocess.getSequenceFlowsofProcess(p);
+    /*
+        flowElements = queryprocess.getFlowElementsOfProcess(this.process);
+        flowNodes = queryprocess.getFlowNodesOfProcess(this.process);
+        sequenceFlows = queryprocess.getSequenceFlowsofProcess(this.process);
 
-    console.log('Flow Elements');
-    for (let i = 0; i < flowElements.length; i++) {
-      console.log(flowElements[i]);
-    }
 
-    console.log('Flow Nodes');
-    for (let i = 0; i < flowNodes.length; i++) {
-      console.log(flowNodes[i]);
-    }
+        console.log('Flow Elements');
+        for (let i = 0; i < flowElements.length; i++) {
+          console.log(flowElements[i]);
+        }
 
-    console.log('Sequence Flow');
-    for (let i = 0; i < sequenceFlows.length; i++) {
-      console.log(sequenceFlows[i]);
-    }
+        console.log('Flow Nodes');
+        for (let i = 0; i < flowNodes.length; i++) {
+          console.log(flowNodes[i]);
+        }
 
-    console.log('Suche nach der ID');
-    let node = queryprocess.getFlowElementById(p, 'StartEvent_1');
-    console.log(node);
+        console.log('Sequence Flow');
+        for (let i = 0; i < sequenceFlows.length; i++) {
+          console.log(sequenceFlows[i]);
+        }
+
+        console.log('Suche nach der ID');
+        let node = queryprocess.getFlowElementById(p, 'StartEvent_1');
+        console.log(node);
+      */
   }
+
 
   getViewer() {
     return this.viewer;
