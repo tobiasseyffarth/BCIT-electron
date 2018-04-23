@@ -1,3 +1,5 @@
+const EventEmitter = require('events');
+
 import dialogHelper from "./../../helpers/fileopen_dialogs";
 import processio from "../control/processio";
 import loadCompliance from "../data/compliance/loadCompliance";
@@ -11,17 +13,19 @@ const baseConfig = {
   xmlUploadButton: "#uploadComplianceXML"
 };
 
-class complianceView {
+class complianceView extends EventEmitter {
   constructor(options) {
+    super();
     if (!options) options = {};
 
     this.document = options.document;
     this.xmlUploadButton = options.xmlUploadButton || baseConfig.xmlUploadButton;
     this.searchRequirement = this.document.querySelector('.input-search-requirement');
     this.listRequirement = this.document.getElementById('select-requirement');
-    this.showRequirement = this.document.getElementById('show-requirement');
+    this.previewRequirement = this.document.getElementById('preview-requirement');
 
     this.compliance = null; //stores our compliance model
+    this.selectedElement = null; //todo: beim Verbinden der Graphen verwenden
 
     this.initComplianceView();
   }
@@ -52,11 +56,13 @@ class complianceView {
     let xml = await processio.readFile('./resources/compliance/hgb.xml');
     this.compliance = loadCompliance.getJSON(xml);
 
-    this.addListRequirement(this.compliance);
+    this.renderComplianceXml();
     log.info('compliance imported');
+    this.emit('compliance_rendered', {done: true});
   }
 
-  addListRequirement(compliance) {
+  renderComplianceXml() {
+    let compliance = this.compliance;
 
     if (compliance.requirement != undefined) {
       for (let i in compliance.requirement) {
@@ -67,7 +73,6 @@ class complianceView {
     }
 
     if (compliance.length > 0) {
-
       for (let i in compliance) {
         let option = new Option();
         option.text = compliance[i].id;
@@ -86,17 +91,15 @@ class complianceView {
     let search = this.searchRequirement.value;
     let compliance = this.compliance;
 
-   // if (event.which != 13) {
-      if (search.length > 0) {
-        this.removeListRequirement(this.listRequirement);
-        let result = [];
-        result = compliance.getRequirementContainsText(search);
-        this.addListRequirement(result);
-      } else {
-        this.removeListRequirement(this.listRequirement);
-        this.addListRequirement(compliance);
-      }
-    //}
+    if (search.length > 0) {
+      this.removeListRequirement(this.listRequirement);
+      let result = [];
+      result = compliance.getRequirementContainsText(search);
+      this.addListRequirement(result);
+    } else {
+      this.removeListRequirement(this.listRequirement);
+      this.addListRequirement(compliance);
+    }
   }
 
   searchOnClick() {
@@ -108,7 +111,7 @@ class complianceView {
     let id;
     //ToDO: Abgreifen, wenn die Liste leer ist
     id = this.listRequirement.options[this.listRequirement.selectedIndex].text;
-    this.showRequirement.value = compliance.toString(id);
+    this.previewRequirement.value = compliance.toString(id);
   }
 }
 

@@ -1,41 +1,44 @@
 import cytoscape from 'cytoscape';
 import queryinfra from './queryInfrastructure';
+import queryprocess from './queryprocess';
 
 module.exports = {
   createGraphFromInfra, createGraphFromProcess
 };
 
+
+//final
 function createGraphFromInfra(graph, infra) {
   let nodes = queryinfra.getNodes(infra);
   let sequences = queryinfra.getSequences(infra);
 
-  /*
-  console.log('graph erstellen');
-  console.log('Anzahl Nodes: ', nodes.length);
-  console.log('Anzahl Edge: ', sequences.length);
-*/
   for (let i in nodes) {
     graph.add({group: "nodes", data: {id: nodes[i].id, name: nodes[i].name, props: nodes[i].props, type: 'infra'}});
-    console.log('node', nodes[i].props);
   }
 
   for (let i in sequences) {
     graph.add({group: "edges", data: {id: sequences[i].id, source: sequences[i].source, target: sequences[i].target}});
-    /*
-      console.log('source', sequences[i].source);
-      console.log('target', sequences[i].target);
-      */
   }
 }
 
-function createGraphFromProcess(process) {
+//final
+function createGraphFromProcess(graph, process) {
+  let nodes = queryprocess.getFlowNodesOfProcess(process);
+  let sequences = queryprocess.getSequenceFlowsofProcess(process);
+
+  for(let i in nodes){
+    graph.add({group: "nodes", data: {id: nodes[i].id, name: nodes[i].name, type: 'businessprocess'}}); //todo: hier die Erweiterung auf Compliance abgreifen und den Knotentyp anpassen
+  }
+
+  for(let i in sequences){
+    graph.add({group: "edges", data: {id: sequences[i].id, source: sequences[i].sourceRef.id, target: sequences[i].targetRef.id}});
+  }
+}
+
+function createGraphFromCompliance() {
 
 }
 
-function createGraphFromCompliance(){
-
-}
-
-function addNodesToComplianceGraph(graph, source, target){
+function addNodesToComplianceGraph(graph, source, target) {
 
 }

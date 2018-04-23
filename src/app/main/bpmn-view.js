@@ -8,7 +8,9 @@ import BpmnModeler from "bpmn-js/dist/bpmn-modeler.development";
 import dialogHelper from "./../../helpers/fileopen_dialogs";
 import processio from "./../control/processio";
 import queryprocess from "./../control/queryprocess";
-import editprocess from "./../control/editprocess"
+import editprocess from "./../control/editprocess";
+import creategraph from "./../control/creategraph";
+import graphrenderer from "./../control/rendergraph";
 
 import log from "./../../helpers/logs";
 
@@ -32,14 +34,16 @@ class bpmnViewer extends EventEmitter {
   constructor(options) {
     super();
     if (!options) options = {};
+    this.document = options.document;
 
     this.bpmnContainer = options.bpmnContainer || baseConfig.bpmnContainer;
     this.propertiesPanel = options.propertiesPanel || baseConfig.propertiesPanel;
     this.bpmnUploadButton = options.bpmnUploadButton || baseConfig.bpmnUploadButton;
-    this.document = options.document;
+
     this.viewer = null;
-    this.selectedElement = null;
-    this.process = null;
+
+    this.selectedElement = null; //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
+    this.process = null; //processmodel of viewer
     this.initViewer();
     this.loadBpmn('./resources/process/sample_process.bpmn');
   }
@@ -88,16 +92,12 @@ class bpmnViewer extends EventEmitter {
       if (err) {
         console.error('error rendering', err);
       } else {
-        _this.emit('rendered', {done: true});
+        _this.process = queryprocess.getProcess(_this.viewer);
+        _this.emit('process_rendered', {done: true});
         _this.bpmnFitViewport();
         _this.hookEventBus();
 
-        //console.log('Element registry');
-        //console.log(_this.viewer.get('elementRegistry'));
-
-        _this.process = queryprocess.getProcess(_this.viewer);
-        //console.log(_this.process);
-
+        //creategraph. //todo: hier den Graphen aus dem Prozess erstellen
         log.info("BPMN file rendered");
       }
     });
@@ -128,13 +128,18 @@ class bpmnViewer extends EventEmitter {
   }
 
   hookOnClick(e) {
-    this.document.querySelector('.selected-element-id').textContent = e.element.id;
+    //this.selectedElement=e.element; //e.element returns a shape element and not a moddle element
 
-    let element = queryprocess.getFlowElementById(this.process, e.element.id);
+    this.document.querySelector('.selected-element-id').textContent = e.element.id;
+    this.selectedElement = queryprocess.getFlowElementById(this.process, e.element.id);
 
     //editprocess.addElements(this.viewer, this.process);
 
-    console.log(element);
+    console.log(this.selectedElement);
+    console.log(this.selectedElement.extensionElements.values[0].$children[0]);
+    console.log(this.selectedElement.extensionElements.values[0].$children.length);
+    console.log(this.selectedElement.extensionElements.values[0].$children[0].name);
+    console.log(this.selectedElement.extensionElements.values[0].$children[0].value);
 
     let flowElements = [];
     let flowNodes = [];
@@ -170,6 +175,11 @@ class bpmnViewer extends EventEmitter {
   getViewer() {
     return this.viewer;
   }
+
+  getProcess() {
+    return this.process;
+  }
+
 }
 
 module.exports = bpmnViewer;

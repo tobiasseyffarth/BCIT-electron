@@ -8,12 +8,14 @@
 
 <div class="menu" id="myMenu">
   <a href="#" id="btnClose">&times;</a>
+  <a href="#" id="btnGraph">Show graph</a>
   <a href="#" id="btnOpen">Open project</a>
   <a href="#" id="btnSave">Save project</a>
   <a href="#" id="btnExport_process">Export Process</a>
   <a href="#" id="btnExport_result">Export result graph</a>
   <a href="#" id="btnAbout">About</a>
 </div>
+
 
 <section class="ctrls">
   <div class="uMenu">
@@ -77,7 +79,7 @@
     <textarea id="preview-requirement"></textarea>
   </div>
   <div class="requirement">
-    <textarea id="show-requirement"></textarea>
+    <textarea id="show-requirement1"></textarea>
   </div>
   <div class="requirement">
     <textarea id="show-requirement2"></textarea>
@@ -87,6 +89,17 @@
 <section class="container-log">
   <textarea class="log-content"></textarea>
 </section>
+
+
+<div class="popup" id="popGraph">
+  <div class="controls">
+    <a href="#" id="btnClosePopGraph">&times;</a>
+  </div>
+  <div class="selected-node">node</div>
+  <div class="graph-io"></div>
+</div>
+
+
 <!--
   <div id="app" class="container" style="display: none;">
     <h1 id="greet"></h1>

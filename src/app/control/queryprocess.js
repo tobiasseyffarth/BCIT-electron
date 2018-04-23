@@ -108,3 +108,14 @@ function getFlowElementById(process, id) {
   }
   return null;
 }
+
+//testen
+function getExtensionOfElement(element) {
+  let extensionElements = [];
+
+ /* if (element.) //auf undefined prüfen --> wenn nicht elemente in das Array pushen
+
+    }
+   */
+
+}

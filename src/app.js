@@ -8,20 +8,51 @@ import "./helpers/external_links.js";
 
 /**************
  * Main
+ *
+ * emitter:
+ * 1) rendering
+ * 1a) process_rendered
+ * 1b) infra_rendered
+ * 1c) compliance_rendered
+ *
+ * 2) connect vertex
+ * 2a) addInfra2Process
+ * 2b) addCompliance2Infra
+ * 2c) addCompliance2Process
+ * 2d) addCompliance2Compliance
+ *
  */
 import bpmnView from "./app/main/bpmn-view.js";
 import complianceView from "./app/main/compliance-view";
 import infrastructureView from "./app/main/infrastructure-view";
 import menuView from "./app/main/menu-view";
+import graphView from "./app/main/graph-view";
 
+let graphViewer = new graphView({document});
 let bpmnViewer = new bpmnView({document});
 let complianceViewer = new complianceView({document});
-let infrastructureViewer = new infrastructureView({document});
+let infraViewer = new infrastructureView({document});
 let menuViewer = new menuView({document});
 
-console.log(bpmnViewer.getViewer());
 
-bpmnViewer.on('rendered', (data) => console.log('Done rendering', data));
+bpmnViewer.on('process_rendered', function (data) {
+    graphViewer.renderGraph({process: bpmnViewer.process});
+    console.log('Done rendering', data);
+    console.log(bpmnViewer.process);
+  }
+);
+
+infraViewer.on('infra_rendered', function (data) {
+    graphViewer.renderGraph({infra: infraViewer.infra});
+    console.log('infra imported');
+    console.log(infraViewer.infra);
+  }
+);
+
+complianceViewer.on('compliance_rendered', function (data) {
+    console.log(complianceViewer.compliance);
+  }
+);
 
 // ----------------------------------------------------------------------------
 // Everything below is just to show you how it works. You can delete all of it.

@@ -40,6 +40,7 @@
       <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="isComplianceProcess" value="true" />
+          <camunda:property name="isAutomatic" value="true" />
         </camunda:properties>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1hgrabz</bpmn:incoming>
