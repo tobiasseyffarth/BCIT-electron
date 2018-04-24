@@ -11,11 +11,10 @@
   <a href="#" id="btnGraph">Show graph</a>
   <a href="#" id="btnOpen">Open project</a>
   <a href="#" id="btnSave">Save project</a>
-  <a href="#" id="btnExport_process">Export Process</a>
+  <a href="#" id="btnExport_bpmn">Export Process</a>
   <a href="#" id="btnExport_result">Export result graph</a>
   <a href="#" id="btnAbout">About</a>
 </div>
-
 
 <section class="ctrls">
   <div class="uMenu">
@@ -37,7 +36,38 @@
     <div class="bpmn-io"></div>
     <div class="selected-element-id"></div>
   </div>
-  <div class="container-properties properties-panel-parent"></div>
+  <div class="container-properties">
+    <div class="bpp-properties-group" data-group="complianceGrp">
+      <span class="group-toggle"></span>
+      <span class="group-label">Process</span>
+      <div class="bpp-properties-entry bpp-textfield" data-entry="id">
+        <label for="flownode-id">Id</label>
+        <div class="bpp-field-wrapper">
+          <input id="flownode-id" type="text" name="id">
+          <button class="clear" data-action="clear" data-show="canClear" id="btnClearProcess"><span>X</span></button>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-textbox" data-entry="name">
+        <label for="flownode-name">Name</label>
+        <div class="bpp-field-wrapper">
+          <div contenteditable="true" id="flownode-name" name="name"></div>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-select" data-entry="props">
+        <label for="flownode-props">Properties</label>
+        <div class="bpp-field-wrapper">
+          <select multiple id="flownode-props" name="name"></select>
+          <button class="clear" data-action="clear" data-show="canClear" id="btnRmvExt"><span>-</span></button>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-checkbox" data-entry="props">
+        <label for="cbx-compliance">Compliance process</label>
+        <div class="bpp-field-wrapper">
+          <input id="cbx-compliance" type="checkbox" name="name">is compliance process</input>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="sub-container">
@@ -62,7 +92,7 @@
           <div contenteditable="true" id="infra-name" name="name"></div>
         </div>
       </div>
-      <div class="bpp-properties-entry bpp-textbox" data-entry="name">
+      <div class="bpp-properties-entry bpp-textbox" data-entry="props">
         <label for="infra-props">Properties</label>
         <div class="bpp-field-wrapper">
           <div contenteditable="true" id="infra-props" name="name"></div>
@@ -90,15 +120,37 @@
   <textarea class="log-content"></textarea>
 </section>
 
-
 <div class="popup" id="popGraph">
   <div class="controls">
     <a href="#" id="btnClosePopGraph">&times;</a>
   </div>
-  <div class="selected-node">node</div>
   <div class="graph-io"></div>
+  <div class="container-properties">
+    <div class="bpp-properties-group" data-group="complianceGrp">
+      <span class="group-toggle"></span>
+      <span class="group-label">Node</span>
+      <div class="bpp-properties-entry bpp-textfield" data-entry="id">
+        <label for="node-id">Id</label>
+        <div class="bpp-field-wrapper">
+          <input id="node-id" type="text" name="id">
+          <button class="clear" data-action="clear" data-show="canClear" id="btnClear-graph"><span>X</span></button>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-textbox" data-entry="name">
+        <label for="node-name">Name</label>
+        <div class="bpp-field-wrapper">
+          <div contenteditable="true" id="node-name" name="name"></div>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-textbox" data-entry="props">
+        <label for="node-props">Properties</label>
+        <div class="bpp-field-wrapper">
+          <div contenteditable="true" id="node-props" name="name"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
 
 <!--
   <div id="app" class="container" style="display: none;">

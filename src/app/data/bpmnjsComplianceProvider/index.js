@@ -16,6 +16,9 @@ const processProps = require('./parts/ProcessProps'),
 const idProps = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/IdProps');
 const nameProps = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/NameProps');
 const extProps = require('bpmn-js-properties-panel/lib/provider/camunda/parts/PropertiesProps.js');
+const processProps = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/ProcessProps');
+const exeProps = require('bpmn-js-properties-panel/lib/provider/bpmn/parts/ExecutableProps');
+const startProps = require('./parts/implementation/Props')
 
 function createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate) {
   /*
@@ -55,16 +58,16 @@ function createGeneralTabGroups(element, bpmnFactory, elementRegistry, translate
 
   idProps(compliance, element, translate);
   nameProps(compliance, element, translate);
-  extProps(compliance, element,bpmnFactory, translate);
+ // extProps(compliance, element, bpmnFactory, translate);
+  exeProps(compliance, element, translate);
+  startProps(compliance, element, translate);
 
   return [
     compliance
   ];
-
 }
 
 function TobusPropertiesProvider(eventBus, bpmnFactory, elementRegistry, translate) {
-
   PropertiesActivator.call(this, eventBus);
 
   this.getTabs = function (element) {

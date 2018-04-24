@@ -38,6 +38,7 @@
     "cytoscape": "^3.2.11",
     "fs": "0.0.1-security",
     "fs-jetpack": "^1.0.0",
+    "jquery": "^3.3.1",
     "xml-js": "^1.6.2"
   },
   "devDependencies": {

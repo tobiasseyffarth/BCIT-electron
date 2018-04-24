@@ -6,6 +6,8 @@ module.exports = {
   getFlowNodesOfProcess,
   getSequenceFlowsofProcess,
   getFlowElementById,
+  getExtensionOfElement,
+  isCompliance
 };
 
 //final
@@ -109,13 +111,44 @@ function getFlowElementById(process, id) {
   return null;
 }
 
-//testen
+//final
 function getExtensionOfElement(element) {
   let extensionElements = [];
+  let result = [];
+  let name;
+  let value;
 
- /* if (element.) //auf undefined prüfen --> wenn nicht elemente in das Array pushen
+  if (element.extensionElements != undefined) {
 
+    extensionElements = element.extensionElements.values;
+
+    for (let i in extensionElements) {
+      if (extensionElements[i].$children != undefined) { //get camunda extension
+        console.log('camunda extension');
+        console.log(extensionElements[i]);
+        for(let j in extensionElements[i].$children){
+          name = extensionElements[i].$children[j].name;
+          value = extensionElements[i].$children[j].value;
+          result.push({name: name, value: value});
+        }
+      } else { //get own extension
+        name = extensionElements[i].name;
+        value = extensionElements[i].value;
+        result.push({name: name, value: value});
+      }
     }
-   */
 
+    return result;
+  }
+}
+
+function isCompliance(element){
+  let props = getExtensionOfElement(element);
+
+  for (let j in props) { //check if the node is a compliance process
+    if (props[j].name == 'isComplianceProcess' && props[j].value == 'true') {
+      return true
+    }
+  }
+  return false;
 }

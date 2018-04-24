@@ -4,6 +4,7 @@ import dialogHelper from "./../../helpers/fileopen_dialogs";
 import processio from "../control/processio";
 import loadCompliance from "../data/compliance/loadCompliance";
 import log from "./../../helpers/logs";
+import gui from "./../../helpers/gui";
 
 /*****
  * Basic config
@@ -81,9 +82,22 @@ class complianceView extends EventEmitter {
     }
   }
 
-  removeListRequirement(list) {
-    for (let i in list) {
-      list.remove(i);
+  addListRequirement(compliance) {
+    if (compliance.requirement != undefined) {
+      for (let i in compliance.requirement) {
+        let option = new Option();
+        option.text = compliance.requirement[i].id;
+        this.listRequirement.add(option);
+      }
+    }
+
+    if (compliance.length > 0) {
+
+      for (let i in compliance) {
+        let option = new Option();
+        option.text = compliance[i].id;
+        this.listRequirement.add(option);
+      }
     }
   }
 
@@ -92,12 +106,12 @@ class complianceView extends EventEmitter {
     let compliance = this.compliance;
 
     if (search.length > 0) {
-      this.removeListRequirement(this.listRequirement);
+      gui.clearList(this.listRequirement);
       let result = [];
       result = compliance.getRequirementContainsText(search);
       this.addListRequirement(result);
     } else {
-      this.removeListRequirement(this.listRequirement);
+      gui.clearList(this.listRequirement);
       this.addListRequirement(compliance);
     }
   }

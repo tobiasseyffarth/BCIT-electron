@@ -65,6 +65,7 @@ class menuView {
     this.document.getElementById("popGraph").style.width = "70%";
     this.document.getElementById("popGraph").style.heigth = "100%";
     this.document.getElementById('popGraph').style.marginLeft = "150px";
+    this.document.getElementById('popGraph').style.left = "0px";
     this.document.querySelector('.ctrls').style.marginLeft = "500px";
     this.document.querySelector('.container-process').style.marginLeft = "500px";
     this.document.querySelector('.sub-container').style.marginLeft = "500px";

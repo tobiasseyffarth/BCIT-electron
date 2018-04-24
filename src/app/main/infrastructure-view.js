@@ -17,7 +17,7 @@ const baseConfig = {
   xmlUploadButton: "#uploadInfra",
 };
 
-class infrastructureView extends EventEmitter{
+class infrastructureView extends EventEmitter {
   constructor(options) {
     super();
     if (!options) options = {};
@@ -107,15 +107,7 @@ class infrastructureView extends EventEmitter{
           //console.log('taped on node');
           _this.selectedElement = element;
           _this.clearITProps();
-          _this.infraId.value = _this.selectedElement.id();
-          _this.infraName.textContent = _this.selectedElement.data('name');
-
-          let props = _this.selectedElement.data('props');
-          if (props.length > 0) { //getElementProperties and display in ProperyPanel
-            for (let i in props) {
-              _this.infraProps.textContent = _this.infraProps.textContent + '\n' + props[i].name + ": " + props[i].value;
-            }
-          }
+          _this.showITProps();
         }
         if (element.isEdge()) {
           //console.log('taped on edge');
@@ -130,6 +122,18 @@ class infrastructureView extends EventEmitter{
     this.infraName.textContent = "";
     this.infraId.value = "";
     this.infraProps.textContent = "";
+  }
+
+  showITProps() {
+    this.infraId.value = this.selectedElement.id();
+    this.infraName.textContent = this.selectedElement.data('name');
+
+    let props = this.selectedElement.data('props');
+    if (props.length > 0) { //getElementProperties and display in ProperyPanel
+      for (let i in props) {
+        this.infraProps.textContent = this.infraProps.textContent + '\r \n' + props[i].name + ": " + props[i].value;
+      }
+    }
   }
 
 }

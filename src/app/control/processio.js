@@ -1,7 +1,7 @@
 import fs from "fs";
 
 module.exports = {
-  readFile, writeBpmnToXML
+  readFile, saveXml
 };
 
 function readFile(url) {
@@ -14,13 +14,11 @@ function readFile(url) {
     });
 }
 
-//todo: wie kann der Prozess zu xml geschrieben werden?
-function writeBpmnToXML(viewer) { //saveXML
-  viewer.toXML({format: true}, function (err, xml) {
-    return xml;
+//final
+function saveXml(viewer) {
+  let result;
+  viewer.saveXML({format: true}, function (err, xml) {
+    result=xml;
   });
-}
-
-function readBpmn(filename){
-
+  return result;
 }

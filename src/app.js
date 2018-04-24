@@ -21,12 +21,17 @@ import "./helpers/external_links.js";
  * 2c) addCompliance2Process
  * 2d) addCompliance2Compliance
  *
+ * 3) update vertex
+ * 3a) process: flownode_updated
+ * 3a) infra: infraelement_updated
+ *
  */
 import bpmnView from "./app/main/bpmn-view.js";
 import complianceView from "./app/main/compliance-view";
 import infrastructureView from "./app/main/infrastructure-view";
 import menuView from "./app/main/menu-view";
 import graphView from "./app/main/graph-view";
+import graphcontroller from "./app/control/creategraph";
 
 let graphViewer = new graphView({document});
 let bpmnViewer = new bpmnView({document});
@@ -37,15 +42,17 @@ let menuViewer = new menuView({document});
 
 bpmnViewer.on('process_rendered', function (data) {
     graphViewer.renderGraph({process: bpmnViewer.process});
-    console.log('Done rendering', data);
     console.log(bpmnViewer.process);
+  }
+);
+
+bpmnViewer.on('flownode_updated', function (data) {
+    graphcontroller.updateFlownodeProperty(graphViewer.graph, bpmnViewer.selectedElement);
   }
 );
 
 infraViewer.on('infra_rendered', function (data) {
     graphViewer.renderGraph({infra: infraViewer.infra});
-    console.log('infra imported');
-    console.log(infraViewer.infra);
   }
 );
 

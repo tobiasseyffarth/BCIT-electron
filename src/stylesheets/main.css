@@ -75,7 +75,7 @@ a {
 .menu .btnClose {
   position: fixed;
   top: 0px;
-  left: 20px;
+  right: 20px;
   /*font-size: 10px;*/
   margin-left: 50px;
 }
@@ -87,10 +87,10 @@ a {
 .popup {
   /* Height & width depends on how you want to reveal the overlay (see JS below) */
   height: 100%;
-  width: 100px; /*ANPASSEN*/
+  width: 300px; /*ANPASSEN*/
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  left: -100px;
+  left: -300px;
   top: 0;
   background-color: rgb(255, 255, 255); /* Black fallback color */
   /* background-color: rgba(255, 255, 255, 0.9);  Black w/opacity */
@@ -98,25 +98,18 @@ a {
   transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
 }
 
-.popup .container-graph{
-  flex: 40%;
-  position: relative;
-  flex-direction: column;
-}
-
 .popup .controls{
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
+  height: auto;
+  width: 99%;
 }
 
-.popup .selected-node{
-  height: 10%;
+.popup .container-properties{
+  height: 22%;
   width: 99%;
 }
 
 .popup .graph-io{
-  height: 85%;
+  height: 75%;
   width: 99%;
 }
 
@@ -148,6 +141,7 @@ a {
   left: 5px;
   top: 2px;
 }
+
 
 /**************************************************
 2. Section Process container
@@ -257,6 +251,16 @@ a {
   width: 260px;
   background-color: #f8f8f8;
   border-left: 1px solid #ccc;
+}
+
+#flownode-props{
+  width: 80%;
+  height: 5em;
+}
+
+#btnRmvExt{
+  background-color: #f8f8f8;
+  border-style: none;
 }
 
 /**************************************************
