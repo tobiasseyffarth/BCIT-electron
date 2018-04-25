@@ -1,7 +1,7 @@
 import BpmnModdle from 'bpmn-moddle';
 
 module.exports = {
-  addElements, definition2xml, addExtension, defineAsComplianceProcess
+  addElements, definition2xml, addExtension, defineAsComplianceProcess, removeExt
 };
 
 function updateProperty_a(element) {
@@ -105,14 +105,21 @@ function createExtensionElement(name, value) {
 }
 
 //final
-function removeExtensionElement(extensionElements, name, value) {
+function removeExt(extensionElements, option) {
   let ext = extensionElements.get('values');
+  let name = option.name;
+  let value = option.value;
+  let index = option.index;
 
-  for (let i in ext) {
-    if (ext[i].name == name && ext[i].value == value) {
-      ext.splice(i, 1);
-      break;
+  if (index == null) {
+    for (let i in ext) {
+      if (ext[i].name == name && ext[i].value == value) {
+        ext.splice(i, 1);
+        break;
+      }
     }
+  } else {
+    ext.splice(index, 1);
   }
 }
 
@@ -122,7 +129,7 @@ function defineAsComplianceProcess(viewer, element, status) {
     let extension = createExtensionElement('isComplianceProcess', 'true');
     addExtension(viewer, element, extension);
   } else { //undo a seted compliance process
-    removeExtensionElement(element.extensionElements, 'isComplianceProcess', 'true');
+    removeExt(element.extensionElements, {name: 'isComplianceProcess', value: 'true'});
   }
 }
 

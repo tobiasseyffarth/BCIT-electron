@@ -44,11 +44,10 @@ class bpmnViewer extends EventEmitter {
     this.btnExportbpmn = options.btnExportbpmn || baseConfig.btnExportbpmn;
     this.flownodeId = this.document.getElementById('flownode-id');
     this.flownodeName = this.document.getElementById('flownode-name');
-    this.flownodeProps = this.document.getElementById('flownode-props');
+    this.lstnodeExtension = this.document.getElementById('flownode-props');
     this.cbxCompliance = this.document.getElementById('cbx-compliance');
     this.btnClear = this.document.getElementById('btnClearProcess');
     this.btnRmvExt = this.document.getElementById('btnRmvExt');
-
 
     this.viewer = null;
     this.selectedElement = null; //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
@@ -101,7 +100,7 @@ class bpmnViewer extends EventEmitter {
     }
 
     if (this.btnRmvExt) {
-      this.btnRmvExt.addEventListener("click", () => this.removeExtension(), true);
+      this.btnRmvExt.addEventListener("click", () => this.removeProcessExtension(), true);
     }
 
     if (this.cbxCompliance) {
@@ -187,72 +186,43 @@ class bpmnViewer extends EventEmitter {
     //editprocess.addElements(this.viewer, this.process);
     //editprocess.addExtension(this.viewer, this.selectedElement);
 
-    this.showProcessProps();
+    this.renderProcessProps();
     this.emit('flownode_updated', {done: true});
-
-    let flowElements = [];
-    let flowNodes = [];
-    let sequenceFlows = [];
-
-    /*
-        flowElements = queryprocess.getFlowElementsOfProcess(this.process);
-        flowNodes = queryprocess.getFlowNodesOfProcess(this.process);
-        sequenceFlows = queryprocess.getSequenceFlowsofProcess(this.process);
-
-
-        console.log('Flow Elements');
-        for (let i = 0; i < flowElements.length; i++) {
-          console.log(flowElements[i]);
-        }
-
-        console.log('Flow Nodes');
-        for (let i = 0; i < flowNodes.length; i++) {
-          console.log(flowNodes[i]);
-        }
-
-        console.log('Sequence Flow');
-        for (let i = 0; i < sequenceFlows.length; i++) {
-          console.log(sequenceFlows[i]);
-        }
-
-        console.log('Suche nach der ID');
-        let node = queryprocess.getFlowElementById(p, 'StartEvent_1');
-        console.log(node);
-      */
   }
 
-  getViewer() {
-    return this.viewer;
-  }
-
-  getProcess() {
-    return this.process;
-  }
-
-  showProcessProps() {
+  renderProcessProps() {
     let element = this.selectedElement;
+    this.clearProcessProps();
 
     this.flownodeId.value = element.id;
     this.flownodeName.textContent = element.name;
     this.cbxCompliance.checked = queryprocess.isCompliance(element);
-
-
-    console.log(queryprocess.getExtensionOfElement(element));
+    this.renderProcessExtension();
   }
 
   clearProcessProps() {
     this.flownodeId.value = "";
     this.flownodeName.textContent = "";
     this.cbxCompliance.checked = false;
-    gui.clearList(this.flownodeProps);
+    gui.clearList(this.lstnodeExtension);
   }
 
-  showProcessExtension(){ //
+  renderProcessExtension() { //
+    gui.clearList(this.lstnodeExtension);
+    let extension = queryprocess.getExtensionOfElement(this.selectedElement);
 
+    for (let i in extension) {
+      let option = new Option();
+      option.text = extension[i].name + ': ' + extension[i].value;
+      this.lstnodeExtension.add(option);
+    }
   }
 
-  removeExtension() {
-    console.log('click');
+  removeProcessExtension() {
+    let index = this.lstnodeExtension.selectedIndex;
+    editprocess.removeExt(this.selectedElement.extensionElements, {index: index});
+    this.renderProcessProps(); //
+    this.emit('flownode_updated', {done: true});
   }
 
   defineComplianceProcess() {
@@ -261,7 +231,8 @@ class bpmnViewer extends EventEmitter {
     } else {
       editprocess.defineAsComplianceProcess(this.viewer, this.selectedElement, false);
     }
-    console.log(this.selectedElement);
+    this.renderProcessProps();
+    this.emit('flownode_updated', {done: true});
   }
 
 }
