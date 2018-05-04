@@ -56,6 +56,11 @@ infraViewer.on('infra_rendered', function (data) {
   }
 );
 
+infraViewer.on('itcomponent_updated', function (data) {
+    graphcontroller.updateITComponentProperty(graphViewer.graph, infraViewer.selectedElement);
+  }
+);
+
 complianceViewer.on('compliance_rendered', function (data) {
     console.log(complianceViewer.compliance);
   }

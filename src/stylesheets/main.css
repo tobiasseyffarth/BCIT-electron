@@ -229,6 +229,16 @@ a {
   flex-direction: column;
 }
 
+#infra-props{
+  width: 80%;
+  height: 5em;
+}
+
+#btnRmvProp{
+  background-color: #f8f8f8;
+  border-style: none;
+}
+
 .container-infrastructure .infra-io{
   height: 90%;
   width: 99%;

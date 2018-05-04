@@ -3,7 +3,10 @@ import queryinfra from './queryInfrastructure';
 import queryprocess from './queryprocess';
 
 module.exports = {
-  createGraphFromInfra, createGraphFromProcess, updateFlownodeProperty
+  createGraphFromInfra,
+  createGraphFromProcess,
+  updateFlownodeProperty,
+  updateITComponentProperty
 };
 
 //final
@@ -107,8 +110,11 @@ function updateFlownodeProperty(graph, flownode){
   node.data('props', props);
 }
 
-function updateInfraelementProperty(graph, element){
+function updateITComponentProperty(graph, element){
+  let node = graph.getElementById(element.id);
+  let props = element.props;
 
+  node.data('props',props);
 }
 
 function createGraphFromCompliance() {

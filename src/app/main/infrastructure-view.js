@@ -1,3 +1,5 @@
+import gui from "../../helpers/gui";
+
 const EventEmitter = require('events');
 
 import dialogHelper from "./../../helpers/fileopen_dialogs";
@@ -8,6 +10,8 @@ import queryInfra from './../control/queryInfrastructure';
 import cytoscape from 'cytoscape';
 import graphcreator from './../control/creategraph';
 import log from "./../../helpers/logs";
+import queryprocess from "../control/queryprocess";
+import editprocess from "../control/editprocess";
 
 /*****
  * Basic config
@@ -26,10 +30,13 @@ class infrastructureView extends EventEmitter {
     this.xmlUploadButton = options.xmlUploadButton || baseConfig.xmlUploadButton;
     this.infraContainer = this.document.querySelector('.infra-io');
 
+    this.infraPanel = this.document.getElementById('infra-panel');
     this.btnClear = this.document.getElementById('btnClear');
+    this.btnRemove = this.document.getElementById('btnRmvProp');
     this.infraName = this.document.getElementById('infra-name'); // get Textfield from Propertypanel Infra
     this.infraId = this.document.getElementById('infra-id'); // get ID-Field from Propertypanel Infra
     this.infraProps = this.document.getElementById('infra-props'); // get Props-Field from Propertypanel Infra
+
 
     this.graph = cytoscape({
       container: this.infraContainer,
@@ -55,7 +62,8 @@ class infrastructureView extends EventEmitter {
       ],
     }); // create an enmpty graph and define its style
     this.infra = null; // stores our infrastructure model
-    this.selectedElement = null; //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
+    this.selectedNode = null; //graph node //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
+    this.selectedElement=null; // query IT component from selectedNode
 
     this.initInfrastructureView();
     this.clickGraph();
@@ -73,6 +81,15 @@ class infrastructureView extends EventEmitter {
     if (this.btnClear) {
       //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
       this.btnClear.addEventListener("click", () => this.clearITProps());
+    }
+
+    if (this.btnRemove) {
+      //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
+      this.btnRemove.addEventListener("click", () => this.removeITProps());
+    }
+
+    if (this.infraPanel) {
+      this.infraPanel.addEventListener("drag", () => this.dragITcomponent());
     }
 
     let xml = await processio.readFile('./resources/it-architecture/architecture.xml'); //read infra-exchange-file
@@ -105,9 +122,9 @@ class infrastructureView extends EventEmitter {
       } else {
         if (element.isNode()) {
           //console.log('taped on node');
-          _this.selectedElement = element;
+          _this.selectedNode = element;
           _this.clearITProps();
-          _this.showITProps();
+          _this.renderITProps();
         }
         if (element.isEdge()) {
           //console.log('taped on edge');
@@ -124,16 +141,36 @@ class infrastructureView extends EventEmitter {
     this.infraProps.textContent = "";
   }
 
-  showITProps() {
-    this.infraId.value = this.selectedElement.id();
-    this.infraName.textContent = this.selectedElement.data('name');
+  renderITProps() {
+    this.infraId.value = this.selectedNode.id();
+    this.infraName.textContent = this.selectedNode.data('name');
 
-    let props = this.selectedElement.data('props');
+    let props = this.selectedNode.data('props');
+    gui.clearList(this.infraProps);
     if (props.length > 0) { //getElementProperties and display in ProperyPanel
       for (let i in props) {
-        this.infraProps.textContent = this.infraProps.textContent + '\r \n' + props[i].name + ": " + props[i].value;
+        let option = new Option();
+        option.text = props[i].name + ': ' + props[i].value;
+        this.infraProps.add(option);
       }
     }
+  }
+
+  removeITProps() {
+    let index = this.infraProps.selectedIndex;
+
+    if (index > -1) {
+      this.selectedElement = queryInfra.getElementById(this.infra, this.selectedNode.id());
+
+      queryInfra.removeITProps(this.selectedElement, index);
+      graphcreator.updateITComponentProperty(this.graph, this.selectedElement);
+      this.renderITProps();
+      this.emit('itcomponent_updated', {done: true});
+    }
+  }
+
+  dragITcomponent() {
+    console.log('click');
   }
 
 }

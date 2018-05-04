@@ -24,6 +24,8 @@ class complianceView extends EventEmitter {
     this.searchRequirement = this.document.querySelector('.input-search-requirement');
     this.listRequirement = this.document.getElementById('select-requirement');
     this.previewRequirement = this.document.getElementById('preview-requirement');
+    this.showRequirement1=this.document.getElementById('show-requirement1');
+    this.showRequirement2=this.document.getElementById('show-requirement2');
 
     this.compliance = null; //stores our compliance model
     this.selectedElement = null; //todo: beim Verbinden der Graphen verwenden
@@ -34,6 +36,7 @@ class complianceView extends EventEmitter {
   initComplianceView() {
     //File open Dialog anlegen. Ausgewählte Datei wird dann dem Viewer zugeführt
     let uploadBpmn = this.document.querySelector(this.xmlUploadButton);
+
     if (uploadBpmn) {
       //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
       uploadBpmn.addEventListener("click", () => this.xmlUploadOnClick());
@@ -49,6 +52,12 @@ class complianceView extends EventEmitter {
 
     if (this.listRequirement) {
       this.listRequirement.addEventListener("click", () => this.requirementListOnClick('click'));
+      this.listRequirement.addEventListener("drag", () => this.requirementListOnDragStart(event));
+    }
+
+    if(this.showRequirement1){
+      this.showRequirement1.addEventListener("drop", () => this.requirementListOnDrop(event));
+      this.showRequirement1.addEventListener("dragover", () => this.allowDrop(event));
     }
   }
 
@@ -127,6 +136,21 @@ class complianceView extends EventEmitter {
     id = this.listRequirement.options[this.listRequirement.selectedIndex].text;
     this.previewRequirement.value = compliance.toString(id);
   }
+
+  requirementListOnDragStart(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+    console.log("drag and drop");
+  }
+
+  requirementListOnDrop(ev){
+    console.log("Source: "+ev.target.id);
+    console.log(ev.dataTransfer.getData("text"));
+  }
+
+  allowDrop(ev) {
+    ev.preventDefault();
+  }
+
 }
 
 module.exports = complianceView;

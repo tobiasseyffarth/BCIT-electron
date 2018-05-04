@@ -23,16 +23,17 @@ class menuView {
   }
 
   initMenuView() {
-    let menu = this.menuButton;
-    let close = this.closeButton;
+    let btnMenu = this.menuButton;
+    let btnClose = this.closeButton;
     let btnGraph = this.btnGraph;
-    if (menu) {
+
+    if (btnMenu) {
       //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
-      menu.addEventListener("click", () => this.openMenu());
+      btnMenu.addEventListener("click", () => this.openMenu());
     }
 
-    if (close) {
-      close.addEventListener("click", () => this.closeMenu());
+    if (btnClose) {
+      btnClose.addEventListener("click", () => this.closeMenu());
     }
 
     if (btnGraph) {

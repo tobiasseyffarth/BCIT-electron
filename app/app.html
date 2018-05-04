@@ -21,13 +21,13 @@
     <button type="button" class="btn btn-outline-danger" id="menu">&#9776</button>
   </div>
   <div class="uBpmn">
-    <button type="button" class="btn btn-outline-success" id="uploadBpmn">Upload BPMN</button>
+    <button type="button" class="btn btn-outline-success" id="uploadBpmn">Upload Process</button>
+  </div>
+  <div class="uInfrastructure">
+    <button type="button" class="btn btn-outline-success" id="uploadInfra">Upload IT Architecture</button>
   </div>
   <div class="uCompliance">
     <button type="button" class="btn btn-outline-success" id="uploadComplianceXML">Upload Compliance</button>
-  </div>
-  <div class="uInfrastructure">
-    <button type="button" class="btn btn-outline-success" id="uploadInfra">Upload Infrastructure</button>
   </div>
 </section>
 
@@ -75,8 +75,8 @@
     <div class="infra-io"></div>
     <div class="selected-infra-element" id="selected-infra-element"></div>
   </div>
-  <div class="container-properties">
-    <div class="bpp-properties-group" data-group="complianceGrp">
+  <div class="container-properties" id="infra-panel">
+    <div class="bpp-properties-group" data-group="complianceGrp" draggable="true">
       <span class="group-toggle"></span>
       <span class="group-label">Infrastructure</span>
       <div class="bpp-properties-entry bpp-textfield" data-entry="id">
@@ -95,7 +95,8 @@
       <div class="bpp-properties-entry bpp-textbox" data-entry="props">
         <label for="infra-props">Properties</label>
         <div class="bpp-field-wrapper">
-          <div contenteditable="true" id="infra-props" name="name"></div>
+          <select multiple id="infra-props" name="name"></select>
+          <button class="clear" data-action="clear" data-show="canClear" id="btnRmvProp"><span>-</span></button>
         </div>
       </div>
     </div>
@@ -105,7 +106,7 @@
 <section class="sub-container">
   <div class="container-compliance">
     <input class="input-search-requirement" id="search-requirement"></input>
-    <select multiple class="list-requirement" id="select-requirement"></select>
+    <select multiple class="list-requirement" id="select-requirement" draggable="true"></select>
     <textarea id="preview-requirement"></textarea>
   </div>
   <div class="requirement">
