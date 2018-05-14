@@ -87,10 +87,6 @@ class infrastructureView extends EventEmitter {
       this.btnRemove.addEventListener("click", () => this.removeITProps());
     }
 
-    if (this.infraPanel) {
-      this.infraPanel.addEventListener("drag", () => this.dragITcomponent());
-    }
-
     let xml = await processio.readFile('./resources/it-architecture/architecture.xml'); //read infra-exchange-file
     this.infra = loadInfraKai.getInfra(xml); //parsing infra-exchange-file
     this.renderInfraXml(); //render infra to gui
@@ -168,10 +164,6 @@ class infrastructureView extends EventEmitter {
       this.renderITProps();
       this.emit('remove_itcomponent_props', {done: true});
     }
-  }
-
-  dragITcomponent() {
-    console.log('click');
   }
 
 }

@@ -1,7 +1,13 @@
 import BpmnModdle from 'bpmn-moddle';
+import processquery from './queryprocess';
 
 module.exports = {
-  addElements, definition2xml, addExtension, defineAsComplianceProcess, removeExt
+  addElements,
+  definition2xml,
+  addExtension,
+  defineAsComplianceProcess,
+  removeExt,
+  createExtensionElement
 };
 
 function updateProperty_a(element) {
@@ -46,7 +52,6 @@ function colorElement(element) {
 die Methoden zum "Programmieren" eines Prozesses anschauen.
  */
 
-
 //final
 function addElements(viewer, process) {
 
@@ -73,23 +78,14 @@ function addElements(viewer, process) {
 
 }
 
-
 function addExtension(viewer, element, extension) {
   let moddle = viewer.get('moddle'); // Moddle verändert das Datenmodell
-  //let moddle = new BpmnModdle();
   let extensionElements = moddle.create('bpmn:ExtensionElements'); //moddle.create('bpmn:DataObject', {id: 'dataObject_2'}); // mit moddle.create können beliebige BPMN-Objekte erzeugt werden
-
-  // let ext = createExtensionElement('infra', '12344');
-  // let ext2 = createExtensionElement('source', '12344');
-  // let ext3 = createExtensionElement('comp', '12344');
 
   if (element.extensionElements == undefined) { //todo: bestehende Extension updaten
     element.extensionElements = extensionElements;
   }
 
-  // element.extensionElements.get('values').push(ext);
-  // element.extensionElements.get('values').push(ext2);
-  // element.extensionElements.get('values').push(ext3);
   element.extensionElements.get('values').push(extension);
 }
 
@@ -128,7 +124,7 @@ function defineAsComplianceProcess(viewer, element, status) {
   if (status == true) { //if element shall be set as a compliance process
     let extension = createExtensionElement('isComplianceProcess', 'true');
     addExtension(viewer, element, extension);
-  } else { //undo a seted compliance process
+  } else { //undo a set compliance process
     removeExt(element.extensionElements, {name: 'isComplianceProcess', value: 'true'});
   }
 }

@@ -7,7 +7,9 @@ module.exports = {
   getSequenceFlowsofProcess,
   getFlowElementById,
   getExtensionOfElement,
-  isCompliance
+  isCompliance,
+  hasComplianceExt,
+  isUniqueExtension
 };
 
 //final
@@ -144,11 +146,40 @@ function getExtensionOfElement(element) {
 
 function isCompliance(element){
   let props = getExtensionOfElement(element);
-
   for (let j in props) { //check if the node is a compliance process
     if (props[j].name == 'isComplianceProcess' && props[j].value == 'true') {
+      console.log('is compliance process');
       return true
     }
   }
   return false;
+}
+
+//final
+function hasComplianceExt(element){
+  let props = getExtensionOfElement(element);
+  for (let j in props) { //check if the node is a compliance process
+    if (props[j].name == 'compliance') {
+      console.log('has compliance req');
+      return true
+    }
+  }
+  return false;
+}
+
+//final
+function isUniqueExtension(viewer, element, extension) {
+
+  if (element.extensionElements == undefined) {
+    return true;
+  } else {
+    let ext = element.extensionElements.get('values');
+    for (let i = 0; i < ext.length; i++) {
+      if (ext[i].name == extension.name && ext[i].value == extension.value) {
+        return false;
+        break;
+      }
+    }
+  }
+  return true;
 }

@@ -222,7 +222,7 @@ class bpmnViewer extends EventEmitter {
     let index = this.lstnodeExtension.selectedIndex;
     editprocess.removeExt(this.selectedElement.extensionElements, {index: index});
     this.renderProcessProps(); //
-    this.emit('flownode_updated', {done: true});
+    this.emit('flowelement_updated', {done: true});
   }
 
   defineComplianceProcess() {
@@ -232,7 +232,7 @@ class bpmnViewer extends EventEmitter {
       editprocess.defineAsComplianceProcess(this.viewer, this.selectedElement, false);
     }
     this.renderProcessProps();
-    this.emit('flownode_updated', {done: true});
+    this.emit('flowelement_updated', {done: true});
   }
 
 }

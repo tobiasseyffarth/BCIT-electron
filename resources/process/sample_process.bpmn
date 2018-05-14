@@ -37,12 +37,6 @@
       <bpmn:outgoing>SequenceFlow_1cc0c5w</bpmn:outgoing>
     </bpmn:parallelGateway>
     <bpmn:subProcess id="SubProcess_1kzc182" name="Approve invoice payment">
-      <bpmn:extensionElements>
-        <camunda:properties>
-          <camunda:property name="isComplianceProcess" value="true" />
-          <camunda:property name="isAutomatic" value="true" />
-        </camunda:properties>
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1hgrabz</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_05ylsat</bpmn:outgoing>
     </bpmn:subProcess>

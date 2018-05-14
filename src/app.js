@@ -16,7 +16,7 @@ import "./helpers/external_links.js";
  * 1c) compliance_rendered -> done
  *
  * 2) connect vertex
- * 2a) addInfra2Process
+ * 2a) link_infra-process
  * 2b) link_requirement-infra -> done
  * 2c) link_requirement-process
  * 2d) link_requirement-requirement -> done
@@ -33,6 +33,8 @@ import menuView from "./app/main/menu-view";
 import graphView from "./app/main/graph-view";
 import graphcontroller from "./app/control/creategraph";
 import queryinfra from "./app/control/queryInfrastructure";
+import queryprocess from "./app/control/queryprocess";
+import processeditor from "./app/control/editprocess";
 
 let graphViewer = new graphView({document});
 let bpmnViewer = new bpmnView({document});
@@ -47,8 +49,13 @@ bpmnViewer.on('process_rendered', function (data) {
   }
 );
 
-bpmnViewer.on('flownode_updated', function (data) {
-    graphcontroller.updateFlownodeProperty(graphViewer.graph, bpmnViewer.selectedElement);
+bpmnViewer.on('flowelement_updated', function (data) {
+    let graph = graphViewer.graph;
+    let flowelement = bpmnViewer.selectedElement;
+
+    graphcontroller.updateFlownodeProperty(graph, flowelement);
+    graphcontroller.updateComplianceNode(graph, flowelement);
+    graphcontroller.updateNeighborsBasedOnProps(graph, flowelement);
   }
 );
 
@@ -73,8 +80,8 @@ complianceViewer.on('compliance_rendered', function (data) {
 
 complianceViewer.on('link_requirement-requirement', function (data) {
     graphcontroller.addNodes(graphViewer.graph, {
-      source_requirement: complianceViewer.selectedSourceRequirement,
-      target_requirement: complianceViewer.selectedTargetRequirement
+      requirement: complianceViewer.selectedSourceRequirement,
+      requirement_2: complianceViewer.selectedTargetRequirement
     });
   }
 );
@@ -86,13 +93,13 @@ complianceViewer.on('link_requirement-infra', function (data) {
     let graph_viewer = graphViewer.graph;
 
     if (itcomponent != null) {
-      let isUpdated;
-      isUpdated = queryinfra.updateITProps(itcomponent, {requirement: requirement});// 1. zu props infra hinzufügen
-      if (isUpdated) { //if new Props are added
+      let isUniqueProp = queryinfra.isUniqueProp(itcomponent, {requirement: requirement});
+      if (isUniqueProp) { //if new Props are added
+        queryinfra.updateITProps(itcomponent, {requirement: requirement});// 1. zu props infra hinzufügen
         graphcontroller.updateITComponentProperty(graph_infra, itcomponent);//2. Graph in infraviewer updaten
         infraViewer.renderITProps(); //3. infraprops neu rendern
         graphcontroller.updateITComponentProperty(graph_viewer, itcomponent); // 4. graph in graphviewer updaten
-        graphcontroller.addNodes(graph_viewer, {source_requirement: requirement, target_itcomponent: itcomponent}); // 5. create and link nodes
+        graphcontroller.addNodes(graph_viewer, {requirement: requirement, itcomponent: itcomponent}); // 5. create and link nodes
       }
     }
   }
@@ -100,13 +107,20 @@ complianceViewer.on('link_requirement-infra', function (data) {
 
 complianceViewer.on('link_requirement-process', function (data) {
     let flowelement = bpmnViewer.selectedElement;
+    let bpmn_viewer = bpmnViewer.viewer;
     let requirement = complianceViewer.selectedRequirement;
     let graph_viewer = graphViewer.graph;
 
-    if (flowelement != null) {
-      queryinfra.updateITProps(itcomponent, {requirement: requirement});// 1. zu props flowelement hinzufügen
-      infraViewer.renderITProps(); //2. processprops neu rendern
-      graphcontroller.updateITComponentProperty(graph_viewer, itcomponent); // 3. graph in graphviewer updaten
+    if (flowelement != null && requirement != null) {
+      let extension = processeditor.createExtensionElement('compliance', requirement.id);
+      let isUniqueExt = queryprocess.isUniqueExtension(bpmn_viewer, flowelement, extension);
+
+      if (isUniqueExt) {
+        processeditor.addExtension(bpmn_viewer, flowelement, extension); // 1. zu props flowelement hinzufügen
+        bpmnViewer.renderProcessProps(); //2. processprops neu rendern
+        graphcontroller.updateFlownodeProperty(graph_viewer, flowelement); // 3. graph in graphviewer updaten
+        graphcontroller.addNodes(graph_viewer, {requirement: requirement, flowelement: flowelement}); // 4. create and link nodes
+      }
     }
   }
 );

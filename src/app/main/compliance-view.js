@@ -28,6 +28,7 @@ class complianceView extends EventEmitter {
     this.showRequirement2 = this.document.getElementById('show-requirement2');
     this.btnLink = this.document.getElementById('btnLinkRequirement');
     this.infraPanel = this.document.getElementById('infra-panel'); //allow drop to emit linking requirement and it component
+    this.processPanel=this.document.getElementById('process-panel'); //allow drop to emit linking requirement and flowelement
 
     this.compliance = null; //stores our compliance model
     this.selectedRequirement = null; //contains the requirement shown in the preview
@@ -77,6 +78,11 @@ class complianceView extends EventEmitter {
     if (this.infraPanel) {
       this.infraPanel.addEventListener("dragover", () => this.allowDrop(event));
       this.infraPanel.addEventListener("drop", () => this.onDropInfrapanel(event, this.dragEvent));
+    }
+
+    if (this.processPanel) {
+      this.processPanel.addEventListener("dragover", () => this.allowDrop(event));
+      this.processPanel.addEventListener("drop", () => this.onDropProcesspanel(event, this.dragEvent));
     }
   }
 
@@ -184,6 +190,16 @@ class complianceView extends EventEmitter {
     if (dragSource == this.previewRequirement.id) {
       this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
       this.emit('link_requirement-infra', {done: true});
+    }
+  }
+
+  onDropProcesspanel(ev, dragEv) {
+    ev.preventDefault();
+    let dragSource = dragEv.target.id;
+
+    if (dragSource == this.previewRequirement.id) {
+      this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
+      this.emit('link_requirement-process', {done: true});
     }
   }
 
