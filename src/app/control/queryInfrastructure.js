@@ -3,7 +3,8 @@ module.exports = {
   getSequences,
   getElementById,
   getMetadata,
-  removeITProps
+  removeITProps,
+  updateITProps
 };
 
 //final
@@ -50,4 +51,27 @@ function getMetadata(infra) {
 function removeITProps(element, index) {
   let props = element.props;
   props.splice(index, 1);
+}
+
+//final
+function updateITProps(element, property) {
+  let requirement = property.requirement;
+  let props = element.props;
+  let updateProps = true;
+  let name = 'compliance';
+
+  if (requirement != null) {
+    for (let i in props) {
+      if (props[i].name == name && props[i].value == requirement.id) {
+        updateProps = false;
+        break;
+      }
+    }
+
+    if (updateProps) { //avoid to insert a duplicate
+      props.push({name: name, value: requirement.id});
+    }
+    return updateProps;
+  }
+  return false;
 }

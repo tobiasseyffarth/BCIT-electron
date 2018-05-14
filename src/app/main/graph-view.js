@@ -33,17 +33,20 @@ class graphView {
           selector: 'node',
           style: {
             'background-color': '#666',
-            'label': 'data(id)'
+            'label': 'data(id)',
+            'font-size': 10,
+            'text-wrap': 'wrap',
+            'text-max-width': 20
           }
         },
-
         {
           selector: 'edge',
           style: {
-            'width': 3,
-            'line-color': '#ccc',
-            'target-arrow-color': '#ccc',
-            'target-arrow-shape': 'triangle'
+            'width': 1,
+            'line-color': '#666',
+            'mid-target-arrow-color': '#666',
+            'mid-target-arrow-shape': 'triangle',
+            'line-style': 'dotted'
           }
         }
       ],

@@ -75,8 +75,8 @@
     <div class="infra-io"></div>
     <div class="selected-infra-element" id="selected-infra-element"></div>
   </div>
-  <div class="container-properties" id="infra-panel">
-    <div class="bpp-properties-group" data-group="complianceGrp" draggable="true">
+  <div class="container-properties" id="infra-panel" draggable="true">
+    <div class="bpp-properties-group" data-group="complianceGrp">
       <span class="group-toggle"></span>
       <span class="group-label">Infrastructure</span>
       <div class="bpp-properties-entry bpp-textfield" data-entry="id">
@@ -106,11 +106,14 @@
 <section class="sub-container">
   <div class="container-compliance">
     <input class="input-search-requirement" id="search-requirement"></input>
-    <select multiple class="list-requirement" id="select-requirement" draggable="true"></select>
-    <textarea id="preview-requirement"></textarea>
+    <select multiple class="list-requirement" id="select-requirement"></select>
+    <textarea id="preview-requirement" draggable="true" readonly></textarea>
   </div>
   <div class="requirement">
     <textarea id="show-requirement1"></textarea>
+  </div>
+  <div class="requirement">
+    <button id="btnLinkRequirement">link</button>
   </div>
   <div class="requirement">
     <textarea id="show-requirement2"></textarea>

@@ -1,12 +1,15 @@
 import cytoscape from 'cytoscape';
 import queryinfra from './queryInfrastructure';
 import queryprocess from './queryprocess';
+import querygraph from './querygraph';
 
 module.exports = {
   createGraphFromInfra,
   createGraphFromProcess,
   updateFlownodeProperty,
-  updateITComponentProperty
+  updateITComponentProperty,
+  addNodes,
+  updateNeighborsBasedOnProps
 };
 
 //final
@@ -93,7 +96,7 @@ function removeModeltypeFromGraph(graph, modeltype) {
 }
 
 //final
-function updateFlownodeProperty(graph, flownode){
+function updateFlownodeProperty(graph, flownode) {
   let node = graph.getElementById(flownode.id);
 
   let props = queryprocess.getExtensionOfElement(flownode); //get extension props of flownode
@@ -110,17 +113,143 @@ function updateFlownodeProperty(graph, flownode){
   node.data('props', props);
 }
 
-function updateITComponentProperty(graph, element){
+//final
+function updateITComponentProperty(graph, element) {
   let node = graph.getElementById(element.id);
   let props = element.props;
 
-  node.data('props',props);
+  node.data('props', props);
 }
 
-function createGraphFromCompliance() {
+//final
+function updateNeighborsBasedOnProps(graph, element) { //
+  let node = graph.getElementById(element.id);
+  let props = node.data('props');
+  let dir_pred = querygraph.getDirectPredecessor(node);
+  let node_remove;
 
+  if (dir_pred.length > 0) {  // check if pred of type compliance
+    for (let i in dir_pred) {
+      node_remove = dir_pred[i];
+      for (let j in props) {
+        if (props[j].value == dir_pred[i].id()) {
+          node_remove = null;
+        }
+      }
+    }
+
+    if (node_remove != null) {
+      let edge_remove;
+      edge_remove = querygraph.getEdge(node, node_remove); //1. determinde Edge between
+      edge_remove.remove(); // 2. delete edge
+
+      if (node_remove.data('modeltype') == 'compliance') {
+        removeNodes(node_remove) // 3. perhaps delete compliance node
+      }
+    }
+  }
 }
 
-function addNodesToComplianceGraph(graph, source, target) {
+//final
+function removeNodes(node) { //only necessary for node of type 'compliance'
+  let modeltype = node.data('modeltype');
+  let successors = [];
+
+  if (modeltype == 'compliance') {
+    successors = querygraph.getDirectSuccessor(node);
+
+    if (successors.length == 0) {
+      let predecessors = node.predecessors().filter('node');
+      let dir_predecessor = querygraph.getDirectPredecessor(node);
+
+      if (predecessors.length > 0) {
+        for (let i = 0; i < dir_predecessor.length; i++) {
+          let edge = querygraph.getEdge(dir_predecessor[i], node);
+          edge.remove();
+        }
+        node.remove(); //initial node
+        removePred(predecessors);
+      }
+    }
+  }
+}
+
+//todo: sometimes error because leaves[0] is undefined
+function removePred(predecessors) {
+  let leaves = predecessors.leaves('node');
+  let node = leaves[0];
+  let dir_succ = querygraph.getDirectSuccessor(node);
+
+  if (dir_succ.length == 0) {
+    let dir_pred = querygraph.getDirectPredecessor(node);
+    if (dir_pred.length == 0) {
+      node.remove();
+    } else {
+      let pred = node.predecessors().filter('node');
+
+      for (let i = 0; i < dir_pred.length; i++) {
+        let edge = querygraph.getEdge(dir_pred[i], node);
+        edge.remove();
+      }
+      node.remove();
+      removePred(pred);
+    }
+  }
+}
+
+function addNodes(graph, option) {
+  let source_requirement = option.source_requirement;
+  let target_requirement = option.target_requirement;
+  let target_flowelement = option.target_flowelement;
+  let source_itcomponent = option.source_itcomponent;
+  let target_itcomponent = option.target_itcomponent;
+
+  if (source_requirement != null && target_requirement != null) { //link requirement-requirement
+    addUniqueNode(graph, source_requirement);
+    addUniqueNode(graph, target_requirement);
+    linkNodes(graph, source_requirement, target_requirement);
+  }
+
+  if (source_requirement != null && target_itcomponent != null) { //link requirement-itcomponent
+    addUniqueNode(graph, source_requirement);
+    linkNodes(graph, source_requirement, target_itcomponent);
+  }
+}
+
+//final?
+function addUniqueNode(graph, element) { //adds a single node to the graph if not available
+  let nodes = graph.nodes();
+  let isUnique = true;
+
+  for (let i = 0; i < nodes.length; i++) { //determine whether an node with this id already exists
+    if (nodes[i].id() == element.id) {
+      isUnique = false;
+      break;
+    }
+  }
+
+  if (isUnique) {
+    graph.add({
+      group: "nodes",
+      data: {
+        id: element.id,
+        text: element.text,
+        title: element.title,
+        props: element.source,
+        nodetype: 'compliance',
+        modeltype: 'compliance'
+      }
+    });
+  }
+}
+
+//final?
+function linkNodes(graph, source, target) {
+  let sequence_id = source.id + '_' + target.id;
+
+  graph.add({
+    group: "edges",
+    data: {id: sequence_id, source: source.id, target: target.id}
+  });
 
 }

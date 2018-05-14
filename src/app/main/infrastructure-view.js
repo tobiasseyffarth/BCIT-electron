@@ -37,7 +37,6 @@ class infrastructureView extends EventEmitter {
     this.infraId = this.document.getElementById('infra-id'); // get ID-Field from Propertypanel Infra
     this.infraProps = this.document.getElementById('infra-props'); // get Props-Field from Propertypanel Infra
 
-
     this.graph = cytoscape({
       container: this.infraContainer,
       style: [ // the stylesheet for the graph
@@ -62,8 +61,8 @@ class infrastructureView extends EventEmitter {
       ],
     }); // create an enmpty graph and define its style
     this.infra = null; // stores our infrastructure model
-    this.selectedNode = null; //graph node //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
-    this.selectedElement=null; // query IT component from selectedNode
+    this.selectedNode = null; //selected graph node //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
+    this.selectedElement = null; // query IT component from selectedNode
 
     this.initInfrastructureView();
     this.clickGraph();
@@ -121,9 +120,11 @@ class infrastructureView extends EventEmitter {
         _this.clearITProps();
       } else {
         if (element.isNode()) {
-          //console.log('taped on node');
-          _this.selectedNode = element;
+          console.log('taped on node');
+
           _this.clearITProps();
+          _this.selectedNode = element;
+          _this.selectedElement = queryInfra.getElementById(_this.infra, _this.selectedNode.id());
           _this.renderITProps();
         }
         if (element.isEdge()) {
@@ -139,6 +140,7 @@ class infrastructureView extends EventEmitter {
     this.infraName.textContent = "";
     this.infraId.value = "";
     this.infraProps.textContent = "";
+    this.selectedElement = null;
   }
 
   renderITProps() {
@@ -161,11 +163,10 @@ class infrastructureView extends EventEmitter {
 
     if (index > -1) {
       this.selectedElement = queryInfra.getElementById(this.infra, this.selectedNode.id());
-
       queryInfra.removeITProps(this.selectedElement, index);
       graphcreator.updateITComponentProperty(this.graph, this.selectedElement);
       this.renderITProps();
-      this.emit('itcomponent_updated', {done: true});
+      this.emit('remove_itcomponent_props', {done: true});
     }
   }
 
