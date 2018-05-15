@@ -73,6 +73,26 @@ infraViewer.on('remove_itcomponent_props', function (data) {
   }
 );
 
+infraViewer.on('link_infra-process', function (data) {
+    let flowelement = bpmnViewer.selectedElement;
+    let bpmn_viewer = bpmnViewer.viewer;
+    let itcomponent = infraViewer.selectedElement;
+    let graph_viewer = graphViewer.graph;
+
+    if (flowelement != null && itcomponent != null) {
+      let extension = processeditor.createExtensionElement('infra', itcomponent.id);
+      let isUniqueExt = queryprocess.isUniqueExtension(bpmn_viewer, flowelement, extension);
+
+      if (isUniqueExt) {
+        processeditor.addExtension(bpmn_viewer, flowelement, extension); // 1. zu props flowelement hinzufügen
+        bpmnViewer.renderProcessProps(); //2. processprops neu rendern
+        graphcontroller.updateFlownodeProperty(graph_viewer, flowelement); // 3. graph in graphviewer updaten
+        graphcontroller.addNodes(graph_viewer, {itcomponent: itcomponent, flowelement: flowelement}); // 4. create and link nodes
+      }
+    }
+  }
+);
+
 complianceViewer.on('compliance_rendered', function (data) {
     console.log(complianceViewer.compliance);
   }

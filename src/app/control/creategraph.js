@@ -123,37 +123,6 @@ function updateITComponentProperty(graph, element) {
 
 //final
 function updateNeighborsBasedOnProps(graph, element) { //
-
-  /*
-  let node = graph.getElementById(element.id);
-  let props = node.data('props');
-  let dir_pred = querygraph.getDirectPredecessor(node);
-  let node_remove;
-
-  if (dir_pred.length > 0) {  // check if pred of type compliance
-    for (let i in dir_pred) {
-      if (dir_pred[i].data('modeltype') != 'process') {
-      node_remove = dir_pred[i];
-        for (let j in props) {
-          if (props[j].value == dir_pred[i].id()) {
-            node_remove = null;
-          }
-        }
-      }
-    }
-
-    if (node_remove != null) {
-      let edge_remove;
-      edge_remove = querygraph.getEdge(node, node_remove); //1. determinde Edge between
-      edge_remove.remove(); // 2. delete edge
-
-      if (node_remove.data('modeltype') == 'compliance') {
-        removeComplianceNodes(node_remove) // 3. perhaps delete compliance node
-      }
-    }
-  }
-  */
-
   let node = graph.getElementById(element.id);
   let props = node.data('props');
   let dir_pred = querygraph.getDirectPredecessor(node);
@@ -161,9 +130,7 @@ function updateNeighborsBasedOnProps(graph, element) { //
   let node_remove = [];
   let node_help;
 
-  if (dir_pred.length > 0) {  // check if pred of type compliance
-
-
+  if (dir_pred.length > 0) {
     for (let i in dir_pred) {
       if (dir_pred[i].data('modeltype') != node.data('modeltype')) {
         node_help = dir_pred[i];
@@ -180,8 +147,7 @@ function updateNeighborsBasedOnProps(graph, element) { //
     }
   }
 
-  if (dir_suc.length > 0) {  // check if pred of type compliance
-
+  if (node.data('nodetype') == 'complianceprocess' && dir_suc.length > 0) {
     for (let i in dir_suc) {
       if (dir_suc[i].data('modeltype') != node.data('modeltype')) {
         node_help = dir_suc[i];
@@ -207,7 +173,6 @@ function updateNeighborsBasedOnProps(graph, element) { //
       removeComplianceNodes(node_remove[i]) // 3. perhaps delete compliance node
     }
   }
-
 }
 
 //final?

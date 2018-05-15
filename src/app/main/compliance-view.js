@@ -28,7 +28,7 @@ class complianceView extends EventEmitter {
     this.showRequirement2 = this.document.getElementById('show-requirement2');
     this.btnLink = this.document.getElementById('btnLinkRequirement');
     this.infraPanel = this.document.getElementById('infra-panel'); //allow drop to emit linking requirement and it component
-    this.processPanel=this.document.getElementById('process-panel'); //allow drop to emit linking requirement and flowelement
+    this.processPanel = this.document.getElementById('process-panel'); //allow drop to emit linking requirement and flowelement
 
     this.compliance = null; //stores our compliance model
     this.selectedRequirement = null; //contains the requirement shown in the preview
@@ -185,21 +185,27 @@ class complianceView extends EventEmitter {
 
   onDropInfrapanel(ev, dragEv) {
     ev.preventDefault();
-    let dragSource = dragEv.target.id;
 
-    if (dragSource == this.previewRequirement.id) {
-      this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
-      this.emit('link_requirement-infra', {done: true});
+    if (dragEv != null) {
+      let dragSource = dragEv.target.id;
+
+      if (dragSource == this.previewRequirement.id) {
+        this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
+        this.emit('link_requirement-infra', {done: true});
+      }
     }
   }
 
   onDropProcesspanel(ev, dragEv) {
     ev.preventDefault();
-    let dragSource = dragEv.target.id;
 
-    if (dragSource == this.previewRequirement.id) {
-      this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
-      this.emit('link_requirement-process', {done: true});
+    if (dragEv != null) {
+      let dragSource = dragEv.target.id;
+
+      if (dragSource == this.previewRequirement.id) {
+        this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
+        this.emit('link_requirement-process', {done: true});
+      }
     }
   }
 

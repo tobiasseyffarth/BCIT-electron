@@ -36,6 +36,7 @@ class infrastructureView extends EventEmitter {
     this.infraName = this.document.getElementById('infra-name'); // get Textfield from Propertypanel Infra
     this.infraId = this.document.getElementById('infra-id'); // get ID-Field from Propertypanel Infra
     this.infraProps = this.document.getElementById('infra-props'); // get Props-Field from Propertypanel Infra
+    this.processPanel = this.document.getElementById('process-panel');
 
     this.graph = cytoscape({
       container: this.infraContainer,
@@ -63,6 +64,7 @@ class infrastructureView extends EventEmitter {
     this.infra = null; // stores our infrastructure model
     this.selectedNode = null; //selected graph node //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
     this.selectedElement = null; // query IT component from selectedNode
+    this.dragEvent = null;
 
     this.initInfrastructureView();
     this.clickGraph();
@@ -85,6 +87,15 @@ class infrastructureView extends EventEmitter {
     if (this.btnRemove) {
       //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
       this.btnRemove.addEventListener("click", () => this.removeITProps());
+    }
+
+    if (this.infraPanel) {
+      this.infraPanel.addEventListener("drag", () => this.linkInfraOnDrag(event));
+    }
+
+    if (this.processPanel) {
+      this.processPanel.addEventListener("dragover", () => this.allowDrop(event));
+      this.processPanel.addEventListener("drop", () => this.onDropProcesspanel(event, this.dragEvent));
     }
 
     let xml = await processio.readFile('./resources/it-architecture/architecture.xml'); //read infra-exchange-file
@@ -163,6 +174,29 @@ class infrastructureView extends EventEmitter {
       graphcreator.updateITComponentProperty(this.graph, this.selectedElement);
       this.renderITProps();
       this.emit('remove_itcomponent_props', {done: true});
+    }
+  }
+
+  linkInfraOnDrag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id); //geht nicht
+    this.dragEvent = ev;
+  }
+
+  allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  onDropProcesspanel(ev, dragEv) {
+    ev.preventDefault();
+
+    if (dragEv != null) {
+      let dragSource = dragEv.target.id;
+
+      if (dragSource == this.infraPanel.id) {
+        this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
+        console.log('link infra process');
+        this.emit('link_infra-process', {done: true});
+      }
     }
   }
 

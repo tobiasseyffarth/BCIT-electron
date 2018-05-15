@@ -19,6 +19,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow-y: hidden;
 }
 
 body {
@@ -87,14 +88,15 @@ a {
 .popup {
   /* Height & width depends on how you want to reveal the overlay (see JS below) */
   height: 100%;
-  width: 300px; /*ANPASSEN*/
+  width: 500px; /*ANPASSEN*/
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: -300px;
+  z-index: 101; /* Sit on top */
+  left: -500px;
   top: 0;
   background-color: rgb(255, 255, 255); /* Black fallback color */
   /* background-color: rgba(255, 255, 255, 0.9);  Black w/opacity */
   overflow-x: hidden; /* Disable horizontal scroll */
+  overflow-y: hidden; /* Disable vertical scroll */
   transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
 }
 
@@ -140,37 +142,6 @@ a {
   position: absolute;
   left: 5px;
   top: 2px;
-}
-
-
-/**************************************************
-2. Section Process container
- */
-.container-process{
-  flex: 35%;
-
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.container-process .ctrls{
-  height: 5em;
-  text-align: center;
-  padding: 10px;
-}
-
-.container-process .bpmn-io{
-  flex: auto;
-  height: 100%;
-  width: 100%;
-}
-
-.container-process .selected-element-id{
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
 }
 
 /**************************************************
@@ -258,24 +229,38 @@ a {
 
 .container-properties{
   overflow: auto;
-  width: 260px;
+  width: 300px;
   background-color: #f8f8f8;
   border-left: 1px solid #ccc;
 }
 
+#flownode-id{
+  width: 90%;
+}
+
 #flownode-props{
-  width: 80%;
+  width: 90%;
+  height: 5em;
+}
+
+#infra-id{
+  width: 90%;
+}
+
+#infra-props{
+  width: 90%;
   height: 5em;
 }
 
 #btnRmvExt{
   background-color: #f8f8f8;
   border-style: none;
+  font-size: 15px;
 }
 
 /**************************************************
 2. Process container
- */
+*/
 .container-process{
   display: flex;
   flex-direction: row;
@@ -309,6 +294,8 @@ a {
   bottom: 10px;
   left: 10px;
 }
+
+
 
 /******
 3. Log container

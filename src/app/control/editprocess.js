@@ -20,33 +20,6 @@ function updateProperty_b(viewer, element) {
   modeling.updateProperties(element, {id: 'neue_id'});
 }
 
-
-//geht nicht
-function colorElement(element) {
-
-  var overlays = this.viewer.get('overlays');
-  //var elementRegistry = viewer.get('elementRegistry');
-
-  //var shape = elementRegistry.get('UserTask_1');
-
-  var $overlayHtml =
-    $('<div class="highlight-overlay">')
-      .css({
-        width: element.width,
-        height: element.height
-      });
-
-  overlays.add(element.id, {
-    position: {
-      top: -5,
-      left: -5
-    },
-    html: $overlayHtml
-  });
-
-}
-
-
 //toDo: weitere Ideen
 /*
 die Methoden zum "Programmieren" eines Prozesses anschauen.
@@ -118,6 +91,12 @@ function removeExt(extensionElements, option) {
     ext.splice(index, 1);
   }
 }
+
+//remove flowelement from repo and shape
+function removeFlowelement(){
+
+}
+
 
 //final
 function defineAsComplianceProcess(viewer, element, status) {

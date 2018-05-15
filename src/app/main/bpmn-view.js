@@ -183,9 +183,6 @@ class bpmnViewer extends EventEmitter {
     this.document.querySelector('.selected-element-id').textContent = e.element.id;
     this.selectedElement = queryprocess.getFlowElementById(this.process, e.element.id); //get element of bpmnviewer register
 
-    //editprocess.addElements(this.viewer, this.process);
-    //editprocess.addExtension(this.viewer, this.selectedElement);
-
     this.renderProcessProps();
     this.emit('flownode_updated', {done: true});
   }
@@ -220,9 +217,11 @@ class bpmnViewer extends EventEmitter {
 
   removeProcessExtension() {
     let index = this.lstnodeExtension.selectedIndex;
-    editprocess.removeExt(this.selectedElement.extensionElements, {index: index});
-    this.renderProcessProps(); //
-    this.emit('flowelement_updated', {done: true});
+    if (index > -1) {
+      editprocess.removeExt(this.selectedElement.extensionElements, {index: index});
+      this.renderProcessProps(); //
+      this.emit('flowelement_updated', {done: true});
+    }
   }
 
   defineComplianceProcess() {
