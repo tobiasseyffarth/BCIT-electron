@@ -1,23 +1,14 @@
-import graphcreator from "../control/creategraph";
-
 const EventEmitter = require('events');
-
-import BpmnJS from "bpmn-js";
-import propertiesPanelModule from "bpmn-js-properties-panel";
-import propertiesProviderTobus from "./../data/bpmnjsComplianceProvider";
 
 import BpmnModeler from "bpmn-js/dist/bpmn-modeler.development";
 import dialogHelper from "./../../helpers/fileopen_dialogs";
 import processio from "./../control/processio";
 import queryprocess from "./../control/queryprocess";
 import editprocess from "./../control/editprocess";
-import creategraph from "./../control/creategraph";
-import graphrenderer from "./../control/rendergraph";
 import renderprocess from "./../control/renderprocess";
 
 import log from "./../../helpers/logs";
 import gui from "./../../helpers/gui";
-import cytoscape from "cytoscape";
 
 /*****
  * Basic config
@@ -187,33 +178,30 @@ class bpmnViewer extends EventEmitter {
   hookOnClick(e) {
     //this.selectedElement=e.element; //e.element returns a shape element and not a moddle element
 
-    let isFlownode = queryprocess.isFlowElement({shape: e.element});
+    let shape = e.element;
+    let isFlownode = queryprocess.isFlowElement({shape: shape});
 
     if (isFlownode) { //just add elements to and edit flownodes
       //this.document.querySelector('.selected-element-id').textContent = e.element.id;
-      this.selectedElement = queryprocess.getFlowElementById(this.process, e.element.id); //get element of bpmnviewer register
-      this.selectedShape = e.element;
-
-     // renderprocess.removeExtensionShape(this.viewer, this.selectedElement);
+      this.selectedElement = queryprocess.getFlowElementById(this.process, shape.id); //get element of bpmnviewer register
+      this.selectedShape = shape;
 
       this.renderProcessProps();
     }
-
-    let isDataobject = queryprocess.isDataObject({shape: e.element});
-    if (isDataobject) {
-      console.log(e.element);
-      renderprocess.removeShape(this.viewer, e.element);
-    }
-
   }
 
   renderProcessProps() {
     let element = this.selectedElement;
+    let shape=this.selectedShape;
+    let isCompliance = queryprocess.isCompliance(element);
+
     this.clearProcessProps();
 
     this.flownodeId.value = element.id;
     this.flownodeName.textContent = element.name;
-    this.cbxCompliance.checked = queryprocess.isCompliance(element);
+    this.cbxCompliance.checked = isCompliance;
+
+    this.renderComplianceProcess(shape, isCompliance);
     this.renderProcessExtension();
   }
 
@@ -235,6 +223,16 @@ class bpmnViewer extends EventEmitter {
     }
   }
 
+  renderComplianceProcess(shape, isCompliance){
+    let viewer = this.viewer;
+
+    if(isCompliance){
+      renderprocess.colorShape(viewer, shape, {fill: 'grey'});
+    }else{
+      renderprocess.colorShape(viewer, shape, {fill: 'none'});
+    }
+  }
+
   removeProcessExtension() {
     let index = this.lstnodeExtension.selectedIndex;
     if (index > -1) {
@@ -245,17 +243,14 @@ class bpmnViewer extends EventEmitter {
   }
 
   defineComplianceProcess() {
-    let isCompliance = this.cbxCompliance.checked;
     let viewer = this.viewer;
     let element = this.selectedElement;
-    let shape = this.selectedShape;
+    let isCompliance = this.cbxCompliance.checked;
 
     if (isCompliance) {
       editprocess.defineAsComplianceProcess(viewer, element, true);
-      renderprocess.colorShape(viewer, shape, {fill: 'grey'});
     } else {
       editprocess.defineAsComplianceProcess(viewer, element, false);
-      renderprocess.colorShape(viewer, shape, {fill: 'none'});
     }
 
     this.renderProcessProps();

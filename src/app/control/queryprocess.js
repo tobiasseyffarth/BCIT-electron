@@ -8,10 +8,12 @@ module.exports = {
   getFlowElementById,
   getExtensionOfElement,
   isCompliance,
+  hasExtensionName,
   hasExtension,
   isUniqueExtension,
   isFlowElement,
-  isDataObject
+  isDataObject,
+  isExtensionShape
 };
 
 //final
@@ -146,21 +148,18 @@ function getExtensionOfElement(element) {
   }
 }
 
+//final
 function isCompliance(element) {
-  let props = getExtensionOfElement(element);
-  for (let j in props) { //check if the node is a compliance process
-    if (props[j].name == 'isComplianceProcess' && props[j].value == 'true') {
-      console.log('is compliance process');
-      return true
-    }
-  }
-  return false;
+  let name = 'isComplianceProcess';
+  let value = 'true';
+
+  return hasExtension(element, name, value);
 }
 
 //final
-function hasExtension(element, name) {
+function hasExtensionName(element, name) {
   let props = getExtensionOfElement(element);
-  for (let j in props) { //check if the node is a compliance process
+  for (let j in props) { //check if the element has an extension of name
     if (props[j].name == name) {
       return true
     }
@@ -168,6 +167,32 @@ function hasExtension(element, name) {
   return false;
 }
 
+function isExtensionShape(shape) {
+  let element = shape.businessObject;
+  return hasExtension(element, 'flowelement');
+}
+
+function hasExtension(element, name, value) {
+  let props = getExtensionOfElement(element);
+
+  if (value == undefined) {
+    for (let j in props) { //check if the element has an extension of name
+      if (props[j].name == name) {
+        return true
+      }
+    }
+  } else {
+    for (let j in props) { //check if the node is a compliance process
+      if (props[j].name == name && props[j].value == value) {
+        return true
+      }
+    }
+  }
+
+  return false;
+}
+
+//final
 function isFlowElement(option) { //identify flowNodes
   let element = option.element;
   let shape = option.shape;
@@ -190,6 +215,7 @@ function isFlowElement(option) { //identify flowNodes
   }
 }
 
+//final
 function isDataObject(option) { //identify Database or Document
   let element = option.element;
   let shape = option.shape;

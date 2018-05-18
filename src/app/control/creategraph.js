@@ -181,7 +181,7 @@ function updateNeighborsBasedOnProps(graph, element) { //
 
   for (let i in node_remove) {
     let edge_remove;
-    edge_remove = querygraph.getEdge(node, node_remove[i]); //1. determinde Edge between
+    edge_remove = querygraph.getEdge(node, node_remove[i]); //1. determine Edge between
     edge_remove.remove(); // 2. delete edge
 
     if (node_remove[i].data('modeltype') == 'compliance') {

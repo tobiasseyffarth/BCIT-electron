@@ -56,7 +56,7 @@ bpmnViewer.on('flowelement_updated', function (data) {
     graphcontroller.updateFlownodeProperty(graph, flowelement);
     graphcontroller.updateComplianceNode(graph, flowelement);
     graphcontroller.updateNeighborsBasedOnProps(graph, flowelement);
-   // processrenderer.removeExtensionShape(viewer, flowelement);
+    processrenderer.removeExtensionShape(viewer, flowelement);
   }
 );
 

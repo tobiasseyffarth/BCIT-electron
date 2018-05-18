@@ -11,6 +11,7 @@ module.exports = {
   removeExtensionShape
 }
 
+//final
 function colorShape(viewer, shape, coloroption) {
   let modeling = viewer.get('modeling');
   let _stroke = coloroption.stroke || 'black';
@@ -26,6 +27,7 @@ function colorShape(viewer, shape, coloroption) {
   modeling.setColor(shape, {stroke: _stroke, fill: _fill});
 }
 
+//final
 function createShape(viewer, option) {
   let canvas = viewer.get('canvas');
   let elementFactory = viewer.get('elementFactory');
@@ -61,11 +63,18 @@ function createShape(viewer, option) {
    */
 }
 
+//final
 function removeShape(viewer, shape) {
   let modeler = viewer.get('modeling');
-  modeler.removeShape(shape);
+
+  try {
+    modeler.removeShape(shape);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
+//final
 function updateShape(viewer, shape, option) {
   let modeler = viewer.get('modeling');
   let _option = option || {id: 'neueid'};
@@ -75,12 +84,14 @@ function updateShape(viewer, shape, option) {
   return shape;
 }
 
+//final
 function connectShapes(viewer, source, target) {
   let modeler = viewer.get('modeling');
   let connection = modeler.connect(source, target);
   return connection;
 }
 
+//final
 function addExtensionShape(viewer, shape, option, extension) {
   let itcomponent = option.infra;
   let compliance = option.compliance;
@@ -116,104 +127,100 @@ function addExtensionShape(viewer, shape, option, extension) {
   // connect created shape with flownode and color it
   connectShapes(viewer, dataShape, shape);
   colorShape(viewer, dataShape, {stroke: 'grey'});
-
 }
 
+//final
 function removeExtensionShape(viewer, flowelement) {
   let elementRegistry = viewer.get('elementRegistry');
   let shapes = elementRegistry.getAll();
   let extShapes = []; //determine extension shapes belong to flowelement
   let shapes_to_remove = [];
 
-  console.log(shapes.length);
-
-  // 1. get all Shapes that have ext.name=flowelement
-  // 2. get Extension of flowelement
-  // 3. delete shapes that are not part of flowelement.extension
-  // --> schleife über shapes --> let id=
-  //   --> schleife über flowelement.ext --> wenn kein Treffer shape löschen
-
+  // 1. get all extensionShapes that belongs to the selected flowelement--> done
   for (let i in shapes) {
-    let el = shapes[i].businessObject;
-    let ext = queryprocess.getExtensionOfElement(el);
-    if (ext != undefined) {
-      //console.log('new el');
-      //console.log(el);
-      for (let j in ext) {
-        //  console.log(ext[j]);
-        //console.log(ext[j].name);
+    let shape = shapes[i];
+    let element = shape.businessObject;
+    let isExtShape = queryprocess.isExtensionShape(shape);
+    let belongsToFlowelement = queryprocess.hasExtension(element, 'flowelement', flowelement.id);
 
-        if (ext[j].name == 'flowelement' && ext[j].value==flowelement.id) {
-          extShapes.push(el);
-          break;
-        }
+    if (isExtShape && shape.type != 'label' && belongsToFlowelement) {
+      extShapes.push(shape);
+    }
+  }
+//  console.log(extShapes);
 
-        // console.log(ext[j].value);
+  // 2. get value Extension of flowelement
+  let ext = queryprocess.getExtensionOfElement(flowelement);
+  let valueFlowelement = [];
+  let valueShape = [];
+
+  for (let i in ext) {
+    let value = ext[i].value;
+    valueFlowelement.push(value);
+  }
+  //console.log(valueFlowelement);
+
+  //3. get ID of Requirement or ITComponent stored in the ShapeExtension
+  for (let i in extShapes) {
+    let shape = extShapes[i];
+    let element = shape.businessObject;
+    let shapeExtension = queryprocess.getExtensionOfElement(element);
+
+    //console.log(element);
+    //console.log(shapeExtension);
+
+    for (let j in shapeExtension) {
+      let name = shapeExtension[j].name;
+      let value = shapeExtension[j].value;
+      //console.log(name);
+      if (name != 'flowelement') {
+        valueShape.push({shape: shape, value: value});
       }
     }
   }
+  //console.log(valueShape);
 
-  let flowExt = queryprocess.getExtensionOfElement(flowelement);
+  //4a check wheather flowelement has no extension
+  if (valueFlowelement.length == 0) {
+    for (let i in extShapes) {
+      let shape = extShapes[i];
+      shapes_to_remove.push(shape);
+    }
+  }
 
+  // 4b. check weather ID of Requirement or ITComponent is in valueFlowElements
+  if (valueFlowelement.length > 0) {
+    let del = true;
 
-  if(flowExt.length==0){
-    let removeShape = true;
-    for (let j in extShapes) {
-      let shapeExt = queryprocess.getExtensionOfElement(extShapes[j]);
-      for (let k in shapeExt) {
-        console.log('shapeext value', shapeExt[k].value);
-        if (shapeExt[k].value == flowelement.id) {
-          removeShape = true;
+    for (let i in valueShape) {
+      let valueS = valueShape[i].value;
+      //console.log('valueShapeExt', valueS);
+      for (let j in valueFlowelement) {
+        let valueF = valueFlowelement[j];
+        //console.log('valueFlowelement', valueF);
+
+        if (valueF == valueS) {
+          del = false;
         }
       }
 
-      if (removeShape) {
-        shapes_to_remove.push(extShapes[j]);
-        removeShape = false;
+      if (del) {
+        shapes_to_remove.push(valueShape[i].shape)
       } else {
-        removeShape = true;
+        del = true;
       }
-
     }
   }
 
-
-
-
-
-  /*
-  console.log(flowExt.length);
-
-  for (let i in flowExt) {
-    let valueFlowElement = flowExt[i].value;
-    console.log('', flowExt[i].value);
-
-    for (let j in extShapes) {
-      let shapeExt = queryprocess.getExtensionOfElement(extShapes[j]);
-      for (let k in shapeExt) {
-        console.log('shapeext value', shapeExt[k].value);
-        if (shapeExt[k].value == flowExt[i].value) {
-          removeShape = false;
-        }
-      }
-
-      if (removeShape) {
-        shapes_to_remove.push(extShapes[j]);
-        removeShape = false;
-      } else {
-        removeShape = true;
-      }
-
-
-    }
+  //5. delete shapes
+  //console.log(shapes_to_remove);
+  for (let i in shapes_to_remove) {
+    let shape = shapes_to_remove[i];
+    removeShape(viewer, shape);
   }
-*/
-  console.log(shapes_to_remove);
-
-  console.log(extShapes);
-
 }
 
+//final
 function getTopPosition(viewer) {
   let elementRegistry = viewer.get('elementRegistry');
   let shapeCollection = elementRegistry.getAll();
@@ -223,7 +230,7 @@ function getTopPosition(viewer) {
     let shape = shapeCollection[i];
     let element = shape.businessObject;
 
-    if (!queryprocess.hasExtension(element, 'compliance')) { //check if shape is a modelled extension
+    if (!queryprocess.isExtensionShape(shape)) { //check if shape is a modelled extension
       if (shape.y != undefined) {
         if (top == 0) {
           top = shape.y;
@@ -232,11 +239,14 @@ function getTopPosition(viewer) {
           top = shape.y;
         }
       }
+    } else {
+      console.log(element);
     }
   }
   return top;
 }
 
+//final
 function getBottomPosition(viewer) {
   let elementRegistry = viewer.get('elementRegistry');
   let shapeCollection = elementRegistry.getAll();
@@ -246,7 +256,7 @@ function getBottomPosition(viewer) {
     let shape = shapeCollection[i];
     let element = shape.businessObject;
 
-    if (!queryprocess.hasExtension(element, 'infra')) { //check if shape is a modelled as extension
+    if (!queryprocess.isExtensionShape(shape)) { //check if shape is a modelled as extension
       if (shape.y != undefined) {
         if (bottom == 0) {
           bottom = shape.y;
