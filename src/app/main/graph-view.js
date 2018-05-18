@@ -77,12 +77,11 @@ class graphView {
   renderGraph(options) {
     let process = options.process;
     let infra = options.infra;
-    let graph = this.graph;
 
     if (process != undefined) {
-      graphcreator.createGraphFromProcess(graph, process);
+      graphcreator.createGraphFromProcess(this.graph, process);
     } else if (infra != undefined) {
-      graphcreator.createGraphFromInfra(graph, infra);
+      graphcreator.createGraphFromInfra(this.graph, infra);
     }
 
     let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
@@ -96,14 +95,7 @@ class graphView {
   }
 
   closePopup() {
-    log.info('click');
-    console.log('click');
-
-    this.document.getElementById("popGraph").style.width = "0px";
-    this.document.querySelector('.ctrls').style.marginLeft = "0px";
-    this.document.querySelector('.container-process').style.marginLeft = "0px";
-    this.document.querySelector('.sub-container').style.marginLeft = "0px";
-    this.document.querySelector('.container-log').style.marginLeft = "0px";
+    this.document.getElementById("popGraph").style.left = "-5000px";
   }
 
   clickGraph() { //weitere Events: http://js.cytoscape.org/#events/user-input-device-events

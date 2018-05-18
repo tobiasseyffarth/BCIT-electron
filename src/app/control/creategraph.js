@@ -41,19 +41,23 @@ function createGraphFromProcess(graph, process) {
 
   for (let i in nodes) {
     let node = nodes[i];
-    let props = queryprocess.getExtensionOfElement(node);
-    let nodetype = 'businessprocess';
+    let elementtype = node.$type.toLowerCase();
 
-    for (let j in props) { //check if the node is a compliance process
-      if (props[j].name == 'isComplianceProcess' && props[j].value == 'true') {
-        nodetype = 'complianceprocess';
+    if (!elementtype.includes('data')) { //only convert flownodes
+      let props = queryprocess.getExtensionOfElement(node);
+      let nodetype = 'businessprocess';
+
+      for (let j in props) { //check if the node is a compliance process
+        if (props[j].name == 'isComplianceProcess' && props[j].value == 'true') {
+          nodetype = 'complianceprocess';
+        }
       }
-    }
 
-    graph.add({
-      group: "nodes",
-      data: {id: node.id, name: node.name, props: props, nodetype: nodetype, modeltype: 'process'}
-    });
+      graph.add({
+        group: "nodes",
+        data: {id: node.id, name: node.name, props: props, nodetype: nodetype, modeltype: 'process'}
+      });
+    }
   }
 
   for (let i in sequences) {
@@ -62,7 +66,9 @@ function createGraphFromProcess(graph, process) {
       data: {id: sequences[i].id, source: sequences[i].sourceRef.id, target: sequences[i].targetRef.id}
     });
   }
+
 }
+
 
 //final
 function removeModeltypeFromGraph(graph, modeltype) {
@@ -70,6 +76,7 @@ function removeModeltypeFromGraph(graph, modeltype) {
   let edges = graph.edges();
   let filter_nodes = [];
   let filter_edges = [];
+  let edgeDublet = false;
 
   for (let i = 0; i < nodes.length; i++) { //get all affected nodes
     if (nodes[i].data('modeltype') == modeltype) {
@@ -80,19 +87,27 @@ function removeModeltypeFromGraph(graph, modeltype) {
   for (let i = 0; i < edges.length; i++) {
     for (let j = 0; j < filter_nodes.length; j++) { //based on the affected nodes determine affected edges
       if (edges[i].data('source') == filter_nodes[j].data('id') || edges[i].data('target') == filter_nodes[j].data('id')) {
-        filter_edges.push(edges[i]);
+        for (let k = 0; k < filter_edges.length; k++) {
+          if (filter_edges[k] == edges[i]) {
+            edgeDublet = true;
+            break;
+          }
+        }
+        if (edgeDublet) {
+          edgeDublet = false;
+        } else {
+          filter_edges.push(edges[i]);
+        }
       }
     }
   }
 
   for (let i = 0; i < filter_edges.length; i++) { //first remove edges
-    //console.log(filter_edges[i]);
-    graph.remove(filter_edges[i]);
+    filter_edges[i].remove();
   }
 
   for (let i = 0; i < filter_nodes.length; i++) { //second remove nodes
-    //console.log(filter_nodes[i]);
-    graph.remove(filter_nodes[i]);
+    filter_nodes[i].remove();
   }
 }
 

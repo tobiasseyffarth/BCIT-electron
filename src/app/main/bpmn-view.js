@@ -1,3 +1,5 @@
+import graphcreator from "../control/creategraph";
+
 const EventEmitter = require('events');
 
 import BpmnJS from "bpmn-js";
@@ -11,9 +13,11 @@ import queryprocess from "./../control/queryprocess";
 import editprocess from "./../control/editprocess";
 import creategraph from "./../control/creategraph";
 import graphrenderer from "./../control/rendergraph";
+import renderprocess from "./../control/renderprocess";
 
 import log from "./../../helpers/logs";
 import gui from "./../../helpers/gui";
+import cytoscape from "cytoscape";
 
 /*****
  * Basic config
@@ -50,7 +54,8 @@ class bpmnViewer extends EventEmitter {
     this.btnRmvExt = this.document.getElementById('btnRmvExt');
 
     this.viewer = null;
-    this.selectedElement = null; //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
+    this.selectedElement = null; //moddleElement //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
+    this.selectedShape = null; //Shape
     this.process = null; //processmodel of viewer
 
     this.initViewer();
@@ -148,8 +153,10 @@ class bpmnViewer extends EventEmitter {
     });
   }
 
-  updateBpmn(viewer) { //rerender Process view
-    let xml = processio.saveXml(viewer);
+  updateBpmnXml(viewer) { //rerender Process view
+    let _viewer = viewer || this.viewer
+
+    let xml = processio.saveXml(_viewer);
     this.renderBpmnXml(xml);
   }
 
@@ -180,11 +187,24 @@ class bpmnViewer extends EventEmitter {
   hookOnClick(e) {
     //this.selectedElement=e.element; //e.element returns a shape element and not a moddle element
 
-    this.document.querySelector('.selected-element-id').textContent = e.element.id;
-    this.selectedElement = queryprocess.getFlowElementById(this.process, e.element.id); //get element of bpmnviewer register
+    let isFlownode = queryprocess.isFlowElement({shape: e.element});
 
-    this.renderProcessProps();
-    this.emit('flownode_updated', {done: true});
+    if (isFlownode) { //just add elements to and edit flownodes
+      //this.document.querySelector('.selected-element-id').textContent = e.element.id;
+      this.selectedElement = queryprocess.getFlowElementById(this.process, e.element.id); //get element of bpmnviewer register
+      this.selectedShape = e.element;
+
+     // renderprocess.removeExtensionShape(this.viewer, this.selectedElement);
+
+      this.renderProcessProps();
+    }
+
+    let isDataobject = queryprocess.isDataObject({shape: e.element});
+    if (isDataobject) {
+      console.log(e.element);
+      renderprocess.removeShape(this.viewer, e.element);
+    }
+
   }
 
   renderProcessProps() {
@@ -225,11 +245,19 @@ class bpmnViewer extends EventEmitter {
   }
 
   defineComplianceProcess() {
-    if (this.cbxCompliance.checked == true) {
-      editprocess.defineAsComplianceProcess(this.viewer, this.selectedElement, true);
+    let isCompliance = this.cbxCompliance.checked;
+    let viewer = this.viewer;
+    let element = this.selectedElement;
+    let shape = this.selectedShape;
+
+    if (isCompliance) {
+      editprocess.defineAsComplianceProcess(viewer, element, true);
+      renderprocess.colorShape(viewer, shape, {fill: 'grey'});
     } else {
-      editprocess.defineAsComplianceProcess(this.viewer, this.selectedElement, false);
+      editprocess.defineAsComplianceProcess(viewer, element, false);
+      renderprocess.colorShape(viewer, shape, {fill: 'none'});
     }
+
     this.renderProcessProps();
     this.emit('flowelement_updated', {done: true});
   }

@@ -8,8 +8,10 @@ module.exports = {
   getFlowElementById,
   getExtensionOfElement,
   isCompliance,
-  hasComplianceExt,
-  isUniqueExtension
+  hasExtension,
+  isUniqueExtension,
+  isFlowElement,
+  isDataObject
 };
 
 //final
@@ -32,7 +34,7 @@ function getProcess(viewer, e) {
     let elementRegistry = viewer.get('elementRegistry');
     let nodes = [];
     nodes = elementRegistry.getAll();
-    console.log(nodes.length);
+    //console.log(nodes.length);
     for (let i = 0; i < nodes.length; i++) {
       if (nodes[i].businessObject.$type == 'bpmn:Process') {
         return nodes[i].businessObject;
@@ -128,7 +130,7 @@ function getExtensionOfElement(element) {
       if (extensionElements[i].$children != undefined) { //get camunda extension
         console.log('camunda extension');
         console.log(extensionElements[i]);
-        for(let j in extensionElements[i].$children){
+        for (let j in extensionElements[i].$children) {
           name = extensionElements[i].$children[j].name;
           value = extensionElements[i].$children[j].value;
           result.push({name: name, value: value});
@@ -144,7 +146,7 @@ function getExtensionOfElement(element) {
   }
 }
 
-function isCompliance(element){
+function isCompliance(element) {
   let props = getExtensionOfElement(element);
   for (let j in props) { //check if the node is a compliance process
     if (props[j].name == 'isComplianceProcess' && props[j].value == 'true') {
@@ -156,15 +158,59 @@ function isCompliance(element){
 }
 
 //final
-function hasComplianceExt(element){
+function hasExtension(element, name) {
   let props = getExtensionOfElement(element);
   for (let j in props) { //check if the node is a compliance process
-    if (props[j].name == 'compliance') {
-      console.log('has compliance req');
+    if (props[j].name == name) {
       return true
     }
   }
   return false;
+}
+
+function isFlowElement(option) { //identify flowNodes
+  let element = option.element;
+  let shape = option.shape;
+  let type;
+
+  if (element != null) {
+    type = element.$type;
+  }
+
+  if (shape != null) {
+    type = shape.type;
+  }
+
+  type = type.toLowerCase();
+
+  if ((!type.includes('data')) && (!type.includes('sequence'))) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function isDataObject(option) { //identify Database or Document
+  let element = option.element;
+  let shape = option.shape;
+  let type;
+
+  if (element != null) {
+    type = element.$type;
+  }
+
+  if (shape != null) {
+    type = shape.type;
+  }
+
+  type = type.toLowerCase();
+
+  if (type.includes('data')) {
+    return true;
+  } else {
+    return false;
+  }
+
 }
 
 //final

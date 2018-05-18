@@ -14,6 +14,9 @@ function getInfra(data) {
     textAttrConversion: true
   });
 
+  elements.splice(0, elements.length);
+  sequenceFlows.splice(0, sequenceFlows.length);
+
   getAttributeRelations(jsonObj);
   getSequenceFlows(jsonObj);
   getArchiElements(jsonObj);
@@ -41,8 +44,8 @@ async function loadXml(url) {
   getSequenceFlows(jsonObj);
 }
 
-function getMetadata(archiObject){
-  let id =archiObject.model.attr["@_identifier"];
+function getMetadata(archiObject) {
+  let id = archiObject.model.attr["@_identifier"];
   let name = archiObject.model.name["#text"];
 
   elements.push({id: id, name: name, type: 'metadata'});
@@ -77,16 +80,19 @@ function getArchiElements(archiObject) {
 let propDefintions = {};
 
 function getAttributeRelations(obj) {
-  let attrRels = obj.model.propertyDefinitions.propertyDefinition;
 
-  for (let i = -1; ++i < attrRels.length;) {
-    let attrRel = attrRels[i];
-    let propid = "";
-    // console.log(attrRel.attr);
-    if (attrRel.attr)
-      propid = attrRel.attr["@_identifier"];
+  if (obj.model.propertyDefinitions != undefined) {
+    let attrRels = obj.model.propertyDefinitions.propertyDefinition;
 
-    propDefintions[propid] = attrRel.name;
+    for (let i = -1; ++i < attrRels.length;) {
+      let attrRel = attrRels[i];
+      let propid = "";
+      // console.log(attrRel.attr);
+      if (attrRel.attr)
+        propid = attrRel.attr["@_identifier"];
+
+      propDefintions[propid] = attrRel.name;
+    }
   }
 
   // console.log("props", propDefintions);
@@ -96,6 +102,7 @@ let sequenceFlows = [];
 
 function getSequenceFlows(obj) {
   let rels = obj.model.relationships.relationship;
+
   for (let i = -1; ++i < rels.length;) {
     let rel = rels[i];
 

@@ -35,6 +35,7 @@ import graphcontroller from "./app/control/creategraph";
 import queryinfra from "./app/control/queryInfrastructure";
 import queryprocess from "./app/control/queryprocess";
 import processeditor from "./app/control/editprocess";
+import processrenderer from "./app/control/renderprocess";
 
 let graphViewer = new graphView({document});
 let bpmnViewer = new bpmnView({document});
@@ -42,20 +43,20 @@ let complianceViewer = new complianceView({document});
 let infraViewer = new infrastructureView({document});
 let menuViewer = new menuView({document});
 
-
 bpmnViewer.on('process_rendered', function (data) {
     graphViewer.renderGraph({process: bpmnViewer.process});
-    console.log(bpmnViewer.process);
   }
 );
 
 bpmnViewer.on('flowelement_updated', function (data) {
     let graph = graphViewer.graph;
     let flowelement = bpmnViewer.selectedElement;
+    let viewer = bpmnViewer.viewer;
 
     graphcontroller.updateFlownodeProperty(graph, flowelement);
     graphcontroller.updateComplianceNode(graph, flowelement);
     graphcontroller.updateNeighborsBasedOnProps(graph, flowelement);
+   // processrenderer.removeExtensionShape(viewer, flowelement);
   }
 );
 
@@ -75,11 +76,12 @@ infraViewer.on('remove_itcomponent_props', function (data) {
 
 infraViewer.on('link_infra-process', function (data) {
     let flowelement = bpmnViewer.selectedElement;
+    let shape = bpmnViewer.selectedShape;
     let bpmn_viewer = bpmnViewer.viewer;
     let itcomponent = infraViewer.selectedElement;
     let graph_viewer = graphViewer.graph;
 
-    if (flowelement != null && itcomponent != null) {
+    if (flowelement != null && itcomponent != null && !flowelement.$type.toLowerCase().includes('data')) {
       let extension = processeditor.createExtensionElement('infra', itcomponent.id);
       let isUniqueExt = queryprocess.isUniqueExtension(bpmn_viewer, flowelement, extension);
 
@@ -88,6 +90,7 @@ infraViewer.on('link_infra-process', function (data) {
         bpmnViewer.renderProcessProps(); //2. processprops neu rendern
         graphcontroller.updateFlownodeProperty(graph_viewer, flowelement); // 3. graph in graphviewer updaten
         graphcontroller.addNodes(graph_viewer, {itcomponent: itcomponent, flowelement: flowelement}); // 4. create and link nodes
+        processrenderer.addExtensionShape(bpmn_viewer, shape, {infra: itcomponent}, extension); // 5. add DataObject to process model
       }
     }
   }
@@ -127,6 +130,7 @@ complianceViewer.on('link_requirement-infra', function (data) {
 
 complianceViewer.on('link_requirement-process', function (data) {
     let flowelement = bpmnViewer.selectedElement;
+    let shape = bpmnViewer.selectedShape;
     let bpmn_viewer = bpmnViewer.viewer;
     let requirement = complianceViewer.selectedRequirement;
     let graph_viewer = graphViewer.graph;
@@ -140,6 +144,7 @@ complianceViewer.on('link_requirement-process', function (data) {
         bpmnViewer.renderProcessProps(); //2. processprops neu rendern
         graphcontroller.updateFlownodeProperty(graph_viewer, flowelement); // 3. graph in graphviewer updaten
         graphcontroller.addNodes(graph_viewer, {requirement: requirement, flowelement: flowelement}); // 4. create and link nodes
+        processrenderer.addExtensionShape(bpmn_viewer, shape, {compliance: requirement}, extension); // 5. add DataObject to process model
       }
     }
   }
