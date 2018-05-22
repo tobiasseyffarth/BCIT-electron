@@ -4,14 +4,11 @@ const EventEmitter = require('events');
 
 import dialogHelper from "./../../helpers/fileopen_dialogs";
 import processio from "./../control/processio";
-import loadInfrastructure from "./../data/infrastructure/loadInfrastructure";
 import loadInfraKai from "./../data/infrastructure/loadInfraKai";
 import queryInfra from './../control/queryInfrastructure';
 import cytoscape from 'cytoscape';
 import graphcreator from './../control/creategraph';
 import log from "./../../helpers/logs";
-import queryprocess from "../control/queryprocess";
-import editprocess from "../control/editprocess";
 
 /*****
  * Basic config
@@ -44,7 +41,7 @@ class infrastructureView extends EventEmitter {
         {
           selector: 'node',
           style: {
-            'label': 'data(name)',
+            'label': 'data(display_name)',
             'shape': 'triangle'
           }
         },
@@ -65,6 +62,7 @@ class infrastructureView extends EventEmitter {
     this.selectedNode = null; //selected graph node //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
     this.selectedElement = null; // query IT component from selectedNode
     this.dragEvent = null;
+    this.ctrl = false;
 
     this.initInfrastructureView();
     this.clickGraph();
@@ -96,6 +94,11 @@ class infrastructureView extends EventEmitter {
     if (this.processPanel) {
       this.processPanel.addEventListener("dragover", () => this.allowDrop(event));
       this.processPanel.addEventListener("drop", () => this.onDropProcesspanel(event, this.dragEvent));
+    }
+
+    if (this.document) {
+      this.document.addEventListener("keydown", () => this.onKeyDown(event), true);
+      this.document.addEventListener("keyup", () => this.onKeyUp(event), true);
     }
 
     let xml = await processio.readFile('./resources/it-architecture/architecture.xml'); //read infra-exchange-file
@@ -133,6 +136,12 @@ class infrastructureView extends EventEmitter {
           _this.selectedNode = element;
           _this.selectedElement = queryInfra.getElementById(_this.infra, _this.selectedNode.id());
           _this.renderITProps();
+
+          // starting analyze in case of press key
+          if (_this.ctrl) {
+            let id = element.id();
+            _this.emit('analyze', {done: true, id: id});
+          }
         }
         if (element.isEdge()) {
           //console.log('taped on edge');
@@ -141,6 +150,16 @@ class infrastructureView extends EventEmitter {
       }
 
     });
+  }
+
+  onKeyDown(event) {
+    if (event.which == 18) {
+      this.ctrl = true;
+    }
+  }
+
+  onKeyUp(event) {
+    this.ctrl = false;
   }
 
   clearITProps() {
@@ -152,7 +171,7 @@ class infrastructureView extends EventEmitter {
 
   renderITProps() {
     this.infraId.value = this.selectedNode.id();
-    this.infraName.textContent = this.selectedNode.data('name');
+    this.infraName.textContent = this.selectedNode.data('display_name');
 
     let props = this.selectedNode.data('props');
     gui.clearList(this.infraProps);

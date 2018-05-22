@@ -7,3 +7,4 @@ function clearList(list) {
     list.remove(i);
   }
 }
+

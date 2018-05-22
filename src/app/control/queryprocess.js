@@ -13,7 +13,8 @@ module.exports = {
   isUniqueExtension,
   isFlowElement,
   isDataObject,
-  isExtensionShape
+  isExtensionShape,
+  getIdFromExtensionShape
 };
 
 //final
@@ -254,4 +255,18 @@ function isUniqueExtension(viewer, element, extension) {
     }
   }
   return true;
+}
+
+//final
+function getIdFromExtensionShape(shape){
+  let element = shape.businessObject;
+  let shapeExtension = getExtensionOfElement(element);
+
+  for (let j in shapeExtension) {
+    let name = shapeExtension[j].name;
+    let value = shapeExtension[j].value;
+    if (name != 'flowelement') {
+      return value;
+    }
+  }
 }

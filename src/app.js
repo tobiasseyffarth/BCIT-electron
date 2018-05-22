@@ -31,32 +31,20 @@ import complianceView from "./app/main/compliance-view";
 import infrastructureView from "./app/main/infrastructure-view";
 import menuView from "./app/main/menu-view";
 import graphView from "./app/main/graph-view";
-import graphcontroller from "./app/control/creategraph";
-import queryinfra from "./app/control/queryInfrastructure";
-import queryprocess from "./app/control/queryprocess";
-import processeditor from "./app/control/editprocess";
-import processrenderer from "./app/control/renderprocess";
+import analyzeView from "./app/main/analyze-view";
+
+import linkmodel from "./app/control/linkmodels";
+import analyze from "./app/control/analyze";
 
 let graphViewer = new graphView({document});
 let bpmnViewer = new bpmnView({document});
 let complianceViewer = new complianceView({document});
 let infraViewer = new infrastructureView({document});
 let menuViewer = new menuView({document});
+let analyzeViewer = new analyzeView({document});
 
 bpmnViewer.on('process_rendered', function (data) {
     graphViewer.renderGraph({process: bpmnViewer.process});
-  }
-);
-
-bpmnViewer.on('flowelement_updated', function (data) {
-    let graph = graphViewer.graph;
-    let flowelement = bpmnViewer.selectedElement;
-    let viewer = bpmnViewer.viewer;
-
-    graphcontroller.updateFlownodeProperty(graph, flowelement);
-    graphcontroller.updateComplianceNode(graph, flowelement);
-    graphcontroller.updateNeighborsBasedOnProps(graph, flowelement);
-    processrenderer.removeExtensionShape(viewer, flowelement);
   }
 );
 
@@ -65,87 +53,93 @@ infraViewer.on('infra_rendered', function (data) {
   }
 );
 
-infraViewer.on('remove_itcomponent_props', function (data) {
+complianceViewer.on('compliance_rendered', function (data) {
+    console.log(complianceViewer.compliance);
+  }
+);
+
+bpmnViewer.on('flowelement_updated', function (data) {
     let graph = graphViewer.graph;
+    let flowelement = bpmnViewer.selectedElement;
+    let viewer = bpmnViewer.viewer;
+
+    linkmodel.updateFlowelement(viewer, graph, flowelement);
+  }
+);
+
+bpmnViewer.on('analyze', function (data) {
+    console.log('analyze from process');
+    console.log(data.id);
+  }
+);
+
+infraViewer.on('remove_itcomponent_props', function (data) {
+    let graph_viewer = graphViewer.graph;
+    let graph_infra = infraViewer.graph;
     let itcomponent = infraViewer.selectedElement;
 
-    graphcontroller.updateITComponentProperty(graph, itcomponent);
-    graphcontroller.updateNeighborsBasedOnProps(graph, itcomponent);
+    linkmodel.updateITComponent({graph_viewer: graph_viewer, graph_infra: graph_infra}, itcomponent);
   }
 );
 
 infraViewer.on('link_infra-process', function (data) {
     let flowelement = bpmnViewer.selectedElement;
     let shape = bpmnViewer.selectedShape;
-    let bpmn_viewer = bpmnViewer.viewer;
+    let viewer = bpmnViewer.viewer;
     let itcomponent = infraViewer.selectedElement;
-    let graph_viewer = graphViewer.graph;
+    let graph = graphViewer.graph;
 
-    if (flowelement != null && itcomponent != null && !flowelement.$type.toLowerCase().includes('data')) {
-      let extension = processeditor.createExtensionElement('infra', itcomponent.id);
-      let isUniqueExt = queryprocess.isUniqueExtension(bpmn_viewer, flowelement, extension);
+    linkmodel.linkInfra2Process(bpmnViewer, viewer, graph, flowelement, shape, itcomponent);
+  }
+);
 
-      if (isUniqueExt) {
-        processeditor.addExtension(bpmn_viewer, flowelement, extension); // 1. zu props flowelement hinzufügen
-        bpmnViewer.renderProcessProps(); //2. processprops neu rendern
-        graphcontroller.updateFlownodeProperty(graph_viewer, flowelement); // 3. graph in graphviewer updaten
-        graphcontroller.addNodes(graph_viewer, {itcomponent: itcomponent, flowelement: flowelement}); // 4. create and link nodes
-        processrenderer.addExtensionShape(bpmn_viewer, shape, {infra: itcomponent}, extension); // 5. add DataObject to process model
-      }
+infraViewer.on('analyze', function (data) {
+    let graph = graphViewer.graph;
+    let node = graph.getElementById(data.id);
+
+    if (node.length>0) {
+      let result_graph = analyze.getGraphChangeITComponent(graph, node);
+      analyzeViewer.showAnalyze(result_graph);
     }
   }
 );
 
-complianceViewer.on('compliance_rendered', function (data) {
-    console.log(complianceViewer.compliance);
-  }
-);
-
 complianceViewer.on('link_requirement-requirement', function (data) {
-    graphcontroller.addNodes(graphViewer.graph, {
-      requirement: complianceViewer.selectedSourceRequirement,
-      requirement_2: complianceViewer.selectedTargetRequirement
-    });
+    let graph = graphViewer.graph;
+    let source_requirement = complianceViewer.selectedSourceRequirement;
+    let target_requirement = complianceViewer.selectedTargetRequirement;
+
+    linkmodel.linkRequirement2Requirement(graph, source_requirement, target_requirement);
   }
 );
 
 complianceViewer.on('link_requirement-infra', function (data) {
     let itcomponent = infraViewer.selectedElement;
     let requirement = complianceViewer.selectedRequirement;
-    let graph_infra = infraViewer.graph;
     let graph_viewer = graphViewer.graph;
 
-    if (itcomponent != null) {
-      let isUniqueProp = queryinfra.isUniqueProp(itcomponent, {requirement: requirement});
-      if (isUniqueProp) { //if new Props are added
-        queryinfra.updateITProps(itcomponent, {requirement: requirement});// 1. zu props infra hinzufügen
-        graphcontroller.updateITComponentProperty(graph_infra, itcomponent);//2. Graph in infraviewer updaten
-        infraViewer.renderITProps(); //3. infraprops neu rendern
-        graphcontroller.updateITComponentProperty(graph_viewer, itcomponent); // 4. graph in graphviewer updaten
-        graphcontroller.addNodes(graph_viewer, {requirement: requirement, itcomponent: itcomponent}); // 5. create and link nodes
-      }
-    }
+    linkmodel.linkRequirement2Infra(graph_viewer, infraViewer, requirement, itcomponent);
   }
 );
 
 complianceViewer.on('link_requirement-process', function (data) {
     let flowelement = bpmnViewer.selectedElement;
     let shape = bpmnViewer.selectedShape;
-    let bpmn_viewer = bpmnViewer.viewer;
+    let viewer = bpmnViewer.viewer;
     let requirement = complianceViewer.selectedRequirement;
-    let graph_viewer = graphViewer.graph;
+    let graph = graphViewer.graph;
 
-    if (flowelement != null && requirement != null) {
-      let extension = processeditor.createExtensionElement('compliance', requirement.id);
-      let isUniqueExt = queryprocess.isUniqueExtension(bpmn_viewer, flowelement, extension);
+    linkmodel.linkRequirement2Process(bpmnViewer, viewer, graph, flowelement, shape, requirement);
+  }
+);
 
-      if (isUniqueExt) {
-        processeditor.addExtension(bpmn_viewer, flowelement, extension); // 1. zu props flowelement hinzufügen
-        bpmnViewer.renderProcessProps(); //2. processprops neu rendern
-        graphcontroller.updateFlownodeProperty(graph_viewer, flowelement); // 3. graph in graphviewer updaten
-        graphcontroller.addNodes(graph_viewer, {requirement: requirement, flowelement: flowelement}); // 4. create and link nodes
-        processrenderer.addExtensionShape(bpmn_viewer, shape, {compliance: requirement}, extension); // 5. add DataObject to process model
-      }
+complianceViewer.on('analyze', function (data) {
+    let graph = graphViewer.graph;
+    let node = graph.getElementById(data.id);
+
+    if (node.length>0) {
+      let result_graph = analyze.getGraphChangeITComponent(graph, node);
+      analyzeViewer.showAnalyze(result_graph);
     }
   }
 );

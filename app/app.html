@@ -124,7 +124,7 @@
   <textarea class="log-content"></textarea>
 </section>
 
-<div class="popup" id="popGraph">
+<section class="popup" id="popGraph">
   <div class="controls">
     <a href="#" id="btnClosePopGraph">&times;</a>
   </div>
@@ -150,6 +150,38 @@
         <label for="node-props">Properties</label>
         <div class="bpp-field-wrapper">
           <div contenteditable="true" id="node-props" name="name"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="popup" id="popAnalyze">
+  <div class="controls">
+    <a href="#" id="btnClosePopAnalyze">&times;</a>
+  </div>
+  <div class="graph-io" id="graph-io-analyze"></div>
+  <div class="container-properties">
+    <div class="bpp-properties-group" data-group="complianceGrp">
+      <span class="group-toggle"></span>
+      <span class="group-label">Node</span>
+      <div class="bpp-properties-entry bpp-textfield" data-entry="id">
+        <label for="node-id">Id</label>
+        <div class="bpp-field-wrapper">
+          <input id="analyze-node-id" type="text" name="id">
+          <button class="clear" data-action="clear" data-show="canClear" id="btnClear-analyze"><span>X</span></button>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-textbox" data-entry="name">
+        <label for="node-name">Name</label>
+        <div class="bpp-field-wrapper">
+          <div contenteditable="true" id="analyze-node-name" name="name"></div>
+        </div>
+      </div>
+      <div class="bpp-properties-entry bpp-textbox" data-entry="props">
+        <label for="node-props">Properties</label>
+        <div class="bpp-field-wrapper">
+          <div contenteditable="true" id="analyze-node-props" name="name"></div>
         </div>
       </div>
     </div>

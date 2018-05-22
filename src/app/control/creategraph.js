@@ -10,7 +10,8 @@ module.exports = {
   updateITComponentProperty,
   addNodes,
   updateNeighborsBasedOnProps,
-  updateComplianceNode
+  updateComplianceNode,
+  updateITDisplayName
 };
 
 //final
@@ -23,7 +24,14 @@ function createGraphFromInfra(graph, infra) {
   for (let i in nodes) {
     graph.add({
       group: "nodes",
-      data: {id: nodes[i].id, name: nodes[i].name, props: nodes[i].props, nodetype: 'infra', modeltype: 'infra'}
+      data: {
+        id: nodes[i].id,
+        name: nodes[i].name,
+        props: nodes[i].props,
+        nodetype: 'infra',
+        modeltype: 'infra',
+        display_name: nodes[i].name
+      }
     });
   }
 
@@ -55,7 +63,14 @@ function createGraphFromProcess(graph, process) {
 
       graph.add({
         group: "nodes",
-        data: {id: node.id, name: node.name, props: props, nodetype: nodetype, modeltype: 'process'}
+        data: {
+          id: node.id,
+          name: node.name,
+          props: props,
+          nodetype: nodetype,
+          modeltype: 'process',
+          display_name: node.name
+        }
       });
     }
   }
@@ -68,7 +83,6 @@ function createGraphFromProcess(graph, process) {
   }
 
 }
-
 
 //final
 function removeModeltypeFromGraph(graph, modeltype) {
@@ -134,6 +148,32 @@ function updateITComponentProperty(graph, element) {
   let props = element.props;
 
   node.data('props', props);
+}
+
+//final
+function updateITDisplayName(graph_viewer, graph_infra, element) {
+  let node = graph_viewer.getElementById(element.id);
+  let node_display = graph_infra.getElementById(element.id);
+  let dir_pred = querygraph.getDirectPredecessor(node);
+  let hasCompliancePred = false;
+
+  if (dir_pred.length > 0) {
+    for (let i in dir_pred) {
+      if (dir_pred[i].data('modeltype') == 'compliance') {
+        hasCompliancePred = true;
+        break;
+      }
+    }
+
+    if (hasCompliancePred) {
+      node_display.data('display_name', node.data('name') + '*');
+    } else {
+      node_display.data('display_name', node.data('name'));
+    }
+
+  } else {
+    node_display.data('display_name', node.data('name'));
+  }
 }
 
 //final
@@ -327,7 +367,8 @@ function addUniqueNode(graph, element) { //adds a single node to the graph if no
         title: element.title,
         props: element.source,
         nodetype: 'compliance',
-        modeltype: 'compliance'
+        modeltype: 'compliance',
+        display_name: element.id
       }
     });
   }
@@ -338,9 +379,6 @@ function addUniqueNode(graph, element) { //adds a single node to the graph if no
 //final?
 function linkNodes(graph, source, target) {
   let sequence_id = source.id() + '_' + target.id();
-  console.log('source', source);
-  console.log('target', target);
-  console.log(sequence_id);
 
   graph.add({
     group: "edges",

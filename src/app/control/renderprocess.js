@@ -163,20 +163,8 @@ function removeExtensionShape(viewer, flowelement) {
   //3. get ID of Requirement or ITComponent stored in the ShapeExtension
   for (let i in extShapes) {
     let shape = extShapes[i];
-    let element = shape.businessObject;
-    let shapeExtension = queryprocess.getExtensionOfElement(element);
-
-    //console.log(element);
-    //console.log(shapeExtension);
-
-    for (let j in shapeExtension) {
-      let name = shapeExtension[j].name;
-      let value = shapeExtension[j].value;
-      //console.log(name);
-      if (name != 'flowelement') {
-        valueShape.push({shape: shape, value: value});
-      }
-    }
+    let id = queryprocess.getIdFromExtensionShape(shape);
+    valueShape.push({shape: shape, value: id});
   }
   //console.log(valueShape);
 

@@ -34,6 +34,7 @@ class complianceView extends EventEmitter {
     this.selectedRequirement = null; //contains the requirement shown in the preview
     this.selectedSourceRequirement = null; //contains the source requirement shown in the left textarea
     this.selectedTargetRequirement = null; //contains the target requirement shown in the right textarea
+    this.ctrl = false;
 
     this.dragEvent = null; //get the source of the drag-event
 
@@ -83,6 +84,11 @@ class complianceView extends EventEmitter {
     if (this.processPanel) {
       this.processPanel.addEventListener("dragover", () => this.allowDrop(event));
       this.processPanel.addEventListener("drop", () => this.onDropProcesspanel(event, this.dragEvent));
+    }
+
+    if (this.document) {
+      this.document.addEventListener("keydown", () => this.onKeyDown(event), true);
+      this.document.addEventListener("keyup", () => this.onKeyUp(event), true);
     }
   }
 
@@ -138,6 +144,12 @@ class complianceView extends EventEmitter {
       let id = list.options[list.selectedIndex].text;
       textarea.value = compliance.toString(id);
       this.selectedRequirement = compliance.getRequirementById(id);
+
+      //starting analyzing
+      if (this.ctrl) {
+        let id = this.selectedRequirement.id;
+        this.emit('analyze', {done: true, id: id});
+      }
     }
   }
 
@@ -207,6 +219,16 @@ class complianceView extends EventEmitter {
         this.emit('link_requirement-process', {done: true});
       }
     }
+  }
+
+  onKeyDown(event) {
+    if (event.which == 18) {
+      this.ctrl = true;
+    }
+  }
+
+  onKeyUp(event) {
+    this.ctrl = false;
   }
 
 }

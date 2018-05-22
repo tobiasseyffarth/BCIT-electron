@@ -48,6 +48,7 @@ class bpmnViewer extends EventEmitter {
     this.selectedElement = null; //moddleElement //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
     this.selectedShape = null; //Shape
     this.process = null; //processmodel of viewer
+    this.ctrl = false;
 
     this.initViewer();
     this.loadBpmn('./resources/process/sample_process.bpmn');
@@ -101,6 +102,11 @@ class bpmnViewer extends EventEmitter {
 
     if (this.cbxCompliance) {
       this.cbxCompliance.addEventListener("click", () => this.defineComplianceProcess(), true);
+    }
+
+    if (this.document) {
+      this.document.addEventListener("keydown", () => this.onKeyDown(event), true);
+      this.document.addEventListener("keyup", () => this.onKeyUp(event), true);
     }
 
   }
@@ -187,12 +193,36 @@ class bpmnViewer extends EventEmitter {
       this.selectedShape = shape;
 
       this.renderProcessProps();
+
+      //Analyze FlowElement
+      if(this.ctrl){
+        let id = shape.id;
+        this.emit('analyze', {done: true, id: id});
+      }
     }
+
+    //Analyze shape extension
+    let isExtShape=queryprocess.isExtensionShape(shape)
+    if (this.ctrl && isExtShape){
+      let id = queryprocess.getIdFromExtensionShape(shape);
+      this.emit('analyze', {done: true, id: id});
+    }
+
+  }
+
+  onKeyDown(event) {
+    if(event.which==18) {
+      this.ctrl = true;
+    }
+  }
+
+  onKeyUp(event) {
+    this.ctrl = false;
   }
 
   renderProcessProps() {
     let element = this.selectedElement;
-    let shape=this.selectedShape;
+    let shape = this.selectedShape;
     let isCompliance = queryprocess.isCompliance(element);
 
     this.clearProcessProps();
@@ -223,12 +253,12 @@ class bpmnViewer extends EventEmitter {
     }
   }
 
-  renderComplianceProcess(shape, isCompliance){
+  renderComplianceProcess(shape, isCompliance) {
     let viewer = this.viewer;
 
-    if(isCompliance){
+    if (isCompliance) {
       renderprocess.colorShape(viewer, shape, {fill: 'grey'});
-    }else{
+    } else {
       renderprocess.colorShape(viewer, shape, {fill: 'none'});
     }
   }

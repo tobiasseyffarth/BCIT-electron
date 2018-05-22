@@ -10,17 +10,18 @@ const baseConfig = {
   menuButton: "#menu"
 };
 
-class graphView {
+class analyzeView {
   constructor(options) {
     if (!options) options = {};
     this.document = options.document;
-    // this.process = options.process; //process to be transformed in graph
-    this.graphContainer = this.document.querySelector('.graph-io');
-    this.closeButton = this.document.getElementById('btnClosePopGraph');
-    this.btnClear = this.document.getElementById('btnClear-graph');
-    this.nodeName = this.document.getElementById('node-name'); // get Textfield from Propertypanel Infra
-    this.nodeId = this.document.getElementById('node-id'); // get ID-Field from Propertypanel Infra
-    this.nodeProps = this.document.getElementById('node-props'); // get Props-Field from Propertypanel Infra
+    this.graph_data = options.graph;
+
+    this.graphContainer = this.document.getElementById('graph-io-analyze');
+    this.closeButton = this.document.getElementById('btnClosePopAnalyze');
+    this.btnClear = this.document.getElementById('btnClear-analyze');
+    this.nodeName = this.document.getElementById('analyze-node-name'); // get Textfield from Propertypanel Infra
+    this.nodeId = this.document.getElementById('analyze-node-id'); // get ID-Field from Propertypanel Infra
+    this.nodeProps = this.document.getElementById('analyze-node-props'); // get Props-Field from Propertypanel Infra
 
     this.graph = cytoscape({
       container: this.graphContainer,
@@ -29,10 +30,11 @@ class graphView {
           selector: 'node',
           style: {
             'background-color': '#666',
-            'label': 'data(id)',
+            'label': 'data(display_name)',
             'font-size': 10,
             'text-wrap': 'wrap',
-            'text-max-width': 20
+            'text-max-width': 20,
+            'shape': 'rectangle'
           }
         },
         {
@@ -51,13 +53,12 @@ class graphView {
         rows: 1
       }
     }); // create an empty graph and define its style
-    this.selectedNode=null;
+    this.selectedNode = null;
 
-    this.initGraphView();
-    this.clickGraph();
+    this.initAnalyzeView();
   }
 
-  initGraphView() {
+  initAnalyzeView() {
     let close = this.closeButton;
 
     if (close) {
@@ -68,19 +69,24 @@ class graphView {
       this.btnClear.addEventListener("click", () => this.clearNodeProps());
     }
 
-    this.document.getElementById("myMenu").style.width = "0px";
+    this.clickGraph();
   }
 
-  renderGraph(options) {
-    let process = options.process;
-    let infra = options.infra;
+  showAnalyze(graph_data) {
+    this.graph_data = graph_data;
 
-    if (process != undefined) {
-      graphcreator.createGraphFromProcess(this.graph, process);
-    } else if (infra != undefined) {
-      graphcreator.createGraphFromInfra(this.graph, infra);
-    }
+    this.showPopup();
+    this.clearGraph();
+    this.copyGraphElements();
+    this.renderGraph();
+  }
 
+  showPopup() {
+    this.document.getElementById('popAnalyze').style.marginLeft = "150px";
+    this.document.getElementById('popAnalyze').style.left = "0px";
+  }
+
+  renderGraph() {
     let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
     layout.run();
     this.graph.autolock(false); //elements can not be moved by the user
@@ -91,8 +97,38 @@ class graphView {
     log.info('graph rendered');
   }
 
+  clearGraph() {
+    let graph = this.graph;
+    let nodes = graph.nodes();
+    let edges = graph.edges();
+
+    for (let i = 0; i < edges.length; i++) { //first remove edges
+      edges[i].remove();
+    }
+
+    for (let i = 0; i < nodes.length; i++) { //second remove nodes
+      nodes[i].remove();
+    }
+  }
+
+  copyGraphElements() {
+    let graph = this.graph;
+    let graph_data = this.graph_data;
+    let nodes = graph_data.nodes();
+    let edges = graph_data.edges();
+
+    for (let i = 0; i < nodes.length; i++) {
+      console.log(nodes[i]);
+      graph.add(nodes[i]);
+    }
+
+    for (let i = 0; i < edges.length; i++) {
+      graph.add(edges[i]);
+    }
+  }
+
   closePopup() {
-    this.document.getElementById("popGraph").style.left = "-5000px";
+    this.document.getElementById("popAnalyze").style.left = "-5000px";
   }
 
   clickGraph() { //weitere Events: http://js.cytoscape.org/#events/user-input-device-events
@@ -109,7 +145,7 @@ class graphView {
       } else {
         if (element.isNode()) {
           console.log('taped on node');
-          _this.selectedNode=element;
+          _this.selectedNode = element;
           _this.renderNodeProps();
         }
         if (element.isEdge()) {
@@ -120,8 +156,8 @@ class graphView {
     });
   }
 
-  renderNodeProps(){
-    let _this=this;
+  renderNodeProps() {
+    let _this = this;
     let element = _this.selectedNode;
 
     _this.nodeId.value = element.id();
@@ -145,4 +181,4 @@ class graphView {
   }
 }
 
-module.exports = graphView;
+module.exports = analyzeView;
