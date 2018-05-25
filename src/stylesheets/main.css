@@ -88,35 +88,46 @@ a {
 .popup {
   /* Height & width depends on how you want to reveal the overlay (see JS below) */
   height: 100%;
-  width: 70%; /*ANPASSEN*/
-  position: fixed; /* Stay in place */
+  width: 100%; /*ANPASSEN*/
+  position: absolute; /* Stay in place */
   z-index: 100;  /*Sit on top */
+  top: 35px;
   left: -5000px;
-  top: 0;
   background-color: rgb(255, 255, 255); /* Black fallback color */
   /* background-color: rgba(255, 255, 255, 0.9);  Black w/opacity */
   overflow-x: hidden; /* Disable horizontal scroll */
   overflow-y: hidden; /* Disable vertical scroll */
   transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+
+  display: flex;
 }
 
 .popup .controls{
+  /*
   height: auto;
   width: 99%;
+  */
+  flex: 5%;
 }
 
 .popup .container-properties{
+  /*
   height: 220px;
   width: 99%;
   bottom: 0px;
   left: 0px;
   position: absolute;
+*/
+  flex: 15%;
 }
 
 .popup .graph-io{
+  /*
   height: 80%;
   width: 99%;
   position: relative;
+*/
+  flex: 80%;
 }
 
 /**************************************************

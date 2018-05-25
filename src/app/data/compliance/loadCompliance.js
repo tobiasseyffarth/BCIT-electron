@@ -64,7 +64,7 @@ let compliance = {
   },
   toString: function (id) {
     let requirement = this.getRequirementById(id);
-    return "ID: " + requirement.id + "\n" + "Source: " + requirement.source.norm + ", § " + requirement.source.paragraph + ", Section " + requirement.source.section + "\nTitle: " + requirement.title + "\n" + requirement.text;
+    return "ID: " + requirement.id + "\n" + "Source: " + requirement.source.norm + ", " + requirement.source.paragraph + ", Section " + requirement.source.section + "\nTitle: " + requirement.title + "\n" + requirement.text;
   }
 };
 
@@ -86,12 +86,46 @@ class source {
   }
 }
 
-function getJSON(xml) { //ToDo: hier mit Promise arbeiten, da es sehr lange dauert?
-  let helpObj = JSON.parse(convert.xml2json(xml, {compact: true, spaces: 2}));
-  return getCompliance(helpObj);
+function getJSON(input) {
+
+  if (input.includes('requirement')) {
+    let json = JSON.parse(input);
+    console.log(json);
+    return getComplianceFromJson(json);
+  } else {
+    let helpObj = JSON.parse(convert.xml2json(input, {compact: true, spaces: 2}));
+    return getComplianceFromXml(helpObj);
+  }
+
 }
 
-function getCompliance(helpObj) {
+function getComplianceFromJson(json) {
+  let result = Object.assign({}, compliance);
+
+  for (let i in json.requirement) {
+    let req_json = json.requirement[i];
+    let cs_json = json.requirement[i].source;
+    let req = new requirement();
+    let cs = new source();
+
+    cs.id = 'source_' + cs.norm + '_' + cs.paragraph + '_' + cs.section;
+    cs.norm = cs_json.norm;
+    cs.paragraph = cs_json.paragraph;
+    cs.section = cs_json.section;
+
+    req.id = 'requirement_' + cs.norm + '_' + cs.paragraph + '_' + cs.section;
+    req.text = req_json.text;
+    req.title = req_json.title;
+    req.source = cs;
+
+    result.requirement.push(req);
+  }
+
+  return result;
+
+}
+
+function getComplianceFromXml(helpObj) {
   let result = Object.assign({}, compliance);
 
   for (let i in helpObj.dokumente.norm) {
@@ -109,8 +143,15 @@ function getCompliance(helpObj) {
                   }
                   r.text = getPlainText(s);
                   let cs = new source();
-                  cs.norm = helpObj.dokumente.norm[i].metadaten.jurabk._text;
-                  cs.paragraph = getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
+                  let norm = helpObj.dokumente.norm[i].metadaten.jurabk;
+
+                  if (norm.length == undefined) {
+                    cs.norm = norm._text;
+                  } else {
+                    cs.norm = norm[0]._text;
+                  }
+
+                  cs.paragraph = '§ '+getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
                   cs.section = Number(j) + 1;
                   cs.id = 'source_' + cs.norm + '_' + cs.paragraph + '_' + cs.section;
                   r.source = cs;
@@ -128,7 +169,7 @@ function getCompliance(helpObj) {
                 r.text = getPlainText(s);
                 let cs = new source();
                 cs.norm = helpObj.dokumente.norm[i].metadaten.jurabk._text;
-                cs.paragraph = getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
+                cs.paragraph = '§ '+getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
                 r.source = cs;
                 cs.id = 'source_' + cs.norm + '_' + cs.paragraph;
                 r.id = 'requirement_' + cs.norm + '_' + cs.paragraph;

@@ -82,7 +82,7 @@ class analyzeView {
   }
 
   showPopup() {
-    this.document.getElementById('popAnalyze').style.marginLeft = "150px";
+    //this.document.getElementById('popAnalyze').style.marginLeft = "150px";
     this.document.getElementById('popAnalyze').style.left = "0px";
   }
 

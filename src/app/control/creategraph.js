@@ -42,17 +42,17 @@ function createGraphFromInfra(graph, infra) {
 
 //final
 function createGraphFromProcess(graph, process) {
-  let nodes = queryprocess.getFlowNodesOfProcess(process);
+  let flownodes = queryprocess.getFlowNodesOfProcess(process);
   let sequences = queryprocess.getSequenceFlowsofProcess(process);
 
   removeModeltypeFromGraph(graph, 'process'); // remove old process model in case of an update
 
-  for (let i in nodes) {
-    let node = nodes[i];
-    let elementtype = node.$type.toLowerCase();
+  for (let i in flownodes) { //add flow elements as nodes to graph
+    let flownode = flownodes[i];
+    let elementtype = flownode.$type.toLowerCase();
 
     if (!elementtype.includes('data')) { //only convert flownodes
-      let props = queryprocess.getExtensionOfElement(node);
+      let props = queryprocess.getExtensionOfElement(flownode);
       let nodetype = 'businessprocess';
 
       for (let j in props) { //check if the node is a compliance process
@@ -64,23 +64,24 @@ function createGraphFromProcess(graph, process) {
       graph.add({
         group: "nodes",
         data: {
-          id: node.id,
-          name: node.name,
+          id: flownode.id,
+          name: flownode.name,
           props: props,
           nodetype: nodetype,
           modeltype: 'process',
-          display_name: node.name
+          display_name: flownode.name
         }
       });
     }
   }
 
-  for (let i in sequences) {
+  for (let i in sequences) { //add edges
     graph.add({
       group: "edges",
       data: {id: sequences[i].id, source: sequences[i].sourceRef.id, target: sequences[i].targetRef.id}
     });
   }
+
 
 }
 

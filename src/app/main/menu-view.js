@@ -61,7 +61,7 @@ class menuView {
   }
 
   openGraphPopup() { //toDo: Popup einbauen
-    this.document.getElementById('popGraph').style.marginLeft = "150px";
+    //this.document.getElementById('popGraph').style.marginLeft = "150px";
     this.document.getElementById('popGraph').style.left = "0px";
 
     this.closeMenu();

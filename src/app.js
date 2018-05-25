@@ -50,11 +50,12 @@ bpmnViewer.on('process_rendered', function (data) {
 
 infraViewer.on('infra_rendered', function (data) {
     graphViewer.renderGraph({infra: infraViewer.infra});
+    console.log(infraViewer.infra);
   }
 );
 
 complianceViewer.on('compliance_rendered', function (data) {
-    console.log(complianceViewer.compliance);
+
   }
 );
 
