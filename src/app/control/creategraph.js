@@ -9,9 +9,11 @@ module.exports = {
   updateFlownodeProperty,
   updateITComponentProperty,
   addNodes,
+  addUniqueNode,
   updateNeighborsBasedOnProps,
   updateComplianceNode,
-  updateITDisplayName
+  updateITDisplayName,
+  createEdges
 };
 
 //final
@@ -30,13 +32,17 @@ function createGraphFromInfra(graph, infra) {
         props: nodes[i].props,
         nodetype: 'infra',
         modeltype: 'infra',
-        display_name: nodes[i].name
+        display_name: nodes[i].name,
+        nodestyle: ''
       }
     });
   }
 
   for (let i in sequences) {
-    graph.add({group: "edges", data: {id: sequences[i].id, source: sequences[i].source, target: sequences[i].target}});
+    graph.add({
+      group: "edges",
+      data: {id: sequences[i].id, source: sequences[i].source, target: sequences[i].target, edgestyle: ''}
+    });
   }
 }
 
@@ -69,7 +75,8 @@ function createGraphFromProcess(graph, process) {
           props: props,
           nodetype: nodetype,
           modeltype: 'process',
-          display_name: flownode.name
+          display_name: flownode.name,
+          nodestyle: ''
         }
       });
     }
@@ -78,7 +85,7 @@ function createGraphFromProcess(graph, process) {
   for (let i in sequences) { //add edges
     graph.add({
       group: "edges",
-      data: {id: sequences[i].id, source: sequences[i].sourceRef.id, target: sequences[i].targetRef.id}
+      data: {id: sequences[i].id, source: sequences[i].sourceRef.id, target: sequences[i].targetRef.id, edgestyle: ''}
     });
   }
 
@@ -307,8 +314,6 @@ function removePred(predecessors) {
       removePred(pred);
     }
   }
-
-
 }
 
 function addNodes(graph, option) {
@@ -320,21 +325,21 @@ function addNodes(graph, option) {
   let target_node;
 
   if (requirement != null && requirement_2 != null) { //link requirement-requirement
-    source_node = addUniqueNode(graph, requirement);
-    target_node = addUniqueNode(graph, requirement_2);
+    source_node = addUniqueNode(graph, {element: requirement});
+    target_node = addUniqueNode(graph, {element: requirement_2});
   }
 
   if (requirement != null && itcomponent != null) { //link requirement-itcomponent
-    source_node = addUniqueNode(graph, requirement);
+    source_node = addUniqueNode(graph, {element: requirement});
     target_node = graph.getElementById(itcomponent.id);
   }
 
   if (requirement != null && flowelement != null) { //link requirement-flowelement
     if (queryprocess.isCompliance(flowelement)) {
       source_node = graph.getElementById(flowelement.id);
-      target_node = addUniqueNode(graph, requirement);
+      target_node = addUniqueNode(graph, {element: requirement});
     } else {
-      source_node = addUniqueNode(graph, requirement);
+      source_node = addUniqueNode(graph, {element: requirement});
       target_node = graph.getElementById(flowelement.id);
     }
   }
@@ -347,37 +352,56 @@ function addNodes(graph, option) {
   linkNodes(graph, source_node, target_node);
 }
 
-//final?
-function addUniqueNode(graph, element) { //adds a single node to the graph if not available
+//final
+function addUniqueNode(graph, input, nodestyle) { //adds a single node to the graph if not available
+  let element = input.element;
+  let node = input.node;
   let nodes = graph.nodes();
   let isUnique = true;
 
-  for (let i = 0; i < nodes.length; i++) { //determine whether an node with this id already exists
-    if (nodes[i].id() == element.id) {
-      isUnique = false;
-      break;
+  if (element != null) {
+    for (let i = 0; i < nodes.length; i++) { //determine whether an node with this id already exists
+      if (nodes[i].id() == element.id) {
+        isUnique = false;
+        break;
+      }
+    }
+
+    if (isUnique) {
+      graph.add({
+        group: "nodes",
+        data: {
+          id: element.id,
+          text: element.text,
+          title: element.title,
+          props: element.source,
+          nodetype: 'compliance',
+          modeltype: 'compliance',
+          display_name: element.id,
+          nodestyle: nodestyle
+        }
+      });
+    }
+
+    return graph.getElementById(element.id);
+  }
+
+  if (node != null) {
+    for (let i = 0; i < nodes.length; i++) { //determine whether an node with this id already exists
+      if (nodes[i] == node) {
+        isUnique = false;
+        break;
+      }
+    }
+
+    if (isUnique) {
+      node.data('nodestyle', nodestyle);
+      graph.add(node);
     }
   }
-
-  if (isUnique) {
-    graph.add({
-      group: "nodes",
-      data: {
-        id: element.id,
-        text: element.text,
-        title: element.title,
-        props: element.source,
-        nodetype: 'compliance',
-        modeltype: 'compliance',
-        display_name: element.id
-      }
-    });
-  }
-
-  return graph.getElementById(element.id);
 }
 
-//final?
+//final
 function linkNodes(graph, source, target) {
   let sequence_id = source.id() + '_' + target.id();
 
@@ -385,4 +409,33 @@ function linkNodes(graph, source, target) {
     group: "edges",
     data: {id: sequence_id, source: source.id(), target: target.id()}
   });
+}
+
+//final??
+function createEdges(source_graph, result_graph, edgestyle) {
+  let nodes_source_graph = source_graph.nodes();
+  let nodes_result_graph = result_graph.nodes();
+
+  // 1. check if nodes are in result_graph
+  for (let i = 0; i < nodes_source_graph.length; i++) {
+    let source_node = nodes_source_graph[i];
+    let con = nodes_result_graph.contains(source_node);
+
+    if (con) {
+      let suc_nodes = querygraph.getDirectSuccessor(source_node);
+
+      // 2. check if direct suc are in result graph
+      for (let j = 0; j < suc_nodes.length; j++) {
+        let target_node = suc_nodes[j];
+        let con_2 = nodes_result_graph.contains(target_node);
+
+        // 3. get edge and ad to result_graph
+        if (con_2) {
+          let edge = querygraph.getEdge(source_node, target_node);
+          edge.data('edgestyle', edgestyle);
+          result_graph.add(edge);
+        }
+      }
+    }
+  }
 }

@@ -99,7 +99,7 @@ infraViewer.on('analyze', function (data) {
     let node = graph.getElementById(data.id);
 
     if (node.length>0) {
-      let result_graph = analyze.getGraphChangeITComponent(graph, node);
+      let result_graph = analyze.getGraphDeleteITComponent(graph, node);
       analyzeViewer.showAnalyze(result_graph);
     }
   }

@@ -29,7 +29,7 @@ class analyzeView {
         {
           selector: 'node',
           style: {
-            'background-color': '#666',
+            'background-color': 'blue',
             'label': 'data(display_name)',
             'font-size': 10,
             'text-wrap': 'wrap',
@@ -89,12 +89,65 @@ class analyzeView {
   renderGraph() {
     let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
     layout.run();
+
     this.graph.autolock(false); //elements can not be moved by the user
     this.graph.reset();//Groesse anpassen
     this.graph.fit();// alle KNoten werden im Container angzeigt
     this.graph.resize();
+    this.styleNodes();
+    this.styleEdges();
+    this.drawGraph();
 
     log.info('graph rendered');
+  }
+
+  styleNodes() {
+    let nodes = this.graph.nodes();
+
+    for (let i = 0; i < nodes.length; i++) {
+      let node = nodes[i];
+      if (node.data('nodestyle') == 'directdemand') {
+        node.style('background-color', 'green');
+      }
+    }
+  }
+
+  styleEdges() {
+    let edges = this.graph.edges();
+
+    for (let i = 0; i < edges.length; i++) {
+      let edge = edges[i];
+      if (edge.data('edgestyle') == 'direct') {
+        edge.style('line-style', 'solid');
+      }
+    }
+  }
+
+  drawGraph() {
+    let changed_node = this.graph.nodes().filter('node[nodestyle = "changedElement"]')[0];
+    let pred = changed_node.predecessors().filter('node');
+    changed_node.position({x: 270, y: 150});
+
+    // 1. get dir Pred of changedElement
+
+    // 2. determine wether complaince or not
+
+    // determine dir. pred of pred in helper --> dir_pred=helper
+
+
+    let x = changed_node.position('x');
+    let y = changed_node.position('y');
+    console.log(x, y);
+
+
+    for (let i = 0; i < pred.length; i++) {
+      let pred_node = pred[i];
+      let y = changed_node.position('y') + (i + 1) * 60;
+
+      pred_node.position({x: x, y: y});
+    }
+
+
   }
 
   clearGraph() {
@@ -118,7 +171,6 @@ class analyzeView {
     let edges = graph_data.edges();
 
     for (let i = 0; i < nodes.length; i++) {
-      console.log(nodes[i]);
       graph.add(nodes[i]);
     }
 
@@ -146,6 +198,12 @@ class analyzeView {
         if (element.isNode()) {
           console.log('taped on node');
           _this.selectedNode = element;
+
+          console.log(element.data());
+          console.log(element.position());
+          console.log(element.width());
+          console.log(element.height());
+
           _this.renderNodeProps();
         }
         if (element.isEdge()) {
