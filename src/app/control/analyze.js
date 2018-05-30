@@ -6,9 +6,13 @@ module.exports = {
   getGraphReplaceITComponent,
   getGraphDeleteITComponent,
   getGraphReplaceComplianceProcess,
-  getGraphReplaceBusinessActivity
+  getGraphReplaceBusinessActivity,
+  getGraphDeleteComplianceProcess,
+  getGraphDeleteBusinessActivity,
+  getGraphDeleteRequirement
 };
 
+//final?
 function getGraphReplaceITComponent(graph, node) {
   let result_graph = cytoscape({/* options */});
   let _node = node;
@@ -21,6 +25,7 @@ function getGraphReplaceITComponent(graph, node) {
   return result_graph;
 }
 
+//final?
 function getGraphDeleteITComponent(graph, node) {
   let result_graph = cytoscape({/* options */});
   let _node = node;
@@ -38,7 +43,6 @@ function getGraphReplaceRequirement(graph, node) {
   let _node = node;
 
   result_graph.add(_node);
-  console.log(result_graph);
 
   return result_graph;
 }
@@ -48,7 +52,6 @@ function getGraphDeleteRequirement(graph, node) {
   let _node = node;
 
   result_graph.add(_node);
-  console.log(result_graph);
 
   return result_graph;
 }
@@ -77,7 +80,6 @@ function getGraphReplaceComplianceProcess(graph, node) {
   let _node = node;
 
   result_graph.add(_node);
-
 
   return result_graph;
 }

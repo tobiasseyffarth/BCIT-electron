@@ -48,7 +48,7 @@ a {
   height: 100%; /* 100% Full-height */
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Stay on top */
+  z-index: 101;
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.9); /*  Black w/opacity */
@@ -135,8 +135,7 @@ a {
 }
 
 .popup .container-properties {
-  flex: 15%;
-  flex-direction: row
+  width: 300px;
 }
 
 /**************************************************
@@ -218,6 +217,7 @@ a {
   height: 100%;
 }
 
+
 /**************************************************
 3.b) Infra-Container
  */
@@ -278,6 +278,24 @@ a {
 #btnRmvProp {
   background-color: #f8f8f8;
   border-style: none;
+}
+
+#node-id {
+  width: 90%;
+}
+
+#node-props {
+  width: 90%;
+  height: 20em;
+}
+
+#analyze-node-id {
+  width: 90%;
+}
+
+#analyze-node-props {
+  width: 90%;
+  height: 20em;
 }
 
 /**************************************************

@@ -112,7 +112,6 @@ class complianceView extends EventEmitter {
     }
 
     if (compliance.length > 0) {
-
       for (let i in compliance) {
         let option = new Option();
         option.text = compliance[i].id;

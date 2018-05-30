@@ -16,7 +16,8 @@ module.exports = {
   isExtensionShape,
   getIdFromExtensionShape,
   isDataObjectRef,
-  isDataStore
+  isDataStore,
+  isTaskOrSubprocess
 };
 
 //final
@@ -313,5 +314,27 @@ function getIdFromExtensionShape(shape) {
     if (name != 'flowelement') {
       return value;
     }
+  }
+}
+
+function isTaskOrSubprocess(input){
+  let element = input.element;
+  let shape = input.shape;
+  let type;
+
+  if (element != null) {
+    type = element.$type;
+  }
+
+  if (shape != null) {
+    type = shape.type;
+  }
+
+  type = type.toLowerCase();
+
+  if (type.includes('task')||type.includes('subprocess')) {
+    return true;
+  } else {
+    return false;
   }
 }

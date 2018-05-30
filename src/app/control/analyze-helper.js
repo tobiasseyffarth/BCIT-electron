@@ -45,7 +45,7 @@ function replaceITDirect(graph, node, result_graph) {
       let nodes_between = querygraph.getNodesBetween(pred, _node);
       for (let j = 0; j < nodes_between.length; j++) {
         let node = nodes_between[j];
-        creategraph.addUniqueNode(result_graph, {node: node});
+        creategraph.addUniqueNode(result_graph, {node: node},'between');
       }
     }
   }
@@ -70,18 +70,18 @@ function replaceITTransitive(graph, node, result_graph) {
         for (let k = 0; k < help_node_dir_pred.length; k++) {
           let help_pred = help_node_dir_pred[k];
           if (help_pred.data('modeltype') == 'compliance') {
-            creategraph.addUniqueNode(result_graph, {node: leave}); //push IT predecessor of business activity
-            creategraph.addUniqueNode(result_graph, {node: help_node}); //push business activity
+            creategraph.addUniqueNode(result_graph, {node: leave},'between'); //push IT predecessor of business activity
+            creategraph.addUniqueNode(result_graph, {node: help_node},'between'); //push business activity
             creategraph.addUniqueNode(result_graph, {node: help_pred}, 'indirectdemand'); //push compliance of business activity
 
             let node_between = querygraph.getNodesBetween(_node, leave); //add nodes between change element and IT predecessor of business activity
             for (let l = 0; l < node_between.length; l++) {
-              creategraph.addUniqueNode(result_graph, {node: node_between[l]});
+              creategraph.addUniqueNode(result_graph, {node: node_between[l]},'between');
             }
 
             let compliance_pred = help_pred.predecessors().filter('node[modeltype = "compliance"]'); //get predecessor of compliance of business activity
             for (let l = 0; l < compliance_pred.length; l++) {
-              creategraph.addUniqueNode(result_graph, {node: compliance_pred[l]});
+              creategraph.addUniqueNode(result_graph, {node: compliance_pred[l]}, 'indirectdemand');
             }
           }
         }
@@ -91,12 +91,12 @@ function replaceITTransitive(graph, node, result_graph) {
         for (let k = 0; k < help_sucs.length; k++) {
           let help_suc_node = help_sucs[k];
 
-          creategraph.addUniqueNode(result_graph, {node: leave}); //push IT predecessor of compliance process
-          creategraph.addUniqueNode(result_graph, {node: help_node}); //push compliance process
+          creategraph.addUniqueNode(result_graph, {node: leave}, 'between'); //push IT predecessor of compliance process
+          creategraph.addUniqueNode(result_graph, {node: help_node},'between'); //push compliance process
 
           let node_between = querygraph.getNodesBetween(_node, leave); //add nodes between change element and IT predecessor of business activity
           for (let l = 0; l < node_between.length; l++) {
-            creategraph.addUniqueNode(result_graph, {node: node_between[l]});
+            creategraph.addUniqueNode(result_graph, {node: node_between[l]},'between');
           }
 
           if (help_suc_node.data('modeltype') == 'compliance') {
@@ -124,18 +124,18 @@ function replaceITTransitive(graph, node, result_graph) {
       let help_node = dir_IT_pred[j];
 
       if (help_node.data('modeltype') == 'compliance') {
-        creategraph.addUniqueNode(result_graph, {node: IT_component}); // add IT component
+        creategraph.addUniqueNode(result_graph, {node: IT_component},'between'); // add IT component
 
         let node_between = querygraph.getNodesBetween(_node, IT_component); //add nodes between change element and IT
         for (let l = 0; l < node_between.length; l++) {
-          creategraph.addUniqueNode(result_graph, {node: node_between[l]});
+          creategraph.addUniqueNode(result_graph, {node: node_between[l]},'between');
         }
 
         creategraph.addUniqueNode(result_graph, {node: help_node}, 'indirectdemand'); // add compliance (=pred of IT component)
 
         let compliance_pred = help_node.predecessors().filter('node[modeltype = "compliance"]');
         for (let l = 0; l < compliance_pred.length; l++) { //add predecessor of compliance of IT component
-          creategraph.addUniqueNode(result_graph, {node: compliance_pred[l]});
+          creategraph.addUniqueNode(result_graph, {node: compliance_pred[l]},'indirectdemand');
         }
       }
     }
@@ -162,11 +162,11 @@ function deleteITObsolete(graph, node, result_graph) {
         let addNode = addComplianceNode(help_node, IT_suc);
 
         if (addNode) { // if compliance has more than one successor, dont remove it
-          creategraph.addUniqueNode(result_graph, {node: IT_component}); // add IT component
+          creategraph.addUniqueNode(result_graph, {node: IT_component},'between'); // add IT component
 
           let node_between = querygraph.getNodesBetween(_node, IT_component); //add nodes between change element and IT
           for (let l = 0; l < node_between.length; l++) {
-            creategraph.addUniqueNode(result_graph, {node: node_between[l]});
+            creategraph.addUniqueNode(result_graph, {node: node_between[l]}, 'between');
           }
 
           creategraph.addUniqueNode(result_graph, {node: help_node}, 'obsolete'); // add compliance (=pred of IT component)
@@ -185,6 +185,9 @@ function deleteITObsolete(graph, node, result_graph) {
       }
     }
   }
+  creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
+
+  //todo: check obsolete compliance of precedings IT
 
   //check obsolete Compliance of node
   let dir_pred = querygraph.getDirectPredecessor(_node);
@@ -210,11 +213,13 @@ function deleteITObsolete(graph, node, result_graph) {
     }
   }
 
-  creategraph.createEdges(graph, result_graph, 'obsolete'); //create Edges
+  creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
 }
 
 //final - // Remove IT - Violation
-function deleteITViolation(graph, node, result_graph) { //todo: es kommt vor, dass ein Compliances eines Vorgänger-Infra alleine als violated im Ergebnis ist??
+//todo: es kommt vor, dass ein Compliances eines Vorgänger-Infra alleine als violated im Ergebnis ist?? -> A-> B und A hat Compliance: wenn B entfernt, dann Compliance alleine angezeigt
+//todo: alleinstehende Compiance ist violated
+function deleteITViolation(graph, node, result_graph) {
   let _node = node;
   let leaves = querygraph.getLeavesOfType(_node); // get leaves of IT component
 
@@ -229,12 +234,12 @@ function deleteITViolation(graph, node, result_graph) { //todo: es kommt vor, da
 
         let help_sucs = querygraph.getDirectSuccessor(help_node);
 
-        creategraph.addUniqueNode(result_graph, {node: leave}); //push IT predecessor of compliance process
+        creategraph.addUniqueNode(result_graph, {node: leave},'between'); //push IT predecessor of compliance process
         creategraph.addUniqueNode(result_graph, {node: help_node}, 'violated'); //push compliance process
 
         let node_between = querygraph.getNodesBetween(_node, leave); //add nodes between change element and IT predecessor of complianceprocess
         for (let l = 0; l < node_between.length; l++) {
-          creategraph.addUniqueNode(result_graph, {node: node_between[l]});
+          creategraph.addUniqueNode(result_graph, {node: node_between[l]}, 'between');
         }
 
         for (let k = 0; k < help_sucs.length; k++) {
@@ -253,6 +258,6 @@ function deleteITViolation(graph, node, result_graph) { //todo: es kommt vor, da
       }
     }
   }
-  creategraph.createEdges(graph, result_graph, 'violation'); //create Edges
+  creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
 }
 

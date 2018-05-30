@@ -1,6 +1,7 @@
 import log from "./../../helpers/logs";
 import graphcreator from "../control/creategraph";
 import cytoscape from "cytoscape";
+import gui from "./../../helpers/gui";
 
 /*****
  * Basic config
@@ -28,7 +29,10 @@ class graphView {
         {
           selector: 'node',
           style: {
-            'background-color': '#666',
+            'background-color': '#ffffff',
+            'border-style': 'solid',
+            'border-color': '#666',
+            'border-width': 1,
             'label': 'data(id)',
             'font-size': 10,
             'text-wrap': 'wrap',
@@ -51,7 +55,7 @@ class graphView {
         rows: 1
       }
     }); // create an empty graph and define its style
-    this.selectedNode=null;
+    this.selectedNode = null;
 
     this.initGraphView();
     this.clickGraph();
@@ -66,6 +70,10 @@ class graphView {
 
     if (this.btnClear) {
       this.btnClear.addEventListener("click", () => this.clearNodeProps());
+    }
+
+    if (this.document) {
+      this.document.addEventListener("keydown", () => this.onKeyDown(event), true);
     }
 
     this.document.getElementById("myMenu").style.width = "0px";
@@ -109,7 +117,8 @@ class graphView {
       } else {
         if (element.isNode()) {
           console.log('taped on node');
-          _this.selectedNode=element;
+          _this.selectedNode = element;
+          _this.clearNodeProps();
           _this.renderNodeProps();
         }
         if (element.isEdge()) {
@@ -120,28 +129,26 @@ class graphView {
     });
   }
 
-  renderNodeProps(){
-    let _this=this;
-    let element = _this.selectedNode;
+  renderNodeProps() {
+    let _this = this;
+    let node = _this.selectedNode;
+    _this.clearNodeProps();
 
-    _this.nodeId.value = element.id();
-    _this.nodeName.textContent = element.data('name');
-    _this.nodeProps.textContent = 'type: ' + element.data('nodetype') + ', ';
-
-    let props = element.data('props');
-    if (props != undefined) {
-      if (props.length > 0) { //getElementProperties and display in ProperyPanel
-        for (let i in props) {
-          _this.nodeProps.textContent = _this.nodeProps.textContent + '\n' + props[i].name + ": " + props[i].value;
-        }
-      }
-    }
+    _this.nodeId.value = node.id();
+    _this.nodeName.textContent = node.data('name');
+    gui.renderNodeProps(node, this.nodeProps);
   }
 
   clearNodeProps() {
     this.nodeId.value = '';
     this.nodeName.textContent = '';
-    this.nodeProps.textContent = '';
+    gui.clearList(this.nodeProps);
+  }
+
+  onKeyDown(event){
+    if(event.which==27){ //press esc.
+      this.closePopup();
+    }
   }
 }
 

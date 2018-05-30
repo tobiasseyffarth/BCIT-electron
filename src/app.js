@@ -83,21 +83,25 @@ bpmnViewer.on('analyze', function (data) {
         if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
           result_graph = analyze.getGraphDeleteITComponent(graph, node);
         }else if(isComplianceProcess){
+
           //result_graph = analyze.getGraphDeleteComplianceProcess(graph, node);
         }else{
           //result_graph = analyze.getGraphDeleteBusinessActivity(graph, node);
         }
+        analyzeViewer.showAnalyze(result_graph, 'Analyze: delete IT component');
 
       } else if (key == 18) { //alt.-> replace
         if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
           result_graph = analyze.getGraphReplaceITComponent(graph, node);
         }else if(isComplianceProcess){
+
           result_graph = analyze.getGraphReplaceComplianceProcess(graph, node);
         }else{
           result_graph = analyze.getGraphReplaceBusinessActivity(graph, node);
         }
+        analyzeViewer.showAnalyze(result_graph, 'Analyze: replace IT component');
       }
-     // analyzeViewer.showAnalyze(result_graph);
+
     }
   }
 );

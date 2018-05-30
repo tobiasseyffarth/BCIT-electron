@@ -42,7 +42,11 @@ class infrastructureView extends EventEmitter {
           selector: 'node',
           style: {
             'label': 'data(display_name)',
-            'shape': 'triangle'
+            'shape': 'triangle',
+            'background-color': '#ffffff',
+            'border-style': 'solid',
+            'border-color': '#666666',
+            'border-width': 1
           }
         },
 
@@ -50,8 +54,8 @@ class infrastructureView extends EventEmitter {
           selector: 'edge',
           style: {
             'width': 1,
-            'line-color': 'blue',
-            'mid-target-arrow-color': 'red',
+            'line-color': '#1c2966',
+            'mid-target-arrow-color': '#3040b7',
             'mid-target-arrow-shape': 'triangle',
             'line-style': 'dotted'
           }
@@ -180,13 +184,7 @@ class infrastructureView extends EventEmitter {
 
     let props = this.selectedNode.data('props');
     gui.clearList(this.infraProps);
-    if (props.length > 0) { //getElementProperties and display in ProperyPanel
-      for (let i in props) {
-        let option = new Option();
-        option.text = props[i].name + ': ' + props[i].value;
-        this.infraProps.add(option);
-      }
-    }
+    gui.renderInfraProps(props, this.infraProps);
   }
 
   removeITProps() {

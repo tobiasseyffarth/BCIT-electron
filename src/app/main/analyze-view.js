@@ -1,6 +1,7 @@
 import log from "./../../helpers/logs";
 import graphcreator from "../control/creategraph";
 import cytoscape from "cytoscape";
+import gui from "./../../helpers/gui";
 
 /*****
  * Basic config
@@ -30,7 +31,10 @@ class analyzeView {
         {
           selector: 'node',
           style: {
-            'background-color': 'blue',
+            'background-color': 'white',
+            'border-style': 'solid',
+            'border-color': 'black',
+            'border-width': 1,
             'label': 'data(display_name)',
             'font-size': 10,
             'text-wrap': 'wrap',
@@ -70,12 +74,16 @@ class analyzeView {
       this.btnClear.addEventListener("click", () => this.clearNodeProps());
     }
 
+    if (this.document) {
+      this.document.addEventListener("keydown", () => this.onKeyDown(event), true);
+    }
+
     this.clickGraph();
   }
 
   showAnalyze(graph_data, heading) {
     this.graph_data = graph_data;
-    this.heading.textContent=heading;
+    this.heading.textContent = heading;
 
     this.showPopup();
     this.clearGraph();
@@ -108,8 +116,20 @@ class analyzeView {
 
     for (let i = 0; i < nodes.length; i++) {
       let node = nodes[i];
-      if (node.data('nodestyle') == 'directdemand') {
-        node.style('background-color', 'green');
+      let nodestyle = node.data('nodestyle');
+
+      if (nodestyle == 'directdemand') {
+        node.style('border-color', 'green');
+      } else if (nodestyle == 'indirectdemand') {
+        node.style('border-color', 'green');
+      } else if (nodestyle == 'obsolete') {
+        node.style('border-color', 'blue');
+      } else if (nodestyle == 'violated') {
+        node.style('border-color', 'red');
+      } else if (nodestyle == 'changedElement') {
+        node.style('border-color', 'orange');
+      } else if (nodestyle == 'between') {
+        node.style('border-color', 'grey');
       }
     }
   }
@@ -206,6 +226,7 @@ class analyzeView {
           console.log(element.width());
           console.log(element.height());
 
+          _this.clearNodeProps();
           _this.renderNodeProps();
         }
         if (element.isEdge()) {
@@ -225,6 +246,8 @@ class analyzeView {
     _this.nodeProps.textContent = 'type: ' + element.data('nodetype') + ', ';
 
     let props = element.data('props');
+    gui.renderProps(props, this.nodeProps)
+    /*
     if (props != undefined) {
       if (props.length > 0) { //getElementProperties and display in ProperyPanel
         for (let i in props) {
@@ -232,12 +255,20 @@ class analyzeView {
         }
       }
     }
+    */
   }
 
   clearNodeProps() {
     this.nodeId.value = '';
     this.nodeName.textContent = '';
-    this.nodeProps.textContent = '';
+    //this.nodeProps.textContent = '';
+    gui.clearList(this.nodeProps);
+  }
+
+  onKeyDown(event){
+    if(event.which==27){ //press esc.
+      this.closePopup();
+    }
   }
 }
 

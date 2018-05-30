@@ -182,13 +182,11 @@ class bpmnViewer extends EventEmitter {
   }
 
   hookOnClick(e) {
-    //this.selectedElement=e.element; //e.element returns a shape element and not a moddle element
-
     let shape = e.element;
     this.selectedShape = shape;
-    let isFlownode = queryprocess.isFlowElement({shape: shape});
+    let isAllowed = queryprocess.isTaskOrSubprocess({shape: shape});
 
-    if (isFlownode) { //just add elements to and edit flownodes
+    if (isAllowed) { //just add elements to and edit flownodes
       //this.document.querySelector('.selected-element-id').textContent = e.element.id;
       this.selectedElement = queryprocess.getFlowElementById(this.process, shape.id); //get element of bpmnviewer register
 
@@ -205,6 +203,7 @@ class bpmnViewer extends EventEmitter {
     let isExtShape = queryprocess.isExtensionShape(shape);
 
     if ((this.key == 17 || this.key == 18) && isExtShape) {
+      console.log('start analyze');
       let id = queryprocess.getIdFromExtensionShape(shape);
       this.emit('analyze', {done: true, id: id, key: this.key});
     }
@@ -244,12 +243,7 @@ class bpmnViewer extends EventEmitter {
   renderProcessExtension() { //
     gui.clearList(this.lstnodeExtension);
     let extension = queryprocess.getExtensionOfElement(this.selectedElement);
-
-    for (let i in extension) {
-      let option = new Option();
-      option.text = extension[i].name + ': ' + extension[i].value;
-      this.lstnodeExtension.add(option);
-    }
+    gui.renderExtensionProps(extension, this.lstnodeExtension);
   }
 
   renderComplianceProcess(shape, isCompliance) {
