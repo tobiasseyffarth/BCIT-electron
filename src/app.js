@@ -35,6 +35,7 @@ import analyzeView from "./app/main/analyze-view";
 
 import linkmodel from "./app/control/linkmodels";
 import analyze from "./app/control/analyze";
+import queryprocess from "./app/control/queryprocess";
 
 let graphViewer = new graphView({document});
 let bpmnViewer = new bpmnView({document});
@@ -69,8 +70,35 @@ bpmnViewer.on('flowelement_updated', function (data) {
 );
 
 bpmnViewer.on('analyze', function (data) {
-    console.log('analyze from process');
-    console.log(data.id);
+    let graph = graphViewer.graph;
+    let node = graph.getElementById(data.id);
+    let result_graph;
+    let key = data.key;
+    let shape = bpmnViewer.selectedShape;
+    let element = shape.businessObject;
+    let isComplianceProcess=queryprocess.isCompliance(element);
+
+    if (node.length > 0) { //avoid click on documents not part of the graph
+      if (key == 17) { // crtl. -> delete
+        if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
+          result_graph = analyze.getGraphDeleteITComponent(graph, node);
+        }else if(isComplianceProcess){
+          //result_graph = analyze.getGraphDeleteComplianceProcess(graph, node);
+        }else{
+          //result_graph = analyze.getGraphDeleteBusinessActivity(graph, node);
+        }
+
+      } else if (key == 18) { //alt.-> replace
+        if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
+          result_graph = analyze.getGraphReplaceITComponent(graph, node);
+        }else if(isComplianceProcess){
+          result_graph = analyze.getGraphReplaceComplianceProcess(graph, node);
+        }else{
+          result_graph = analyze.getGraphReplaceBusinessActivity(graph, node);
+        }
+      }
+     // analyzeViewer.showAnalyze(result_graph);
+    }
   }
 );
 
@@ -97,10 +125,18 @@ infraViewer.on('link_infra-process', function (data) {
 infraViewer.on('analyze', function (data) {
     let graph = graphViewer.graph;
     let node = graph.getElementById(data.id);
+    let result_graph;
+    let key = data.key;
 
-    if (node.length>0) {
-      let result_graph = analyze.getGraphDeleteITComponent(graph, node);
-      analyzeViewer.showAnalyze(result_graph);
+    if (node.length > 0) {
+      if (key == 17) { // crtl.
+        result_graph = analyze.getGraphDeleteITComponent(graph, node);
+        analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete IT component');
+      } else if (key == 18) { //alt.
+        result_graph = analyze.getGraphReplaceITComponent(graph, node);
+        analyzeViewer.showAnalyze(result_graph, 'Analyze: replace IT component');
+      }
+
     }
   }
 );
@@ -138,7 +174,7 @@ complianceViewer.on('analyze', function (data) {
     let graph = graphViewer.graph;
     let node = graph.getElementById(data.id);
 
-    if (node.length>0) {
+    if (node.length > 0) {
       let result_graph = analyze.getGraphChangeITComponent(graph, node);
       analyzeViewer.showAnalyze(result_graph);
     }

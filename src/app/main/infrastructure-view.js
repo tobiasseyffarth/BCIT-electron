@@ -59,10 +59,12 @@ class infrastructureView extends EventEmitter {
       ],
     }); // create an enmpty graph and define its style
     this.infra = null; // stores our infrastructure model
-    this.selectedNode = null; //selected graph node //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
+    this.selectedNode = null; //selected graph node
     this.selectedElement = null; // query IT component from selectedNode
     this.dragEvent = null;
-    this.ctrl = false;
+    this.ctrl = false; //check crtl. pressed to start analyse
+    this.alt = false; //check alt. pressed to start analyse
+    this.key = null;
 
     this.initInfrastructureView();
     this.clickGraph();
@@ -130,17 +132,15 @@ class infrastructureView extends EventEmitter {
         _this.clearITProps();
       } else {
         if (element.isNode()) {
-          console.log('taped on node');
-
           _this.clearITProps();
           _this.selectedNode = element;
           _this.selectedElement = queryInfra.getElementById(_this.infra, _this.selectedNode.id());
           _this.renderITProps();
 
           // starting analyze in case of press key
-          if (_this.ctrl) {
+          if (_this.key == 17 || _this.key == 18) {
             let id = element.id();
-            _this.emit('analyze', {done: true, id: id});
+            _this.emit('analyze', {done: true, id: id, key: _this.key});
           }
         }
         if (element.isEdge()) {
@@ -155,11 +155,16 @@ class infrastructureView extends EventEmitter {
   onKeyDown(event) {
     if (event.which == 18) {
       this.ctrl = true;
+    } else if (event.which == 17) {
+      this.alt = true;
     }
+    this.key = event.which;
   }
 
   onKeyUp(event) {
     this.ctrl = false;
+    this.alt = false;
+    this.key = null;
   }
 
   clearITProps() {
@@ -213,7 +218,6 @@ class infrastructureView extends EventEmitter {
 
       if (dragSource == this.infraPanel.id) {
         this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
-        console.log('link infra process');
         this.emit('link_infra-process', {done: true});
       }
     }

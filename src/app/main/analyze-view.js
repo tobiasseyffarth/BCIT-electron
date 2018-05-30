@@ -18,6 +18,7 @@ class analyzeView {
 
     this.graphContainer = this.document.getElementById('graph-io-analyze');
     this.closeButton = this.document.getElementById('btnClosePopAnalyze');
+    this.heading = this.document.getElementById('heading-analyze');
     this.btnClear = this.document.getElementById('btnClear-analyze');
     this.nodeName = this.document.getElementById('analyze-node-name'); // get Textfield from Propertypanel Infra
     this.nodeId = this.document.getElementById('analyze-node-id'); // get ID-Field from Propertypanel Infra
@@ -72,8 +73,9 @@ class analyzeView {
     this.clickGraph();
   }
 
-  showAnalyze(graph_data) {
+  showAnalyze(graph_data, heading) {
     this.graph_data = graph_data;
+    this.heading.textContent=heading;
 
     this.showPopup();
     this.clearGraph();

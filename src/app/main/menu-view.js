@@ -44,20 +44,24 @@ class menuView {
 
   openMenu() {
     this.document.getElementById("myMenu").style.width = "150px";
+    /*
     this.document.querySelector('.ctrls').style.marginLeft = "150px";
     this.document.querySelector('.container-process').style.marginLeft = "150px";
     this.document.querySelector('.sub-container').style.marginLeft = "150px";
     this.document.querySelector('.container-compliance').style.marginLeft = "150px";
     this.document.querySelector('.container-log').style.marginLeft = "150px";
+    */
   }
 
   closeMenu() {
     this.document.getElementById("myMenu").style.width = "0px";
+    /*
     this.document.querySelector('.ctrls').style.marginLeft = "0px";
     this.document.querySelector('.container-process').style.marginLeft = "0px";
     this.document.querySelector('.sub-container').style.marginLeft = "0px";
     this.document.querySelector('.container-compliance').style.marginLeft = "0px";
     this.document.querySelector('.container-log').style.marginLeft = "0px";
+    */
   }
 
   openGraphPopup() { //toDo: Popup einbauen
@@ -66,7 +70,6 @@ class menuView {
 
     this.closeMenu();
   }
-
 }
 
 module.exports = menuView;

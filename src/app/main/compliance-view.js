@@ -94,7 +94,7 @@ class complianceView extends EventEmitter {
 
   async xmlUploadOnClick() {
     //let data = dialogHelper.xmlFileOpenDialog();
-    let xml = await processio.readFile('./resources/compliance/bdsg.xml');
+    let xml = await processio.readFile('./resources/compliance/gdpr.json');
     this.compliance = loadCompliance.getJSON(xml);
 
     this.renderListRequirement(this.compliance);

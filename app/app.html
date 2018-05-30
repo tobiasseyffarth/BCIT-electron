@@ -113,7 +113,7 @@
     <textarea id="show-requirement1"></textarea>
   </div>
   <div class="requirement">
-    <button id="btnLinkRequirement">link</button>
+    <button class="clear" id="btnLinkRequirement">link</button>
   </div>
   <div class="requirement">
     <textarea id="show-requirement2"></textarea>
@@ -125,10 +125,13 @@
 </section>
 
 <section class="popup" id="popGraph">
-  <div class="controls">
-    <a href="#" id="btnClosePopGraph">&times;</a>
+  <div class="container-pop">
+    <div class="controls">
+      <a href="#" id="btnClosePopGraph">&times;</a>
+    </div>
+    <div class="heading">Graph</div>
+    <div class="graph-io"></div>
   </div>
-  <div class="graph-io"></div>
   <div class="container-properties">
     <div class="bpp-properties-group" data-group="complianceGrp">
       <span class="group-toggle"></span>
@@ -157,10 +160,13 @@
 </section>
 
 <div class="popup" id="popAnalyze">
-  <div class="controls">
-    <a href="#" id="btnClosePopAnalyze">&times;</a>
+  <div class="container-pop">
+    <div class="controls">
+      <a href="#" id="btnClosePopAnalyze">&times;</a>
+    </div>
+    <div class="heading" id="heading-analyze">Analyze</div>
+    <div class="graph-io" id="graph-io-analyze"></div>
   </div>
-  <div class="graph-io" id="graph-io-analyze"></div>
   <div class="container-properties">
     <div class="bpp-properties-group" data-group="complianceGrp">
       <span class="group-toggle"></span>

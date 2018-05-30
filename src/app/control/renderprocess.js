@@ -9,7 +9,7 @@ module.exports = {
   removeShape,
   addExtensionShape,
   removeExtensionShape
-}
+};
 
 //final
 function colorShape(viewer, shape, coloroption) {

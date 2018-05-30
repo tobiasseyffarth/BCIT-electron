@@ -14,7 +14,9 @@ module.exports = {
   isFlowElement,
   isDataObject,
   isExtensionShape,
-  getIdFromExtensionShape
+  getIdFromExtensionShape,
+  isDataObjectRef,
+  isDataStore
 };
 
 //final
@@ -237,7 +239,50 @@ function isDataObject(option) { //identify Database or Document
   } else {
     return false;
   }
+}
 
+function isDataStore(option) {
+  let element = option.element;
+  let shape = option.shape;
+  let type;
+
+  if (element != null) {
+    type = element.$type;
+  }
+
+  if (shape != null) {
+    type = shape.type;
+  }
+
+  type = type.toLowerCase();
+
+  if (type.includes('datastore')) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function isDataObjectRef(option) {
+  let element = option.element;
+  let shape = option.shape;
+  let type;
+
+  if (element != null) {
+    type = element.$type;
+  }
+
+  if (shape != null) {
+    type = shape.type;
+  }
+
+  type = type.toLowerCase();
+
+  if (type.includes('dataobject')) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 //final
@@ -258,7 +303,7 @@ function isUniqueExtension(viewer, element, extension) {
 }
 
 //final
-function getIdFromExtensionShape(shape){
+function getIdFromExtensionShape(shape) {
   let element = shape.businessObject;
   let shapeExtension = getExtensionOfElement(element);
 

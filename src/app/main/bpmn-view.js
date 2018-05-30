@@ -48,7 +48,7 @@ class bpmnViewer extends EventEmitter {
     this.selectedElement = null; //moddleElement //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
     this.selectedShape = null; //Shape
     this.process = null; //processmodel of viewer
-    this.ctrl = false;
+    this.key = null; //get crtl. or alt.
 
     this.initViewer();
     this.loadBpmn('./resources/process/sample_process.bpmn');
@@ -185,39 +185,38 @@ class bpmnViewer extends EventEmitter {
     //this.selectedElement=e.element; //e.element returns a shape element and not a moddle element
 
     let shape = e.element;
+    this.selectedShape = shape;
     let isFlownode = queryprocess.isFlowElement({shape: shape});
 
     if (isFlownode) { //just add elements to and edit flownodes
       //this.document.querySelector('.selected-element-id').textContent = e.element.id;
       this.selectedElement = queryprocess.getFlowElementById(this.process, shape.id); //get element of bpmnviewer register
-      this.selectedShape = shape;
 
       this.renderProcessProps();
 
       //Analyze FlowElement
-      if(this.ctrl){
+      if (this.key == 17 || this.key == 18) {
         let id = shape.id;
-        this.emit('analyze', {done: true, id: id});
+        this.emit('analyze', {done: true, id: id, key: this.key});
       }
     }
 
     //Analyze shape extension
-    let isExtShape=queryprocess.isExtensionShape(shape)
-    if (this.ctrl && isExtShape){
+    let isExtShape = queryprocess.isExtensionShape(shape);
+
+    if ((this.key == 17 || this.key == 18) && isExtShape) {
       let id = queryprocess.getIdFromExtensionShape(shape);
-      this.emit('analyze', {done: true, id: id});
+      this.emit('analyze', {done: true, id: id, key: this.key});
     }
 
   }
 
   onKeyDown(event) {
-    if(event.which==18) {
-      this.ctrl = true;
-    }
+    this.key = event.which;
   }
 
   onKeyUp(event) {
-    this.ctrl = false;
+    this.key = null;
   }
 
   renderProcessProps() {
