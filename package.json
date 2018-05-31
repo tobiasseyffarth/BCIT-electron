@@ -1,12 +1,12 @@
 {
-  "name": "electron-boilerplate",
-  "productName": "Electron Boilerplate",
-  "description": "Starter for your Electron application",
-  "version": "0.0.0",
+  "name": "BCIT",
+  "productName": "BCIT",
+  "description": "hello world bit",
+  "version": "0.0.1",
   "private": true,
-  "author": "Mr. Gumby <mr.gumby@example.com>",
-  "copyright": "© 2017, Gumby inc.",
-  "homepage": "http://example.com",
+  "author": "Tobias Seyffarth <tobias.seyffarth@wiwi.uni-halle.de>, Kai Raschke <kai.raschke@wiwi.uni-halle.de>",
+  "copyright": "© 2018",
+  "homepage": "http://informationsmanagement.wiwi.uni-halle.de/projekte/bit",
   "main": "app/background.js",
   "build": {
     "appId": "com.example.electron-boilerplate",
@@ -28,7 +28,7 @@
     "e2e": "mocha temp/e2e.js --require source-map-support/register",
     "test": "npm run unit && npm run e2e",
     "start": "node build/start.js",
-    "release": "npm test && webpack --config=build/webpack.app.config.js --env=production && electron-builder"
+    "release": "webpack --config=build/webpack.app.config.js --env=production && electron-builder"
   },
   "dependencies": {
     "bootstrap": "^4.0.0",
@@ -39,7 +39,9 @@
     "fs": "0.0.1-security",
     "fs-jetpack": "^1.0.0",
     "jquery": "^3.3.1",
-    "xml-js": "^1.6.2"
+    "popper.js": "^1.14.3",
+    "xml-js": "^1.6.2",
+    "yui-lint": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.5",

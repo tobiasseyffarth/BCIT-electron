@@ -66,8 +66,6 @@ class infrastructureView extends EventEmitter {
     this.selectedNode = null; //selected graph node
     this.selectedElement = null; // query IT component from selectedNode
     this.dragEvent = null;
-    this.ctrl = false; //check crtl. pressed to start analyse
-    this.alt = false; //check alt. pressed to start analyse
     this.key = null;
 
     this.initInfrastructureView();
@@ -107,6 +105,7 @@ class infrastructureView extends EventEmitter {
       this.document.addEventListener("keyup", () => this.onKeyUp(event), true);
     }
 
+    //let xml = await processio.readFile('./resources/it-architecture/empty_infra.xml'); //read infra-exchange-file
     let xml = await processio.readFile('./resources/it-architecture/architecture.xml'); //read infra-exchange-file
     this.infra = loadInfraKai.getInfra(xml); //parsing infra-exchange-file
     this.renderInfraXml(); //render infra to gui
@@ -116,6 +115,12 @@ class infrastructureView extends EventEmitter {
     let xml = await dialogHelper.xmlFileOpenDialog();
     this.infra = loadInfraKai.getInfra(xml); //parsing infra-exchange-file
     this.renderInfraXml(); //render infra to gui
+  }
+
+  async newProject(){
+    graphcreator.removeModeltypeFromGraph(this.graph, 'infra');
+    this.infra=null;
+    this.clearITProps();
   }
 
   renderInfraXml() {

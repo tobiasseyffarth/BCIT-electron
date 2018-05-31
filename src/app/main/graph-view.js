@@ -63,20 +63,22 @@ class graphView {
 
   initGraphView() {
     let close = this.closeButton;
+    let btnClear = this.btnClear;
+    let document = this.document;
 
     if (close) {
       close.addEventListener("click", () => this.closePopup());
     }
 
-    if (this.btnClear) {
-      this.btnClear.addEventListener("click", () => this.clearNodeProps());
+    if (btnClear) {
+      btnClear.addEventListener("click", () => this.clearNodeProps());
     }
 
-    if (this.document) {
-      this.document.addEventListener("keydown", () => this.onKeyDown(event), true);
+    if (document) {
+      document.addEventListener("keydown", () => this.onKeyDown(event), true);
     }
 
-    this.document.getElementById("myMenu").style.width = "0px";
+    document.getElementById("myMenu").style.width = "0px";
   }
 
   renderGraph(options) {
@@ -145,11 +147,20 @@ class graphView {
     gui.clearList(this.nodeProps);
   }
 
-  onKeyDown(event){
-    if(event.which==27){ //press esc.
+  onKeyDown(event) {
+    if (event.which == 27) { //press esc.
       this.closePopup();
     }
   }
+
+  newProject() {
+    let graph = this.graph;
+    graphcreator.removeModeltypeFromGraph(graph, 'process');
+    graphcreator.removeModeltypeFromGraph(graph, 'infra');
+    graphcreator.removeModeltypeFromGraph(graph, 'compliance');
+    this.clearNodeProps();
+  }
+
 }
 
 module.exports = graphView;

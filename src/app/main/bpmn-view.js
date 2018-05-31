@@ -45,7 +45,7 @@ class bpmnViewer extends EventEmitter {
     this.btnRmvExt = this.document.getElementById('btnRmvExt');
 
     this.viewer = null;
-    this.selectedElement = null; //moddleElement //todo: beim Verbinden der Kanten mi intergierten Graphen verwenden.
+    this.selectedElement = null; //moddleElement
     this.selectedShape = null; //Shape
     this.process = null; //processmodel of viewer
     this.key = null; //get crtl. or alt.
@@ -54,11 +54,11 @@ class bpmnViewer extends EventEmitter {
     this.loadBpmn('./resources/process/sample_process.bpmn');
   }
 
-  initViewer() { //hier noch die Moodle Extension einbauen: https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension#plugging-everything-together
-
+  initViewer() {
     this.viewer = new BpmnModeler({
       container: this.bpmnContainer
     });
+
     /*
      this.viewer = new BpmnModeler({
        container: this.bpmnContainer,
@@ -122,10 +122,10 @@ class bpmnViewer extends EventEmitter {
   }
 
   async exportBpmn() {
-    if (this.viewer == null) {
+    if (this.viewer == null || queryprocess.getFlowElementsOfProcess(this.process)==null) {
       log.info('No process imported');
     } else {
-      let promise = await dialogHelper.bpmnFileSaveDialog(processio.saveXml(this.viewer)).catch(function (err) {
+      let promise = await dialogHelper.bpmnFileSaveDialog(processio.getXml(this.viewer)).catch(function (err) {
         console.log('error');
       });
       if (promise != undefined) {
@@ -134,10 +134,15 @@ class bpmnViewer extends EventEmitter {
     }
   }
 
+  newProject() {
+    this.loadBpmn('./resources/process/empty_bpmn.bpmn')
+    this.clearProcessProps();
+  }
+
   renderBpmnXml(xml) {
     let _this = this;
 
-    this.viewer.importXML(xml, function (err) {
+    _this.viewer.importXML(xml, function (err) {
       if (err) {
         console.error('error rendering', err);
       } else {

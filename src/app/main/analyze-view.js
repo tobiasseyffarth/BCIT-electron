@@ -246,7 +246,7 @@ class analyzeView {
     _this.nodeProps.textContent = 'type: ' + element.data('nodetype') + ', ';
 
     let props = element.data('props');
-    gui.renderProps(props, this.nodeProps)
+    gui.renderNodeProps(props, this.nodeProps)
     /*
     if (props != undefined) {
       if (props.length > 0) { //getElementProperties and display in ProperyPanel

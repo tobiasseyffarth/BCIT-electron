@@ -72,13 +72,16 @@ function getFlowNodesOfProcess(process) {
 
   flowElements = getFlowElementsOfProcess(process);
 
-  for (let i = 0; i < flowElements.length; i++) {
-    if (!flowElements[i].$type.includes('SequenceFlow')) {
-      nodes.push(flowElements[i]);
+  if (flowElements != null) {
+    for (let i = 0; i < flowElements.length; i++) {
+      if (!flowElements[i].$type.includes('SequenceFlow')) {
+        nodes.push(flowElements[i]);
+      }
     }
+    return nodes;
+  } else {
+    return null;
   }
-
-  return nodes;
 }
 
 //final
@@ -88,24 +91,33 @@ function getSequenceFlowsofProcess(process) {
 
   flowElements = getFlowElementsOfProcess(process);
 
-  for (let i = 0; i < flowElements.length; i++) {
-    if (flowElements[i].$type.includes('SequenceFlow')) {
-      sequence.push(flowElements[i]);
+  if (flowElements != null) {
+    for (let i = 0; i < flowElements.length; i++) {
+      if (flowElements[i].$type.includes('SequenceFlow')) {
+        sequence.push(flowElements[i]);
+      }
     }
+    return sequence;
+  } else {
+    return null;
   }
-
-  return sequence;
 }
 
 //final
 function getFlowElementsOfProcess(process) {
   let flowElements = [];
 
-  for (let i = 0; i < process.flowElements.length; i++) {
-    flowElements.push(process.flowElements[i]);
+  if (process.flowElements == undefined) {
+    return null;
+  } else {
+    for (let i = 0; i < process.flowElements.length; i++) {
+      flowElements.push(process.flowElements[i]);
+    }
+
+    return flowElements;
   }
 
-  return flowElements;
+
 }
 
 //final
@@ -317,7 +329,7 @@ function getIdFromExtensionShape(shape) {
   }
 }
 
-function isTaskOrSubprocess(input){
+function isTaskOrSubprocess(input) {
   let element = input.element;
   let shape = input.shape;
   let type;
@@ -332,7 +344,7 @@ function isTaskOrSubprocess(input){
 
   type = type.toLowerCase();
 
-  if (type.includes('task')||type.includes('subprocess')) {
+  if (type.includes('task') || type.includes('subprocess')) {
     return true;
   } else {
     return false;

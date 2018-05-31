@@ -61,7 +61,23 @@ module.exports = {
         console.log(fileName);
         if (fileName == null) rej('kein pfad');
         fs.writeFile(fileName, xml, function (err) {
-          if(err) rej(err);
+          if (err) rej(err);
+
+          res(fileName);
+        });
+      });
+    });
+  },
+  projectFileSaveDialog: (file) => {
+    return new Promise((res, rej) => {
+      dialog.showSaveDialog({
+        filters: [
+          {name: 'bcit', extensions: ['bcit']}
+        ]
+      }, function (fileName) {
+        if (fileName == null) rej('kein pfad');
+        fs.writeFile(fileName, file, function (err) {
+          if (err) rej(err);
 
           res(fileName);
         });

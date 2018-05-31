@@ -69,7 +69,7 @@ class complianceView extends EventEmitter {
 
     if (this.showRequirement2) {
       this.showRequirement2.addEventListener("dragover", () => this.allowDrop(event));
-      this.showRequirement2.addEventListener("drop", () => this.showRequirementOnDrop(event, this.dragEvent)); // todo: wie kann das DragEvent gemerkt werden, aktuell in dragEvent gespeichert
+      this.showRequirement2.addEventListener("drop", () => this.showRequirementOnDrop(event, this.dragEvent));
     }
 
     if (this.btnLink) {
@@ -228,6 +228,15 @@ class complianceView extends EventEmitter {
 
   onKeyUp(event) {
     this.ctrl = false;
+  }
+
+  newProject() {
+    this.compliance = null;
+    this.searchRequirement.value = "";
+    this.previewRequirement.value = "";
+    this.showRequirement1.value = "";
+    this.showRequirement2.value = "";
+    gui.clearList(this.listRequirement);
   }
 
 }

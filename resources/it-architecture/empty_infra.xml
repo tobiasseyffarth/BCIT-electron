@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/qdc/2008/02/11/dc.xsd" identifier="id-7e4f3a47-913b-432a-a975-bcc5f1f41a01">
+  <name xml:lang="de">test2</name>
+  <metadata>
+    <schema>Dublin Core</schema>
+    <schemaversion>1.1</schemaversion>
+    <dc:title>MeinerstesModell</dc:title>
+    <dc:creator>Tobias</dc:creator>
+  </metadata>
+  <elements>
+    
+  </elements>
+  <relationships>
+    
+  </relationships>
+  <propertyDefinitions>
+    
+  </propertyDefinitions>
+  <views>
+    <diagrams>
+      <view identifier="id-d546f83d-7450-444d-80a3-c5f07bd6b393" xsi:type="Diagram">
+        <name xml:lang="de">Default View</name>
+        <node identifier="id-390fd9a2-c375-4b61-9447-e35d57a39578" elementRef="id-adc9dc3f-fcf4-4bdd-b178-95500d00c416" xsi:type="Element" x="340" y="301" w="120" h="55">
+          <style>
+            <fillColor r="201" g="231" b="183" />
+            <lineColor r="92" g="92" b="92" />
+          </style>
+        </node>
+        <node identifier="id-3768dd3d-f830-4646-8580-8cf3585f9e07" elementRef="id-e3d7c758-e454-4680-bba6-2314841a392c" xsi:type="Element" x="679" y="338" w="120" h="55">
+          <style>
+            <fillColor r="201" g="231" b="183" />
+            <lineColor r="92" g="92" b="92" />
+          </style>
+        </node>
+        <node identifier="id-fb9b9fd3-a48d-4353-8cf7-1426cbdcd5b4" elementRef="id-2dbc3a80-2d10-4b09-8452-12745f29afb4" xsi:type="Element" x="685" y="219" w="120" h="55">
+          <style>
+            <fillColor r="181" g="255" b="255" />
+            <lineColor r="92" g="92" b="92" />
+          </style>
+        </node>
+        <node identifier="id-7d31fd3d-1330-40a3-bf3a-1098a282b09a" elementRef="id-c5ee727b-93d5-4436-9116-a93b0b1e2a13" xsi:type="Element" x="372" y="188" w="120" h="55">
+          <style>
+            <fillColor r="181" g="255" b="255" />
+            <lineColor r="92" g="92" b="92" />
+          </style>
+        </node>
+        <connection identifier="id-89d8e801-172e-4979-a858-c1d347866b38" relationshipRef="id-7023f665-f1c4-4cb1-aa9a-a7ac7a5760a3" xsi:type="Relationship" source="id-390fd9a2-c375-4b61-9447-e35d57a39578" target="id-7d31fd3d-1330-40a3-bf3a-1098a282b09a">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+          </style>
+        </connection>
+        <connection identifier="id-16a716dd-36cb-4bc1-a47c-29642a933de1" relationshipRef="id-4086a326-c582-4c66-ab60-55c8abe72f5d" xsi:type="Relationship" source="id-3768dd3d-f830-4646-8580-8cf3585f9e07" target="id-fb9b9fd3-a48d-4353-8cf7-1426cbdcd5b4">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+          </style>
+        </connection>
+      </view>
+    </diagrams>
+  </views>
+</model>

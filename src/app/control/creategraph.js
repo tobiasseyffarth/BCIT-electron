@@ -13,7 +13,8 @@ module.exports = {
   updateNeighborsBasedOnProps,
   updateComplianceNode,
   updateITDisplayName,
-  createEdges
+  createEdges,
+  removeModeltypeFromGraph
 };
 
 //final

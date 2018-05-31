@@ -261,3 +261,44 @@ function deleteITViolation(graph, node, result_graph) {
   creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
 }
 
+function deleteComplianceProcessViolation(graph, node, result_graph){
+// Suc anschauen, wenn Compliance
+  // -> Compliance violated, Vörgänger der Compliance ebenfalls violated
+}
+
+function deleteComplianceProcessObsolte(graph, node, result_graph){
+  //wenn Vörgänger = IT
+  //IT wird durch Compliance bestimmt und IT erbringt nur diese IT --> Compliance ist obsolete
+}
+
+function replaceComplianceProcess(graph, node, result_graph){
+// Suc anschauen, wenn Compliance
+  // -> Compliance stellt direkte Bedinungen,
+  // Vörgänger der Compliance stellen indirekte Bedingungen
+}
+
+function deleteComplianceObsolete(graph, node, result_graph){ //violation gibt es hier nicht
+ //alle Vorgänger indirekt obsolete, falls keine anderen Compliance-Nachfolger?
+  //alle nachfolger Compliance sind Obsolete
+ //direkte Vörgänger = ComplianceProcess sind obsolete, wenn sie nicht noch ein nicht-obsoletes Compliance sicherstellen //todo: später Suche im Compliance-Process-Repo
+}
+
+function replaceComplianceDirect(){
+  //alle Värgänger stellen direkte Bedingungen
+}
+
+function replaceComplianceTransitive(){
+  //alle nachfolger stellen indirekte Bedingungen --> können auch nach Aktivitäten oder IT sein
+}
+
+function replaceActivityDirect(){
+  //alle Compliance-Vorgänger und dess erfüllende Compliance Prozesse
+}
+
+function replaceActivityTransitive(){
+  //wenn von IT unterstützt wird und diese IT Compliance hat
+}
+
+function deleteActivityObsolte(){ //es gibt keine Violation
+  //alle Compliance Vörgänger und dessen erfüllende Compliance-Prozesse (sofern keine weiteren CA erfüllt werden)
+}

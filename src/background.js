@@ -17,7 +17,7 @@ import env from "env";
 const setApplicationMenu = () => {
   const menus = [editMenuTemplate];
   if (env.name !== "production") {
-    menus.push(devMenuTemplate);
+   menus.push(devMenuTemplate);
   }
   Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
 };
@@ -38,6 +38,8 @@ app.on("ready", () => {
     height: 600
   });
 
+  //mainWindow.setMenu(null);
+
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, "app.html"),
@@ -47,7 +49,7 @@ app.on("ready", () => {
   );
 
   if (env.name === "development") {
-    mainWindow.openDevTools();
+    //mainWindow.openDevTools();
   }
 });
 

@@ -1,8 +1,4 @@
-import dialogHelper from "./../../helpers/fileopen_dialogs";
-import processio from "../control/processio";
-import loadCompliance from "../data/compliance/loadCompliance";
-import log from "./../../helpers/logs";
-import graphView from "./graph-view";
+const EventEmitter = require('events');
 
 /*****
  * Basic config
@@ -12,13 +8,19 @@ const baseConfig = {
   menuButton: "#menu"
 };
 
-class menuView {
+class menuView extends EventEmitter {
   constructor(options) {
+    super();
+
     if (!options) options = {};
     this.document = options.document;
     this.menuButton = this.document.getElementById('menu');
     this.closeButton = this.document.getElementById('btnClose');
     this.btnGraph = this.document.getElementById('btnGraph');
+    this.btnNew=this.document.getElementById('btnNew');
+    this.btnOpen=this.document.getElementById('btnOpen');
+    this.btnSave=this.document.getElementById('btnSave');
+
     this.initMenuView();
   }
 
@@ -26,6 +28,9 @@ class menuView {
     let btnMenu = this.menuButton;
     let btnClose = this.closeButton;
     let btnGraph = this.btnGraph;
+    let btnNew = this.btnNew;
+    let btnOPen = this.btnOpen;
+    let btnSave=this.btnSave;
 
     if (btnMenu) {
       //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
@@ -39,35 +44,47 @@ class menuView {
     if (btnGraph) {
       btnGraph.addEventListener("click", () => this.openGraphPopup());
     }
+
+    if(btnNew){
+      btnNew.addEventListener("click", () => this.newProject());
+    }
+
+    if(btnOpen){
+      btnOpen.addEventListener("click", () => this.openProject());
+    }
+
+    if(btnSave){
+      btnSave.addEventListener("click", () => this.saveProject());
+    }
+
     this.document.getElementById("myMenu").style.width = "0px";
   }
 
   openMenu() {
     this.document.getElementById("myMenu").style.width = "150px";
-    /*
-    this.document.querySelector('.ctrls').style.marginLeft = "150px";
-    this.document.querySelector('.container-process').style.marginLeft = "150px";
-    this.document.querySelector('.sub-container').style.marginLeft = "150px";
-    this.document.querySelector('.container-compliance').style.marginLeft = "150px";
-    this.document.querySelector('.container-log').style.marginLeft = "150px";
-    */
   }
 
   closeMenu() {
     this.document.getElementById("myMenu").style.width = "0px";
-    /*
-    this.document.querySelector('.ctrls').style.marginLeft = "0px";
-    this.document.querySelector('.container-process').style.marginLeft = "0px";
-    this.document.querySelector('.sub-container').style.marginLeft = "0px";
-    this.document.querySelector('.container-compliance').style.marginLeft = "0px";
-    this.document.querySelector('.container-log').style.marginLeft = "0px";
-    */
   }
 
-  openGraphPopup() { //toDo: Popup einbauen
-    //this.document.getElementById('popGraph').style.marginLeft = "150px";
+  openGraphPopup() {
     this.document.getElementById('popGraph').style.left = "0px";
+    this.closeMenu();
+  }
 
+  newProject(){
+    this.emit('newproject', {done: true});
+    this.closeMenu();
+  }
+
+  openProject(){
+    this.emit('openproject', {done: true});
+    this.closeMenu();
+  }
+
+  saveProject(){
+    this.emit('saveproject', {done: true});
     this.closeMenu();
   }
 }

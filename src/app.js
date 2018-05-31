@@ -36,6 +36,9 @@ import analyzeView from "./app/main/analyze-view";
 import linkmodel from "./app/control/linkmodels";
 import analyze from "./app/control/analyze";
 import queryprocess from "./app/control/queryprocess";
+import dialogHelper from "./helpers/fileopen_dialogs";
+import processio from "./app/control/processio";
+import projectupdater from "./helpers/update_project";
 
 let graphViewer = new graphView({document});
 let bpmnViewer = new bpmnView({document});
@@ -76,16 +79,16 @@ bpmnViewer.on('analyze', function (data) {
     let key = data.key;
     let shape = bpmnViewer.selectedShape;
     let element = shape.businessObject;
-    let isComplianceProcess=queryprocess.isCompliance(element);
+    let isComplianceProcess = queryprocess.isCompliance(element);
 
     if (node.length > 0) { //avoid click on documents not part of the graph
       if (key == 17) { // crtl. -> delete
         if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
           result_graph = analyze.getGraphDeleteITComponent(graph, node);
-        }else if(isComplianceProcess){
+        } else if (isComplianceProcess) {
 
           //result_graph = analyze.getGraphDeleteComplianceProcess(graph, node);
-        }else{
+        } else {
           //result_graph = analyze.getGraphDeleteBusinessActivity(graph, node);
         }
         analyzeViewer.showAnalyze(result_graph, 'Analyze: delete IT component');
@@ -93,10 +96,10 @@ bpmnViewer.on('analyze', function (data) {
       } else if (key == 18) { //alt.-> replace
         if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
           result_graph = analyze.getGraphReplaceITComponent(graph, node);
-        }else if(isComplianceProcess){
+        } else if (isComplianceProcess) {
 
           result_graph = analyze.getGraphReplaceComplianceProcess(graph, node);
-        }else{
+        } else {
           result_graph = analyze.getGraphReplaceBusinessActivity(graph, node);
         }
         analyzeViewer.showAnalyze(result_graph, 'Analyze: replace IT component');
@@ -185,6 +188,30 @@ complianceViewer.on('analyze', function (data) {
   }
 );
 
+menuViewer.on('newproject', function (data) {
+    projectupdater.newProject({
+      bpmnView: bpmnViewer,
+      infraView: infraViewer,
+      complianceView: complianceViewer,
+      graphView: graphViewer
+    });
+  }
+);
+
+menuViewer.on('openproject', function (data) {
+
+  }
+);
+
+menuViewer.on('saveproject', function (data) {
+    projectupdater.saveProject({
+      bpmnView: bpmnViewer,
+      infraView: infraViewer,
+      complianceView: complianceViewer,
+      graphView: graphViewer
+    });
+  }
+);
 
 // ----------------------------------------------------------------------------
 // Everything below is just to show you how it works. You can delete all of it.
