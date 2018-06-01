@@ -1,6 +1,8 @@
 import processio from "./../app/control/processio";
 import dialoghelper from "./fileopen_dialogs";
 import log from "./logs";
+import path from 'path';
+import graphcreator from "./../app/control/creategraph";
 
 module.exports = {
   newProject,
@@ -27,44 +29,80 @@ async function saveProject(viewer) {
   let graphViewer = viewer.graphView;
 
   let processXml = processio.getXml(bpmnViewer.viewer);
+  let processFilename = getUUID() + ".bpmn.bcit_process";
   let infra = infraViewer.infra;
   let compliance = complianceViewer.compliance;
 
   let graph = graphViewer.graph;
   let graph_elements = getGraphElements(graph);
 
-  let json = getJsonSaveProject({
-    process: processXml,
+  let json = {
+    processFilename: processFilename,
     infra: infra,
     compliance: compliance,
     graph_elements: graph_elements
-  });
+  };
 
+  //save json
   let saveFile = JSON.stringify(json);
-  let promise = await dialoghelper.projectFileSaveDialog(saveFile); //todo: hier async arbeiten um promise zu verwerten
+  let promise_json = await dialoghelper.bcitFileSaveDialog(saveFile);
 
-  if (promise != undefined) {
-    log.info('Project exported to ' + promise);
+//get directory to save process.xml
+  let dir = path.dirname(promise_json);
+  let filename = dir + "/" + processFilename;
+  let promise_processxml = await processio.writeFile(filename, processXml);
+
+
+  if (promise_json != undefined && promise_processxml != undefined) {
+    log.info('Project exported to ' + dir);
   }
 }
 
-function openProject() {
-
+function getUUID() {
+  let dt = new Date().getTime();
+  let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    let r = (dt + Math.random() * 16) % 16 | 0;
+    dt = Math.floor(dt / 16);
+    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+  return uuid;
 }
 
-function getJsonSaveProject(input) {
-  let process = input.process;
-  let infra = input.infra;
-  let compliance = input.compliance;
-  let graphelements = input.graph_elements;
-  let exportFile = {process: undefined, infra: undefined, compliance: undefined, graph_elements: undefined};
+async function openProject(viewer) {
+  let bpmnViewer = viewer.bpmnView;
+  let infraViewer = viewer.infraView;
+  let complianceViewer = viewer.complianceView;
+  let graphViewer = viewer.graphView;
 
-  exportFile.process = process;
-  exportFile.infra = infra;
-  exportFile.compliance = compliance;
-  exportFile.graph_elements = graphelements;
+  let filePath = await dialoghelper.bcitFileOpenDialog(); //path of project data
 
-  return exportFile;
+  if (filePath != undefined) {
+    let data = await processio.readFile(filePath);
+    let json = JSON.parse(data);
+
+    //read json
+    let processFilename = json.processFilename;
+    let infra = json.infra;
+    let compliance = json.compliance;
+    let graph_elements = json.graph_elements;
+
+    //read process.bpmn
+    let dir = path.dirname(filePath); //get directory of process
+    let processPath = dir + "//" + processFilename; //build complete process path
+    let processXml = await processio.readFile(processPath); //read process xml
+
+    //set variables in viewers
+    bpmnViewer.openProject(processXml);
+    infraViewer.openProject(infra);
+    complianceViewer.openProject(compliance);
+    graphViewer.openProject(graph_elements);
+
+    //update IT component display name
+    let graph_view = graphViewer.graph;
+    let graph_infra = infraViewer.graph;
+
+    graphcreator.updateITDisplayName(graph_view, graph_infra);
+  }
 }
 
 function getGraphElements(graph) {
@@ -106,7 +144,6 @@ function getGraphElements(graph) {
 
   return graphelements;
 }
-
 
 class node {
   constructor() {

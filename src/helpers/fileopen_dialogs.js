@@ -26,7 +26,6 @@ module.exports = {
 
           res(data);
         });
-
       });
     });
   },
@@ -47,7 +46,26 @@ module.exports = {
 
           res(data);
         });
+      });
+    });
+  },
+  bcitFileOpenDialog: () => {
+    return new Promise((res, rej) => {
+      dialog.showOpenDialog({
+        filters: [
+          {name: 'BCIT', extensions: ['bcit']}
+        ]
+      }, function (fileNames) {
 
+        if (fileNames === undefined) rej(null);
+
+        let fileName = fileNames[0];
+
+        fs.readFile(fileName, 'utf-8', function (err, data) {
+          if (err) rej(err);
+
+          res(fileName);
+        });
       });
     });
   },
@@ -68,11 +86,11 @@ module.exports = {
       });
     });
   },
-  projectFileSaveDialog: (file) => {
+  bcitFileSaveDialog: (file) => {
     return new Promise((res, rej) => {
       dialog.showSaveDialog({
         filters: [
-          {name: 'bcit', extensions: ['bcit']}
+          {name: 'BCIT', extensions: ['bcit']}
         ]
       }, function (fileName) {
         if (fileName == null) rej('kein pfad');

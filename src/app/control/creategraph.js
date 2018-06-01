@@ -4,6 +4,7 @@ import queryprocess from './queryprocess';
 import querygraph from './querygraph';
 
 module.exports = {
+  createGraphFromGraphelements,
   createGraphFromInfra,
   createGraphFromProcess,
   updateFlownodeProperty,
@@ -16,6 +17,46 @@ module.exports = {
   createEdges,
   removeModeltypeFromGraph
 };
+
+//final
+function createGraphFromGraphelements(graph, graph_elements) {
+  let nodes = graph_elements.node;
+  let edges = graph_elements.edge;
+
+  removeModeltypeFromGraph(graph, 'process');
+  removeModeltypeFromGraph(graph, 'infra');
+  removeModeltypeFromGraph(graph, 'compliance');
+
+  for (let i = 0; i < nodes.length; i++) {
+    let node = nodes[i];
+    graph.add({
+      group: "nodes",
+      data: {
+        id: node.id,
+        name: node.name,
+        props: node.props,
+        nodetype: node.nodetype,
+        modeltype: node.modeltype,
+        display_name: node.display_name,
+        nodestyle: node.nodestyle
+      }
+    })
+  }
+
+  for (let i = 0; i < edges.length; i++) {
+    let edge = edges[i];
+
+    graph.add({
+      group: "edges",
+      data: {
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        edgestyle: edge.edgestyle
+      }
+    });
+  }
+}
 
 //final
 function createGraphFromInfra(graph, infra) {
@@ -160,10 +201,26 @@ function updateITComponentProperty(graph, element) {
 }
 
 //final
-function updateITDisplayName(graph_viewer, graph_infra, element) {
-  let node = graph_viewer.getElementById(element.id);
-  let node_display = graph_infra.getElementById(element.id);
-  let dir_pred = querygraph.getDirectPredecessor(node);
+function updateITDisplayName(graph_view, graph_infra, element) {
+
+  if (element != null) { //in case of updating a defined IT component
+    let node_graph = graph_view.getElementById(element.id);
+    let node_display = graph_infra.getElementById(element.id);
+    updateITDisplayName_Node(node_graph, node_display);
+  } else { // in case of opening a project
+    let infra_nodes = graph_infra.nodes();
+
+    for (let i = 0; i < infra_nodes.length; i++) {
+      let node_display = infra_nodes[i];
+      let node_graph = graph_view.getElementById(node_display.id());
+
+      updateITDisplayName_Node(node_graph, node_display);
+    }
+  }
+}
+
+function updateITDisplayName_Node(node_graph, node_display) {
+  let dir_pred = querygraph.getDirectPredecessor(node_graph);
   let hasCompliancePred = false;
 
   if (dir_pred.length > 0) {
@@ -173,15 +230,13 @@ function updateITDisplayName(graph_viewer, graph_infra, element) {
         break;
       }
     }
-
     if (hasCompliancePred) {
-      node_display.data('display_name', node.data('name') + '*');
+      node_display.data('display_name', node_display.data('name') + '*');
     } else {
-      node_display.data('display_name', node.data('name'));
+      node_display.data('display_name', node_display.data('name'));
     }
-
   } else {
-    node_display.data('display_name', node.data('name'));
+    node_display.data('display_name', node_display.data('name'));
   }
 }
 

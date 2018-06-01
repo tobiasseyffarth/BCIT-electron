@@ -5,6 +5,7 @@ import processio from "../control/processio";
 import loadCompliance from "../data/compliance/loadCompliance";
 import log from "./../../helpers/logs";
 import gui from "./../../helpers/gui";
+import querycompliance from "./../control/querycompliance";
 
 /*****
  * Basic config
@@ -103,19 +104,21 @@ class complianceView extends EventEmitter {
   }
 
   renderListRequirement(compliance) {
-    if (compliance.requirement != undefined) {
-      for (let i in compliance.requirement) {
-        let option = new Option();
-        option.text = compliance.requirement[i].id;
-        this.listRequirement.add(option);
+    if (compliance != null) {
+      if (compliance.requirement != undefined) {
+        for (let i in compliance.requirement) {
+          let option = new Option();
+          option.text = compliance.requirement[i].id;
+          this.listRequirement.add(option);
+        }
       }
-    }
 
-    if (compliance.length > 0) {
-      for (let i in compliance) {
-        let option = new Option();
-        option.text = compliance[i].id;
-        this.listRequirement.add(option);
+      if (compliance.length > 0) {
+        for (let i in compliance) {
+          let option = new Option();
+          option.text = compliance[i].id;
+          this.listRequirement.add(option);
+        }
       }
     }
   }
@@ -127,7 +130,7 @@ class complianceView extends EventEmitter {
     if (search.length > 0) {
       gui.clearList(this.listRequirement);
       let result = [];
-      result = compliance.getRequirementContainsText(search);
+      result = querycompliance.getRequirementContainsText(compliance.requirement, search);
       this.renderListRequirement(result);
     } else {
       gui.clearList(this.listRequirement);
@@ -141,8 +144,8 @@ class complianceView extends EventEmitter {
 
     if (list.selectedIndex > -1) {
       let id = list.options[list.selectedIndex].text;
-      textarea.value = compliance.toString(id);
-      this.selectedRequirement = compliance.getRequirementById(id);
+      textarea.value = querycompliance.toString(compliance.requirement, id);
+      this.selectedRequirement = querycompliance.getRequirementById(compliance.requirement, id);
 
       //starting analyzing
       if (this.ctrl) {
@@ -166,13 +169,14 @@ class complianceView extends EventEmitter {
 
       let target = this.document.getElementById(ev.target.id); // get HTML Element
       let id = this.listRequirement.options[this.listRequirement.selectedIndex].text;
+      let compliance=this.compliance;
 
       this.showRequirement(target); //show the requirement in the appropriate textarea
 
       if (target.id == this.showRequirement1.id) { //when selectedRequirement was dropped on the left textarea
-        this.selectedSourceRequirement = this.compliance.getRequirementById(id);
+        this.selectedSourceRequirement = querycompliance.getRequirementById(compliance.requirement, id);
       } else if (target.id == this.showRequirement2.id) { //when selectedRequirement was dropped on the right textarea
-        this.selectedTargetRequirement = this.compliance.getRequirementById(id);
+        this.selectedTargetRequirement = querycompliance.getRequirementById(compliance.requirement, id);
       }
     }
   }
@@ -182,8 +186,8 @@ class complianceView extends EventEmitter {
   }
 
   linkRequirements() {
-    let source = this.selectedSourceRequirement
-    let target = this.selectedTargetRequirement
+    let source = this.selectedSourceRequirement;
+    let target = this.selectedTargetRequirement;
 
     if (source != null && target != null) {
       this.emit('link_requirement-requirement', {done: true});
@@ -201,7 +205,7 @@ class complianceView extends EventEmitter {
       let dragSource = dragEv.target.id;
 
       if (dragSource == this.previewRequirement.id) {
-        this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
+        this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird.
         this.emit('link_requirement-infra', {done: true});
       }
     }
@@ -237,6 +241,12 @@ class complianceView extends EventEmitter {
     this.showRequirement1.value = "";
     this.showRequirement2.value = "";
     gui.clearList(this.listRequirement);
+  }
+
+  openProject(compliance) {
+    this.newProject();
+    this.renderListRequirement(compliance);
+    this.compliance=compliance;
   }
 
 }

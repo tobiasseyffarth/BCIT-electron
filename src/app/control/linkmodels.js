@@ -63,18 +63,18 @@ function linkRequirement2Infra(graph_viewer, infraViewer, requirement, itcompone
       infraViewer.renderITProps(); //3. infraprops neu rendern
       graphcontroller.updateITComponentProperty(graph_viewer, itcomponent); // 4. graph in graphviewer updaten
       graphcontroller.addNodes(graph_viewer, {requirement: requirement, itcomponent: itcomponent}); // 5. create and link nodes
-      graphcontroller.updateITDisplayName(graph_viewer, graph_infra,itcomponent); // 6. update Displayname IT Component
+      graphcontroller.updateITDisplayName(graph_viewer, graph_infra, itcomponent); // 6. update Displayname IT Component
     }
   }
 }
 
 function updateITComponent(graph, itcomponent) {
-  let graph_viewer= graph.graph_viewer;
-  let graph_infra= graph.graph_infra;
+  let graph_viewer = graph.graph_viewer;
+  let graph_infra = graph.graph_infra;
 
   graphcontroller.updateITComponentProperty(graph_viewer, itcomponent); // update node.data('props')
   graphcontroller.updateNeighborsBasedOnProps(graph_viewer, itcomponent); // remove edges
-  graphcontroller.updateITDisplayName(graph_viewer, graph_infra,itcomponent); // update Displayname IT Component
+  graphcontroller.updateITDisplayName(graph_viewer, graph_infra, itcomponent); // update Displayname IT Component
 }
 
 function updateFlowelement(viewer, graph, flowelement) {

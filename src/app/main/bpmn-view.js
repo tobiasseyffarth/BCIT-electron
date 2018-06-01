@@ -122,7 +122,7 @@ class bpmnViewer extends EventEmitter {
   }
 
   async exportBpmn() {
-    if (this.viewer == null || queryprocess.getFlowElementsOfProcess(this.process)==null) {
+    if (this.viewer == null || queryprocess.getFlowElementsOfProcess(this.process) == null) {
       log.info('No process imported');
     } else {
       let promise = await dialogHelper.bpmnFileSaveDialog(processio.getXml(this.viewer)).catch(function (err) {
@@ -135,11 +135,16 @@ class bpmnViewer extends EventEmitter {
   }
 
   newProject() {
-    this.loadBpmn('./resources/process/empty_bpmn.bpmn')
+    this.loadBpmn('./resources/process/empty_bpmn.bpmn');
     this.clearProcessProps();
   }
 
-  renderBpmnXml(xml) {
+  openProject(xml) {
+    this.clearProcessProps();
+    this.renderBpmnXml(xml, true);
+  }
+
+  renderBpmnXml(xml, openProject) {
     let _this = this;
 
     _this.viewer.importXML(xml, function (err) {
@@ -150,7 +155,9 @@ class bpmnViewer extends EventEmitter {
         _this.bpmnFitViewport();
         _this.hookEventBus();
         log.info("BPMN file rendered");
-        _this.emit('process_rendered', {done: true});
+        if (openProject == false || openProject == undefined) { //when loading a new bpmn model
+          _this.emit('process_rendered', {done: true});
+        }
       }
     });
   }
@@ -158,7 +165,7 @@ class bpmnViewer extends EventEmitter {
   updateBpmnXml(viewer) { //rerender Process view
     let _viewer = viewer || this.viewer
 
-    let xml = processio.saveXml(_viewer);
+    let xml = processio.getXml(_viewer);
     this.renderBpmnXml(xml);
   }
 

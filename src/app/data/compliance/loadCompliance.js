@@ -6,66 +6,6 @@ module.exports = {
 
 let compliance = {
   requirement: [],
-
-  getRequirementContainsTitle: function (input) {
-    let result = [];
-    for (let i in this.requirement) {
-      if (this.requirement[i].title != undefined) {
-        let low_title = this.requirement[i].title.toLowerCase();
-        let low_input = input.toLowerCase();
-        if (low_title.includes(low_input)) {
-          result.push(this.requirement[i]);
-        }
-      }
-    }
-    return result;
-  },
-  getRequirementContainsText: function (input) {
-    let result = [];
-    for (let i in this.requirement) {
-      let low_req = this.requirement[i].text.toLowerCase();
-      let low_input = input.toLowerCase();
-      if (low_req.includes(low_input)) {
-        result.push(this.requirement[i]);
-      }
-    }
-    return result;
-  },
-  getRequirementBySource: function (paragraph, section) {
-    let result = [];
-
-    if (section == undefined) {
-      for (let i in this.requirement) {
-        if (this.requirement[i].source.paragraph == paragraph) {
-          result.push(this.requirement[i]);
-        }
-      }
-    } else if (paragraph == undefined) {
-      for (let i in this.requirement) {
-        if (this.requirement[i].source.section != undefined && this.requirement[i].source.section == section) {
-          result.push(this.requirement[i]);
-        }
-      }
-    } else {
-      for (let i in this.requirement) {
-        if (this.requirement[i].source.paragraph == paragraph && this.requirement[i].source.section != undefined && this.requirement[i].source.section == section) {
-          result.push(this.requirement[i]);
-        }
-      }
-    }
-    return result;
-  },
-  getRequirementById: function (id) {
-    for (let i in this.requirement) {
-      if (this.requirement[i].id == id) {
-        return this.requirement[i];
-      }
-    }
-  },
-  toString: function (id) {
-    let requirement = this.getRequirementById(id);
-    return "ID: " + requirement.id + "\n" + "Source: " + requirement.source.norm + ", " + requirement.source.paragraph + ", Section " + requirement.source.section + "\nTitle: " + requirement.title + "\n" + requirement.text;
-  }
 };
 
 class requirement {
@@ -87,7 +27,6 @@ class source {
 }
 
 function getJSON(input) {
-
   if (input.includes('requirement')) {
     let json = JSON.parse(input);
     console.log(json);

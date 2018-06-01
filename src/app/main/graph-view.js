@@ -91,14 +91,18 @@ class graphView {
       graphcreator.createGraphFromInfra(this.graph, infra);
     }
 
+    this.layoutGraph();
+
+    log.info('graph rendered');
+  }
+
+  layoutGraph() {
     let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
     layout.run();
     this.graph.autolock(false); //elements can not be moved by the user
     this.graph.reset();//Groesse anpassen
     this.graph.fit();// alle KNoten werden im Container angzeigt
     this.graph.resize();
-
-    log.info('graph rendered');
   }
 
   closePopup() {
@@ -159,6 +163,12 @@ class graphView {
     graphcreator.removeModeltypeFromGraph(graph, 'infra');
     graphcreator.removeModeltypeFromGraph(graph, 'compliance');
     this.clearNodeProps();
+  }
+
+  openProject(graph_elements) {
+    let graph = this.graph;
+    graphcreator.createGraphFromGraphelements(graph, graph_elements);
+    this.layoutGraph();
   }
 
 }

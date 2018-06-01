@@ -117,19 +117,28 @@ class infrastructureView extends EventEmitter {
     this.renderInfraXml(); //render infra to gui
   }
 
-  async newProject(){
+  newProject() {
     graphcreator.removeModeltypeFromGraph(this.graph, 'infra');
-    this.infra=null;
+    this.infra = null;
     this.clearITProps();
   }
 
-  renderInfraXml() {
+  openProject(infra) {
+    this.newProject();
+
+    this.infra = infra;
+    this.renderInfraXml(true);
+  }
+
+  renderInfraXml(openProject) {
     graphcreator.createGraphFromInfra(this.graph, this.infra);
     let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
     layout.run();
     this.graph.autolock(false); //elements can not be moved by the user
     log.info('infra_rendered');
-    this.emit('infra_rendered', {done: true});
+    if (openProject == false || openProject == undefined) { //when loading a new infra model
+      this.emit('infra_rendered', {done: true});
+    }
   }
 
   clickGraph() { //weitere Events: http://js.cytoscape.org/#events/user-input-device-events

@@ -36,8 +36,6 @@ import analyzeView from "./app/main/analyze-view";
 import linkmodel from "./app/control/linkmodels";
 import analyze from "./app/control/analyze";
 import queryprocess from "./app/control/queryprocess";
-import dialogHelper from "./helpers/fileopen_dialogs";
-import processio from "./app/control/processio";
 import projectupdater from "./helpers/update_project";
 
 let graphViewer = new graphView({document});
@@ -199,7 +197,12 @@ menuViewer.on('newproject', function (data) {
 );
 
 menuViewer.on('openproject', function (data) {
-
+  projectupdater.openProject({
+    bpmnView: bpmnViewer,
+    infraView: infraViewer,
+    complianceView: complianceViewer,
+    graphView: graphViewer
+  });
   }
 );
 

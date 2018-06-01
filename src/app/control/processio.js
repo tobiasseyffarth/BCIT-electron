@@ -1,7 +1,7 @@
 import fs from "fs";
 
 module.exports = {
-  readFile, getXml
+  readFile, getXml, writeFile
 };
 
 function readFile(url) {
@@ -21,4 +21,14 @@ function getXml(viewer) {
     result = xml;
   });
   return result;
+}
+
+function writeFile(fileName, xml) {
+  return new Promise((res, rej) => {
+    fs.writeFile(fileName, xml, function (err) {
+      if (err) rej(err);
+
+      res(fileName);
+    })
+  });
 }
