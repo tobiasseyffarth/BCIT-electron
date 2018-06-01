@@ -84,26 +84,20 @@ a {
 0.c) Popup Graph
  */
 
+/*basic styles
+*****************/
 .popup {
   height: 100%;
   width: 100%;
   position: absolute; /* Stay in place */
   z-index: 100;
-  top: 35px;
   left: -5000px;
-  background-color: rgb(255, 255, 255); /*  Black w/opacity */
   overflow-x: hidden; /* Disable horizontal scroll */
   overflow-y: hidden; /* Disable vertical scroll */
-  transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
   display: flex;
 }
 
-.popup .container-pop {
-  flex: 80%;
-  flex-direction: row
-}
-
-.popup .container-pop .controls {
+.pop-controls {
   height: auto;
   width: 99%;
   margin-left: 5px;
@@ -111,21 +105,29 @@ a {
   font-size: 20px;
 }
 
-.popup .container-pop .controls a {
+.pop-controls a {
   color: #818181;
 }
 
-.popup .container-pop .controls a:hover {
+.pop-controls a:hover {
   color: #bebebe;
 }
 
-.popup .container-pop .heading {
+.pop-heading {
   height: auto;
   width: 99%;
   font-size: 15px;
   font-weight: bold;
   color: #818181;
   text-align: center;
+}
+
+/*container style popup graph
+******************************/
+.popup .container-pop {
+  flex: 80%;
+  flex-direction: row;
+  background-color: rgba(255, 255, 255, 1); /*  Black w/opacity */
 }
 
 .popup .container-pop .graph-io {
@@ -136,6 +138,32 @@ a {
 
 .popup .container-properties {
   width: 300px;
+}
+
+/*container style popup About
+******************************/
+.popup .border_vertical {
+  flex: 15%;
+  flex-direction: row;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.popup .middle {
+  flex: 70%;
+  flex-direction: row;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.popup .middle .border_horizontal{
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.popup .middle .content{
+  background-color: rgba(255, 255, 255, 1);
+  height: 95%;
+  padding: 10px;
+  overflow-y: auto;
 }
 
 /**************************************************

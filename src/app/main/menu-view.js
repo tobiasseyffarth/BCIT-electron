@@ -20,6 +20,7 @@ class menuView extends EventEmitter {
     this.btnNew=this.document.getElementById('btnNew');
     this.btnOpen=this.document.getElementById('btnOpen');
     this.btnSave=this.document.getElementById('btnSave');
+    this.btnAbout=this.document.getElementById('btnAbout');
 
     this.initMenuView();
   }
@@ -29,8 +30,9 @@ class menuView extends EventEmitter {
     let btnClose = this.closeButton;
     let btnGraph = this.btnGraph;
     let btnNew = this.btnNew;
-    let btnOPen = this.btnOpen;
+    let btnOpen = this.btnOpen;
     let btnSave=this.btnSave;
+    let btnAbout=this.btnAbout;
 
     if (btnMenu) {
       //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
@@ -55,6 +57,10 @@ class menuView extends EventEmitter {
 
     if(btnSave){
       btnSave.addEventListener("click", () => this.saveProject());
+    }
+
+    if(btnAbout){
+      btnAbout.addEventListener("click", () => this.openAboutPopup());
     }
 
     this.document.getElementById("myMenu").style.width = "0px";
@@ -85,6 +91,11 @@ class menuView extends EventEmitter {
 
   saveProject(){
     this.emit('saveproject', {done: true});
+    this.closeMenu();
+  }
+
+  openAboutPopup(){
+    this.document.getElementById('popAbout').style.left = "0px";
     this.closeMenu();
   }
 }

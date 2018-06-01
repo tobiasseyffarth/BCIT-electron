@@ -32,6 +32,7 @@ import infrastructureView from "./app/main/infrastructure-view";
 import menuView from "./app/main/menu-view";
 import graphView from "./app/main/graph-view";
 import analyzeView from "./app/main/analyze-view";
+import aboutView from "./app/main/about-view";
 
 import linkmodel from "./app/control/linkmodels";
 import analyze from "./app/control/analyze";
@@ -44,6 +45,7 @@ let complianceViewer = new complianceView({document});
 let infraViewer = new infrastructureView({document});
 let menuViewer = new menuView({document});
 let analyzeViewer = new analyzeView({document});
+let aboutViewer = new aboutView({document});
 
 bpmnViewer.on('process_rendered', function (data) {
     graphViewer.renderGraph({process: bpmnViewer.process});

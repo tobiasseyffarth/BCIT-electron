@@ -113,7 +113,7 @@
   <div class="requirement">
     <textarea id="show-requirement1"></textarea>
   </div>
-  <div class ="buttonLink">
+  <div class="buttonLink">
     <button id="btnLinkRequirement">>></button>
   </div>
   <div class="requirement">
@@ -127,10 +127,10 @@
 
 <section class="popup" id="popGraph">
   <div class="container-pop">
-    <div class="controls">
+    <div class="pop-controls">
       <a href="#" id="btnClosePopGraph">&times;</a>
     </div>
-    <div class="heading">Graph</div>
+    <div class="pop-heading">Graph</div>
     <div class="graph-io"></div>
   </div>
   <div class="container-properties">
@@ -160,12 +160,12 @@
   </div>
 </section>
 
-<div class="popup" id="popAnalyze">
+<section class="popup" id="popAnalyze">
   <div class="container-pop">
-    <div class="controls">
+    <div class="pop-controls">
       <a href="#" id="btnClosePopAnalyze">&times;</a>
     </div>
-    <div class="heading" id="heading-analyze">Analyze</div>
+    <div class="pop-heading" id="heading-analyze">Analyze</div>
     <div class="graph-io" id="graph-io-analyze"></div>
   </div>
   <div class="container-properties">
@@ -193,25 +193,405 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!--
-  <div id="app" class="container" style="display: none;">
-    <h1 id="greet"></h1>
-    <p>
-      Welcome to <a href="http://electron.atom.io" class="js-external-link">Electron</a> app running on this <strong id="os"></strong> machine.
-    </p>
-    <p>
-      App author: <strong id="author"></strong>
-    </p>
-    <p>
-      Environment: <strong id="env"></strong>
-    </p>
-    <p>
-      Electron version: <strong id="electron-version"></strong>
-    </p>
+<section class="popup" id="popAbout">
+  <div class="border_vertical"></div>
+  <div class="middle">
+    <div class="border_horizontal"></div>
+    <div class="pop-controls">
+      <a href="#" id="btnClosePopAbout">&times;</a>
+    </div>
+    <div class="pop-heading" id="heading-about">About</div>
+    <div class="content" id="content-about">
+      <dl>
+        <dt>BCIT (Business Process Compliance and Information Technology)</dt>
+        <dd>Authors: Tobias Seyffarth and Kai Raschke
+        </dd>
+        <dd>Contact: {firstname.lastname}@wiwi.uni-halle.de
+        </dd>
+      </dl>
+      <hr>
+      <h5>Dependencies</h5>
+
+      <dl>
+        <dt>Bootstrap</dt>
+        <dd>Creators: Otto, Mark; Thornton
+        </dd>
+        <dd>Version: 4.0.0
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/twbs/bootstrap
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>bpmn-js</dt>
+        <dd>Creators: Camunda GmbH
+        </dd>
+        <dd>Version: 0.27.5
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/bpmn-io/bpmn-js
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>bpmn-js-properties-panel</dt>
+        <dd>Creators: Camunda GmbH
+        </dd>
+        <dd>Version: 0.22.0
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/bpmn-io/bpmn-js-properties-panel
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>camunda-bpmn-moddle</dt>
+        <dd>Creators: Camunda GmbH
+        </dd>
+        <dd>Version: 0.13.0
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/camunda/camunda-bpmn-moddle
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>cytoscape</dt>
+        <dd>Creators: Franz M, Lopes CT, Huck G, Dong Y, Sumer O, Bader GD
+        </dd>
+        <dd>Version: 3.2.11
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/cytoscape/cytoscape.js
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>fs</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 0.0.1-security
+        </dd>
+        <dd>License: ISC
+        </dd>
+        <dd>Repository: https://github.com/npm/security-holder
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>fs-jetpack</dt>
+        <dd>Creators: Szwacz, Jakub
+        </dd>
+        <dd>Version: 1.0.0
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/szwacz/fs-jetpack
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>jquery</dt>
+        <dd>Creators: JS Foundation
+        </dd>
+        <dd>Version: 3.3.1
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/jquery/jquery
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>popper.js</dt>
+        <dd>Creators: Zivolo, Federico
+        </dd>
+        <dd>Version: 1.14.3
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/FezVrasta/popper.js
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>xml-js</dt>
+        <dd>Creators: Nashwaan, Yousuf
+        </dd>
+        <dd>Version: 1.6.2
+        </dd>
+        <dd>License: MIT
+        </dd>
+        <dd>Repository: https://github.com/nashwaan/xml-js
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>yui-lint</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 0.2.0
+        </dd>
+        <dd>License: BSD
+        </dd>
+        <dd>Repository: https://github.com/yui/yui-lint
+        </dd>
+      </dl>
+
+      <h5>devDependencies</h5>
+
+      <dl>
+        <dt>@babel/core</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 7.0.0-beta.5
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>@babel/preset-env</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 7.0.0-beta.5
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>babel-loader</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 8.0.0-beta.0
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>babel-plugin-transform-object-rest-spread</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 7.0.0-beta.3
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>chai</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 4.1.0
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>css-loader</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 0.28.7
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>electron</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 1.8.2
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>electron-builder</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 19.43.3
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>electron-mocha</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 5.0.0
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>friendly-errors-webpack-plugin</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 1.6.1
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>mocha</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 4.0.1
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>node-sass</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 4.7.2
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>sass-loader</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 6.0.6
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>source-map-support</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 0.5.0
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>spectron</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 3.7.2
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>style-loader</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 0.20.2
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>webpack</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 4.0.1
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>webpack-cli</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 2.1.4
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>webpack-merge</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 4.1.0
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+      <dl>
+        <dt>webpack-node-externals</dt>
+        <dd>Creators:
+        </dd>
+        <dd>Version: 1.6.0
+        </dd>
+        <dd>License:
+        </dd>
+        <dd>Repository:
+        </dd>
+      </dl>
+
+    </div>
   </div>
--->
+  <div class="border_vertical"></div>
+</section>
 
 <script src="app.js"></script>
 </body>
