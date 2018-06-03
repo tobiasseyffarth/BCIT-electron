@@ -218,13 +218,15 @@ class analyzeView {
         _this.graph.resize(); //Komplette Container nutzen
       } else {
         if (element.isNode()) {
-          console.log('taped on node');
+          //console.log('taped on node');
           _this.selectedNode = element;
 
+          /*
           console.log(element.data());
           console.log(element.position());
           console.log(element.width());
           console.log(element.height());
+          */
 
           _this.clearNodeProps();
           _this.renderNodeProps();
@@ -239,23 +241,11 @@ class analyzeView {
 
   renderNodeProps() {
     let _this = this;
-    let element = _this.selectedNode;
+    let node = _this.selectedNode;
 
-    _this.nodeId.value = element.id();
-    _this.nodeName.textContent = element.data('name');
-    _this.nodeProps.textContent = 'type: ' + element.data('nodetype') + ', ';
-
-    let props = element.data('props');
-    gui.renderNodeProps(props, this.nodeProps)
-    /*
-    if (props != undefined) {
-      if (props.length > 0) { //getElementProperties and display in ProperyPanel
-        for (let i in props) {
-          _this.nodeProps.textContent = _this.nodeProps.textContent + '\n' + props[i].name + ": " + props[i].value;
-        }
-      }
-    }
-    */
+    _this.nodeId.value = node.id();
+    _this.nodeName.textContent = node.data('name');
+    gui.renderNodeProps(node, this.nodeProps); //render props in listbox
   }
 
   clearNodeProps() {
@@ -265,8 +255,8 @@ class analyzeView {
     gui.clearList(this.nodeProps);
   }
 
-  onKeyDown(event){
-    if(event.which==27){ //press esc.
+  onKeyDown(event) {
+    if (event.which == 27) { //press esc.
       this.closePopup();
     }
   }

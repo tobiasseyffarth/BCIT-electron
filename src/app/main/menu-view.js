@@ -33,6 +33,7 @@ class menuView extends EventEmitter {
     let btnOpen = this.btnOpen;
     let btnSave=this.btnSave;
     let btnAbout=this.btnAbout;
+    let document = this.document;
 
     if (btnMenu) {
       //arrow function expression (fat arrow function) for binding this (class itself) to the event listener
@@ -63,7 +64,11 @@ class menuView extends EventEmitter {
       btnAbout.addEventListener("click", () => this.openAboutPopup());
     }
 
-    this.document.getElementById("myMenu").style.width = "0px";
+    if (document) {
+      document.addEventListener("keydown", () => this.onKeyDown(event), true);
+    }
+
+    document.getElementById("myMenu").style.width = "0px";
   }
 
   openMenu() {
@@ -97,6 +102,12 @@ class menuView extends EventEmitter {
   openAboutPopup(){
     this.document.getElementById('popAbout').style.left = "0px";
     this.closeMenu();
+  }
+
+  onKeyDown(event){
+    if(event.which==27){ //press esc.
+      this.closeMenu();
+    }
   }
 }
 

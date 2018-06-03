@@ -2,6 +2,7 @@ import log from "./../../helpers/logs";
 import graphcreator from "../control/creategraph";
 import cytoscape from "cytoscape";
 import gui from "./../../helpers/gui";
+import query from "./../control/querygraph";
 
 /*****
  * Basic config
@@ -126,6 +127,7 @@ class graphView {
           _this.selectedNode = element;
           _this.clearNodeProps();
           _this.renderNodeProps();
+          _this.testquery(element);
         }
         if (element.isEdge()) {
           console.log('taped on edge');
@@ -142,7 +144,7 @@ class graphView {
 
     _this.nodeId.value = node.id();
     _this.nodeName.textContent = node.data('name');
-    gui.renderNodeProps(node, this.nodeProps);
+    gui.renderNodeProps(node, this.nodeProps); //render props in listbox
   }
 
   clearNodeProps() {
@@ -169,6 +171,16 @@ class graphView {
     let graph = this.graph;
     graphcreator.createGraphFromGraphelements(graph, graph_elements);
     this.layoutGraph();
+  }
+
+  testquery(element){
+    console.log(element);
+
+    console.log('all preds of type')
+    console.log(query.getPredecessors(element, 'infra'));
+
+    console.log('all sucs of type')
+    console.log(query.getSuccessors(element, 'infra'));
   }
 
 }

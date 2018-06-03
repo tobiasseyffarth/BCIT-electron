@@ -5,31 +5,49 @@ module.exports = {
   filterNodesByType,
   filterNodes,
   getNodesBetween,
-  getLeavesOfType
-}
+  getLeavesOfType,
+  getPredecessors,
+  getSuccessors
+};
 
 //final
-function getDirectPredecessor(node) {
+function getDirectPredecessor(node, nodetype) {
   let helper = [];
-  let predecessors = [];
   helper = node.incomers();
+  let predecessors = [];
 
   for (let i = 0; i < helper.length; i++) {
     if (helper[i].isNode()) {
-      predecessors.push(helper[i]);
+      if (nodetype == null) {
+        predecessors.push(helper[i]);
+      }
+
+      if (nodetype != null) {
+        if (helper[i].data('nodetype') == nodetype) {
+          predecessors.push(helper[i]);
+        }
+      }
     }
   }
   return predecessors;
 }
 
-function getDirectSuccessor(node) {
+function getDirectSuccessor(node, nodetype) {
   let helper = [];
   let successor = [];
   helper = node.outgoers();
 
   for (let i = 0; i < helper.length; i++) {
     if (helper[i].isNode()) {
-      successor.push(helper[i]);
+      if (nodetype == null) {
+        successor.push(helper[i]);
+      }
+
+      if (nodetype != null) {
+        if (helper[i].data('nodetype') == nodetype) {
+          successor.push(helper[i]);
+        }
+      }
     }
   }
   return successor;
@@ -103,7 +121,7 @@ function getNodesBetween(source, target) {
 
 function getLeavesOfType(node, modeltype) {
   let leaves = [];
-  let suc = node.successors().filter('node');
+  // let suc = node.successors().filter('node');
   let type;
 
   if (modeltype != null) {
@@ -112,22 +130,23 @@ function getLeavesOfType(node, modeltype) {
     type = node.data('modeltype');
   }
 
+  let suc = getSuccessors(node, type);
 
   if (suc.length == 0) {
     return node;
   }
 
   //check direct successor
-  let dir_suc=getDirectSuccessor(node);
-  let isLeave=false;
-  for(let i =0;i<dir_suc.length;i++){
-    if(dir_suc[i].data('modeltype') != type){
-      isLeave=true;
+  let dir_suc = getDirectSuccessor(node);
+  let isLeave = false;
+  for (let i = 0; i < dir_suc.length; i++) {
+    if (dir_suc[i].data('modeltype') != type) {
+      isLeave = true;
       break;
     }
   }
 
-  if(isLeave){
+  if (isLeave) {
     leaves.push(node);
   }
 
@@ -150,4 +169,83 @@ function getLeavesOfType(node, modeltype) {
   }
 
   return leaves;
+}
+
+
+function getPredecessors(node, nodetype) {
+  let dir_preds = getDirectPredecessor(node, nodetype);
+
+  return getPredsOfType(dir_preds, nodetype, dir_preds);
+}
+
+function getPredsOfType(to_check, nodetype, preds) {
+  let _tocheck = to_check;
+  let new_check = [];
+
+  for (let i = 0; i < _tocheck.length; i++) {
+    let dir_pred = getDirectPredecessor(_tocheck[i], nodetype);
+
+    for (let j = 0; j < dir_pred.length; j++) {
+      preds.push(dir_pred[j]);
+      new_check.push(dir_pred[j]);
+    }
+  }
+
+  if (new_check.length > 0) {
+    return getPredsOfType(new_check, nodetype, preds);
+  } else {
+    return uniqueArray(preds);
+  }
+}
+
+function getSuccessors(node, nodetype) {
+  let dir_sucs = getDirectSuccessor(node, nodetype);
+
+  return getSucsOfType(dir_sucs, nodetype, dir_sucs);
+}
+
+function getSucsOfType(to_check, nodetype, sucs) {
+  let _tocheck = to_check;
+  let new_check = [];
+
+  for (let i = 0; i < _tocheck.length; i++) {
+    let dir_suc = getDirectSuccessor(_tocheck[i], nodetype);
+
+    for (let j = 0; j < dir_suc.length; j++) {
+      sucs.push(dir_suc[j]);
+      new_check.push(dir_suc[j]);
+    }
+  }
+
+  if (new_check.length > 0) {
+    return getSucsOfType(new_check, nodetype, sucs);
+  } else {
+    return uniqueArray(sucs);
+  }
+}
+
+//final
+function uniqueArray(input) {
+  let result = [];
+
+  for (let i = 0; i < input.length; i++) {
+    let el = input[i];
+    let unique = true;
+
+    for (let j = 0; j < result.length; j++) {
+      let check = result[j];
+      if (el == check) {
+        unique = false;
+        break;
+      }
+    }
+
+    if (unique) {
+      result.push(el);
+    } else {
+      unique = true;
+    }
+  }
+
+  return result;
 }

@@ -42,7 +42,7 @@ function getGraphReplaceRequirement(graph, node) {
   let result_graph = cytoscape({/* options */});
   let _node = node;
 
-  result_graph.add(_node);
+  creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
 
   return result_graph;
 }
@@ -51,8 +51,8 @@ function getGraphDeleteRequirement(graph, node) {
   let result_graph = cytoscape({/* options */});
   let _node = node;
 
-  result_graph.add(_node);
-
+  creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
+  analyzehelper.deleteComplianceObsolete(graph, _node, result_graph);
   return result_graph;
 }
 
@@ -60,7 +60,7 @@ function getGraphReplaceBusinessActivity(graph, node) {
   let result_graph = cytoscape({/* options */});
   let _node = node;
 
-  result_graph.add(_node);
+  creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
 
 
   return result_graph;
@@ -70,25 +70,33 @@ function getGraphDeleteBusinessActivity(graph, node) {
   let result_graph = cytoscape({/* options */});
   let _node = node;
 
-  result_graph.add(_node);
+  creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
 
   return result_graph;
 }
 
+//final?
 function getGraphReplaceComplianceProcess(graph, node) {
   let result_graph = cytoscape({/* options */});
   let _node = node;
 
-  result_graph.add(_node);
+  creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
+
+  analyzehelper.replaceComplianceProcessDirect(graph, _node, result_graph);
+  analyzehelper.replaceComplianceProcessTransitive(graph, _node, result_graph);
 
   return result_graph;
 }
 
+//final?
 function getGraphDeleteComplianceProcess(graph, node) {
   let result_graph = cytoscape({/* options */});
   let _node = node;
 
-  result_graph.add(_node);
+  creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
+
+  analyzehelper.deleteComplianceProcessObsolete(graph, _node, result_graph);
+  analyzehelper.deleteComplianceProcessViolation(graph, _node, result_graph);
 
   return result_graph;
 }

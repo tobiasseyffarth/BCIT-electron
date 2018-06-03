@@ -35,22 +35,24 @@ function renderInfraProps(props, list) {
   }
 }
 
-function renderNodeProps(node, list){
+function renderNodeProps(node, list) {
   let props = node.data('props');
   let option = new Option();
 
-  option.text='modeltype: ' + node.data('modeltype'); //add modeltype to properties
+  option.text = 'modeltype: ' + node.data('modeltype'); //add modeltype to properties
   list.add(option);
 
-  option=new Option();
-  option.text='nodetype: ' + node.data('nodetype'); // add nodetype to properties
+  option = new Option();
+  option.text = 'nodetype: ' + node.data('nodetype'); // add nodetype to properties
   list.add(option);
 
-  if (props.length > 0) { //add props tp properties
-    for (let i in props) {
-      option = new Option();
-      option.text = props[i].name + ': ' + props[i].value;
-      list.add(option);
+  if (props != undefined) { //nodes of process propabily have no props
+    if (props.length > 0) { //add props tp properties
+      for (let i in props) {
+        option = new Option();
+        option.text = props[i].name + ': ' + props[i].value;
+        list.add(option);
+      }
     }
   }
 }

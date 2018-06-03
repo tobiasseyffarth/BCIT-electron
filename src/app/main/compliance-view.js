@@ -35,8 +35,8 @@ class complianceView extends EventEmitter {
     this.selectedRequirement = null; //contains the requirement shown in the preview
     this.selectedSourceRequirement = null; //contains the source requirement shown in the left textarea
     this.selectedTargetRequirement = null; //contains the target requirement shown in the right textarea
-    this.ctrl = false;
 
+    this.key=null;
     this.dragEvent = null; //get the source of the drag-event
 
     this.initComplianceView();
@@ -61,6 +61,7 @@ class complianceView extends EventEmitter {
 
     if (this.previewRequirement) {
       this.previewRequirement.addEventListener("drag", () => this.previewRequirementOnDrag(event));
+      this.previewRequirement.addEventListener("click", () => this.analyzeRequirement());
     }
 
     if (this.showRequirement1) {
@@ -146,18 +147,19 @@ class complianceView extends EventEmitter {
       let id = list.options[list.selectedIndex].text;
       textarea.value = querycompliance.toString(compliance.requirement, id);
       this.selectedRequirement = querycompliance.getRequirementById(compliance.requirement, id);
-
-      //starting analyzing
-      if (this.ctrl) {
-        let id = this.selectedRequirement.id;
-        this.emit('analyze', {done: true, id: id});
-      }
     }
   }
 
   previewRequirementOnDrag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id); //geht nicht
     this.dragEvent = ev;
+  }
+
+  analyzeRequirement() {
+    let key = this.key;
+    if (key === 17 || key === 18) {
+      let id = this.selectedRequirement.id;
+      this.emit('analyze', {done: true, id: id, key: key});
+    }
   }
 
   showRequirementOnDrop(ev, dragEv) {
@@ -165,11 +167,11 @@ class complianceView extends EventEmitter {
     let dragSource = dragEv.target.id;
 
     if (dragSource == this.previewRequirement.id) {
-      this.dragEvent = null; //sichertstellen, dass nicht das Propertyfenster hier rein gezogen wird. //ToDo: wie kann das besser gehen?
+      this.dragEvent = null;
 
       let target = this.document.getElementById(ev.target.id); // get HTML Element
       let id = this.listRequirement.options[this.listRequirement.selectedIndex].text;
-      let compliance=this.compliance;
+      let compliance = this.compliance;
 
       this.showRequirement(target); //show the requirement in the appropriate textarea
 
@@ -225,13 +227,11 @@ class complianceView extends EventEmitter {
   }
 
   onKeyDown(event) {
-    if (event.which == 18) {
-      this.ctrl = true;
-    }
+    this.key = event.which;
   }
 
   onKeyUp(event) {
-    this.ctrl = false;
+    this.key = null;
   }
 
   newProject() {
@@ -246,7 +246,7 @@ class complianceView extends EventEmitter {
   openProject(compliance) {
     this.newProject();
     this.renderListRequirement(compliance);
-    this.compliance=compliance;
+    this.compliance = compliance;
   }
 
 }

@@ -38,6 +38,7 @@ import linkmodel from "./app/control/linkmodels";
 import analyze from "./app/control/analyze";
 import queryprocess from "./app/control/queryprocess";
 import projectupdater from "./helpers/update_project";
+import log from "./../src/helpers/logs";
 
 let graphViewer = new graphView({document});
 let bpmnViewer = new bpmnView({document});
@@ -82,29 +83,32 @@ bpmnViewer.on('analyze', function (data) {
     let isComplianceProcess = queryprocess.isCompliance(element);
 
     if (node.length > 0) { //avoid click on documents not part of the graph
-      if (key == 17) { // crtl. -> delete
+      if (key === 17) { // crtl. -> delete
         if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
           result_graph = analyze.getGraphDeleteITComponent(graph, node);
+          analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete IT component');
+        } else if (queryprocess.isExtensionShape(shape) && queryprocess.isDataObjectRef({shape: shape})) {
+          result_graph = analyze.getGraphDeleteRequirement(graph, node);
+          analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Compliance Requirement');
         } else if (isComplianceProcess) {
-
-          //result_graph = analyze.getGraphDeleteComplianceProcess(graph, node);
+          result_graph = analyze.getGraphDeleteComplianceProcess(graph, node);
+          analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Compliance Process');
         } else {
           //result_graph = analyze.getGraphDeleteBusinessActivity(graph, node);
+          //analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Business Activity');
         }
-        analyzeViewer.showAnalyze(result_graph, 'Analyze: delete IT component');
-
-      } else if (key == 18) { //alt.-> replace
+      } else if (key === 18) { //alt.-> replace
         if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
           result_graph = analyze.getGraphReplaceITComponent(graph, node);
+          analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace IT Component');
         } else if (isComplianceProcess) {
-
           result_graph = analyze.getGraphReplaceComplianceProcess(graph, node);
+          analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace Compliance Process');
         } else {
-          result_graph = analyze.getGraphReplaceBusinessActivity(graph, node);
+          //result_graph = analyze.getGraphReplaceBusinessActivity(graph, node);
+          //analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace Business Activity');
         }
-        analyzeViewer.showAnalyze(result_graph, 'Analyze: replace IT component');
       }
-
     }
   }
 );
@@ -136,14 +140,13 @@ infraViewer.on('analyze', function (data) {
     let key = data.key;
 
     if (node.length > 0) {
-      if (key == 17) { // crtl.
+      if (key == 17) { // crtl. -> delete
         result_graph = analyze.getGraphDeleteITComponent(graph, node);
         analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete IT component');
-      } else if (key == 18) { //alt.
+      } else if (key == 18) { //alt. -> replace
         result_graph = analyze.getGraphReplaceITComponent(graph, node);
-        analyzeViewer.showAnalyze(result_graph, 'Analyze: replace IT component');
+        analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace IT component');
       }
-
     }
   }
 );
@@ -180,10 +183,16 @@ complianceViewer.on('link_requirement-process', function (data) {
 complianceViewer.on('analyze', function (data) {
     let graph = graphViewer.graph;
     let node = graph.getElementById(data.id);
+    let key = data.key;
 
-    if (node.length > 0) {
-      let result_graph = analyze.getGraphChangeITComponent(graph, node);
-      analyzeViewer.showAnalyze(result_graph);
+
+    if (key === 17) { //-> ctrl: delete
+      if (node.length > 0) {
+        let result_graph = analyze.getGraphDeleteRequirement(graph, node);
+        analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Compliance Requirement');
+      }else{
+        log.info('Compliance requirement is not linked to any other element.');
+      }
     }
   }
 );
@@ -199,12 +208,12 @@ menuViewer.on('newproject', function (data) {
 );
 
 menuViewer.on('openproject', function (data) {
-  projectupdater.openProject({
-    bpmnView: bpmnViewer,
-    infraView: infraViewer,
-    complianceView: complianceViewer,
-    graphView: graphViewer
-  });
+    projectupdater.openProject({
+      bpmnView: bpmnViewer,
+      infraView: infraViewer,
+      complianceView: complianceViewer,
+      graphView: graphViewer
+    });
   }
 );
 

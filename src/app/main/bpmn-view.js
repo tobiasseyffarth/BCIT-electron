@@ -215,7 +215,6 @@ class bpmnViewer extends EventEmitter {
     let isExtShape = queryprocess.isExtensionShape(shape);
 
     if ((this.key == 17 || this.key == 18) && isExtShape) {
-      console.log('start analyze');
       let id = queryprocess.getIdFromExtensionShape(shape);
       this.emit('analyze', {done: true, id: id, key: this.key});
     }
