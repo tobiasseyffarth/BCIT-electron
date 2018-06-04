@@ -84,29 +84,32 @@ bpmnViewer.on('analyze', function (data) {
 
     if (node.length > 0) { //avoid click on documents not part of the graph
       if (key === 17) { // crtl. -> delete
-        if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
+        if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) { //change IT
           result_graph = analyze.getGraphDeleteITComponent(graph, node);
           analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete IT component');
-        } else if (queryprocess.isExtensionShape(shape) && queryprocess.isDataObjectRef({shape: shape})) {
+        } else if (queryprocess.isExtensionShape(shape) && queryprocess.isDataObjectRef({shape: shape})) { //change requirement
           result_graph = analyze.getGraphDeleteRequirement(graph, node);
           analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Compliance Requirement');
-        } else if (isComplianceProcess) {
+        } else if (isComplianceProcess) { //change complianceProcess
           result_graph = analyze.getGraphDeleteComplianceProcess(graph, node);
           analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Compliance Process');
-        } else {
-          //result_graph = analyze.getGraphDeleteBusinessActivity(graph, node);
-          //analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Business Activity');
+        } else { //change business activity
+          result_graph = analyze.getGraphDeleteBusinessActivity(graph, node);
+          analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Business Activity');
         }
       } else if (key === 18) { //alt.-> replace
         if (queryprocess.isExtensionShape(shape) && queryprocess.isDataStore({shape: shape})) {
           result_graph = analyze.getGraphReplaceITComponent(graph, node);
           analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace IT Component');
+        }else if(queryprocess.isExtensionShape(shape) && queryprocess.isDataObjectRef({shape: shape})){
+          result_graph = analyze.getGraphReplaceRequirement(graph, node);
+          analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace Compliance Requirement');
         } else if (isComplianceProcess) {
           result_graph = analyze.getGraphReplaceComplianceProcess(graph, node);
           analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace Compliance Process');
         } else {
-          //result_graph = analyze.getGraphReplaceBusinessActivity(graph, node);
-          //analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace Business Activity');
+          result_graph = analyze.getGraphReplaceBusinessActivity(graph, node);
+          analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace Business Activity');
         }
       }
     }
@@ -139,7 +142,7 @@ infraViewer.on('analyze', function (data) {
     let result_graph;
     let key = data.key;
 
-    if (node.length > 0) {
+    if (node.length > 0) { //avoid to click an element that is not part of the graph
       if (key == 17) { // crtl. -> delete
         result_graph = analyze.getGraphDeleteITComponent(graph, node);
         analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete IT component');
@@ -185,13 +188,19 @@ complianceViewer.on('analyze', function (data) {
     let node = graph.getElementById(data.id);
     let key = data.key;
 
-
     if (key === 17) { //-> ctrl: delete
       if (node.length > 0) {
         let result_graph = analyze.getGraphDeleteRequirement(graph, node);
         analyzeViewer.showAnalyze(result_graph, 'Analyze: Delete Compliance Requirement');
       }else{
-        log.info('Compliance requirement is not linked to any other element.');
+        log.info('The selected compliance requirement is not linked to any other element.');
+      }
+    }else if(key===18){ //alt. -> replace
+      if (node.length > 0) {
+        let result_graph = analyze.getGraphReplaceRequirement(graph, node);
+        analyzeViewer.showAnalyze(result_graph, 'Analyze: Replace Compliance Requirement');
+      }else{
+        log.info('The selected compliance requirement is not linked to any other element.');
       }
     }
   }

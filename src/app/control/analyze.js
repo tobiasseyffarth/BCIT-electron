@@ -7,6 +7,7 @@ module.exports = {
   getGraphDeleteITComponent,
   getGraphReplaceComplianceProcess,
   getGraphReplaceBusinessActivity,
+  getGraphReplaceRequirement,
   getGraphDeleteComplianceProcess,
   getGraphDeleteBusinessActivity,
   getGraphDeleteRequirement
@@ -43,6 +44,8 @@ function getGraphReplaceRequirement(graph, node) {
   let _node = node;
 
   creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
+  analyzehelper.replaceComplianceTransitive(graph, _node, result_graph);
+  analyzehelper.replaceComplianceDirect(graph, _node, result_graph);
 
   return result_graph;
 }
@@ -61,7 +64,8 @@ function getGraphReplaceBusinessActivity(graph, node) {
   let _node = node;
 
   creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
-
+  analyzehelper.replaceActivityDirect(graph, _node, result_graph);
+  analyzehelper.replaceProcessTransitive(graph, _node, result_graph);
 
   return result_graph;
 }
@@ -71,6 +75,7 @@ function getGraphDeleteBusinessActivity(graph, node) {
   let _node = node;
 
   creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
+  analyzehelper.deleteActivityObsolte(graph, _node, result_graph);
 
   return result_graph;
 }
@@ -83,7 +88,7 @@ function getGraphReplaceComplianceProcess(graph, node) {
   creategraph.addUniqueNode(result_graph, {node: _node}, 'changedElement');
 
   analyzehelper.replaceComplianceProcessDirect(graph, _node, result_graph);
-  analyzehelper.replaceComplianceProcessTransitive(graph, _node, result_graph);
+  analyzehelper.replaceProcessTransitive(graph, _node, result_graph);
 
   return result_graph;
 }

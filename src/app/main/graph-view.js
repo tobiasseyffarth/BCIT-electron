@@ -127,7 +127,6 @@ class graphView {
           _this.selectedNode = element;
           _this.clearNodeProps();
           _this.renderNodeProps();
-          _this.testquery(element);
         }
         if (element.isEdge()) {
           console.log('taped on edge');
@@ -171,16 +170,6 @@ class graphView {
     let graph = this.graph;
     graphcreator.createGraphFromGraphelements(graph, graph_elements);
     this.layoutGraph();
-  }
-
-  testquery(element){
-    console.log(element);
-
-    console.log('all preds of type')
-    console.log(query.getPredecessors(element, 'infra'));
-
-    console.log('all sucs of type')
-    console.log(query.getSuccessors(element, 'infra'));
   }
 
 }
