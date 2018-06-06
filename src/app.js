@@ -70,6 +70,7 @@ bpmnViewer.on('flowelement_updated', function (data) {
     let viewer = bpmnViewer.viewer;
 
     linkmodel.updateFlowelement(viewer, graph, flowelement);
+    graphViewer.colorNodes();
   }
 );
 

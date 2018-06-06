@@ -1,12 +1,17 @@
 let convert = require('xml-js');
 
 module.exports = {
-  getJSON
-}
+  getJSON,
+  addCompliance
+};
 
+
+/*
 let compliance = {
   requirement: [],
 };
+*/
+
 
 class requirement {
   constructor() {
@@ -29,17 +34,22 @@ class source {
 function getJSON(input) {
   if (input.includes('requirement')) {
     let json = JSON.parse(input);
-    console.log(json);
     return getComplianceFromJson(json);
   } else {
     let helpObj = JSON.parse(convert.xml2json(input, {compact: true, spaces: 2}));
+
     return getComplianceFromXml(helpObj);
   }
 
 }
 
 function getComplianceFromJson(json) {
+  let compliance = {
+    requirement: [],
+  };
+
   let result = Object.assign({}, compliance);
+
 
   for (let i in json.requirement) {
     let req_json = json.requirement[i];
@@ -65,6 +75,10 @@ function getComplianceFromJson(json) {
 }
 
 function getComplianceFromXml(helpObj) {
+  let compliance = {
+    requirement: [],
+  };
+
   let result = Object.assign({}, compliance);
 
   for (let i in helpObj.dokumente.norm) {
@@ -90,7 +104,7 @@ function getComplianceFromXml(helpObj) {
                     cs.norm = norm[0]._text;
                   }
 
-                  cs.paragraph = '§ '+getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
+                  cs.paragraph = '§ ' + getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
                   cs.section = Number(j) + 1;
                   cs.id = 'source_' + cs.norm + '_' + cs.paragraph + '_' + cs.section;
                   r.source = cs;
@@ -108,7 +122,7 @@ function getComplianceFromXml(helpObj) {
                 r.text = getPlainText(s);
                 let cs = new source();
                 cs.norm = helpObj.dokumente.norm[i].metadaten.jurabk._text;
-                cs.paragraph = '§ '+getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
+                cs.paragraph = '§ ' + getPlainParagraph(helpObj.dokumente.norm[i].metadaten.enbez._text);
                 r.source = cs;
                 cs.id = 'source_' + cs.norm + '_' + cs.paragraph;
                 r.id = 'requirement_' + cs.norm + '_' + cs.paragraph;
@@ -140,4 +154,37 @@ function getPlainText(input) {
 
 function getPlainParagraph(input) {
   return input.substring(2, input.length);
+}
+
+function addCompliance(input) {
+  // compliance: existing compliance json
+  // imported_compliance: compliance to be added to compliance
+
+  let compliance = input.compliance;
+  let imported_compliance = input.imported_compliance;
+
+  if (compliance === null) {
+    return imported_compliance;
+  } else {
+    let updated_compliance = compliance;
+
+    for (let i = 0; i < imported_compliance.requirement.length; i++) {
+      let req_import = imported_compliance.requirement[i];
+      let isNew = true;
+
+      for (let j = 0; j < compliance.requirement.length; j++) {
+        let req = compliance.requirement[j];
+
+        if (req_import.id === req.id) {
+          isNew = false;
+        }
+      }
+
+      if (isNew) {
+        updated_compliance.requirement.push(req_import);
+      }
+    }
+
+    return updated_compliance;
+  }
 }

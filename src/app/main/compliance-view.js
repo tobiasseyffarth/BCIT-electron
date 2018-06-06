@@ -36,7 +36,7 @@ class complianceView extends EventEmitter {
     this.selectedSourceRequirement = null; //contains the source requirement shown in the left textarea
     this.selectedTargetRequirement = null; //contains the target requirement shown in the right textarea
 
-    this.key=null;
+    this.key = null;
     this.dragEvent = null; //get the source of the drag-event
 
     this.initComplianceView();
@@ -95,10 +95,14 @@ class complianceView extends EventEmitter {
   }
 
   async xmlUploadOnClick() {
-    //let data = dialogHelper.xmlFileOpenDialog();
-    let xml = await processio.readFile('./resources/compliance/gdpr.json');
-    this.compliance = loadCompliance.getJSON(xml);
+    let data = await dialogHelper.complianceFileOpenDialog();
+    //let data = await processio.readFile('./resources/compliance/gdpr.json');
 
+    let imported_compliance = loadCompliance.getJSON(data);
+    let _helper = this.compliance;
+
+    this.compliance = loadCompliance.addCompliance({compliance: _helper, imported_compliance: imported_compliance});
+    gui.clearList(this.listRequirement);
     this.renderListRequirement(this.compliance);
     log.info('compliance imported');
     this.emit('compliance_rendered', {done: true});

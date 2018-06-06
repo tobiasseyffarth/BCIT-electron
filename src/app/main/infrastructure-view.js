@@ -112,7 +112,7 @@ class infrastructureView extends EventEmitter {
   }
 
   async xmlUploadOnClick() {
-    let xml = await dialogHelper.xmlFileOpenDialog();
+    let xml = await dialogHelper.infraFileOpenDialog();
     this.infra = loadInfraKai.getInfra(xml); //parsing infra-exchange-file
     this.renderInfraXml(); //render infra to gui
   }

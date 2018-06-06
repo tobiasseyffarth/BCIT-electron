@@ -17,7 +17,7 @@ class graphView {
     if (!options) options = {};
     this.document = options.document;
     // this.process = options.process; //process to be transformed in graph
-    this.graphContainer = this.document.querySelector('.graph-io');
+    this.graphContainer = this.document.getElementById('graph-io');
     this.closeButton = this.document.getElementById('btnClosePopGraph');
     this.btnClear = this.document.getElementById('btnClear-graph');
     this.nodeName = this.document.getElementById('node-name'); // get Textfield from Propertypanel Infra
@@ -93,7 +93,7 @@ class graphView {
     }
 
     this.layoutGraph();
-
+    this.colorNodes();
     log.info('graph rendered');
   }
 
@@ -104,6 +104,25 @@ class graphView {
     this.graph.reset();//Groesse anpassen
     this.graph.fit();// alle KNoten werden im Container angzeigt
     this.graph.resize();
+  }
+
+  colorNodes() {
+    let nodes = this.graph.nodes();
+
+    for (let i = 0; i < nodes.length; i++) {
+      let node = nodes[i];
+      let nodetype = node.data('nodetype');
+
+      if (nodetype === 'businessprocess') {
+        node.style('border-color', 'green');
+      } else if (nodetype === 'complianceprocess') {
+        node.style('border-color', 'blue');
+      } else if (nodetype === 'compliance') {
+        node.style('border-color', 'grey');
+      } else if (nodetype === 'infra') {
+        node.style('border-color', 'orange');
+      }
+    }
   }
 
   closePopup() {

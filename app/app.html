@@ -13,7 +13,6 @@
   <a href="#" id="btnSave">Save Project</a>
   <a href="#" id="btnGraph">Show Graph</a>
   <a href="#" id="btnExport_bpmn">Export Process</a>
-  <a href="#" id="btnExport_result">Export Result Graph</a>
   <a href="#" id="btnAbout">About</a>
 </div>
 
@@ -131,7 +130,7 @@
       <a href="#" id="btnClosePopGraph">&times;</a>
     </div>
     <div class="pop-heading">Graph</div>
-    <div class="graph-io"></div>
+    <div class="graph-io" id="graph-io"></div>
   </div>
   <div class="container-properties">
     <div class="bpp-properties-group" data-group="complianceGrp">
@@ -155,6 +154,10 @@
         <div class="bpp-field-wrapper">
           <select multiple id="node-props" name="name"></select>
         </div>
+      </div>
+      <div class="legend">
+        <p>Legend</p>
+        <img src="./../resources/picture/legendGraph.jpg" style="width:150px;height:130px;">
       </div>
     </div>
   </div>
@@ -190,6 +193,10 @@
         <div class="bpp-field-wrapper">
           <select multiple id="analyze-node-props" name="name"></select>
         </div>
+      </div>
+      <div class="legend">
+        <p>Legend</p>
+        <img src="./../resources/picture/legendAnalyze.jpg" style="width:200px;height:145px;">
       </div>
     </div>
   </div>

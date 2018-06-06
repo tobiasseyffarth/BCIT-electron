@@ -29,7 +29,28 @@ module.exports = {
       });
     });
   },
-  xmlFileOpenDialog: () => {
+  complianceFileOpenDialog: () => {
+    return new Promise((res, rej) => {
+      dialog.showOpenDialog({
+        filters: [
+          {name: 'XML', extensions: ['xml']},
+          {name: 'JSON', extensions: ['json']}
+        ]
+      }, function (fileNames) {
+
+        if (fileNames === undefined) rej(null);
+
+        let fileName = fileNames[0];
+
+        fs.readFile(fileName, 'utf-8', function (err, data) {
+          if (err) rej(err);
+
+          res(data);
+        });
+      });
+    });
+  },
+  infraFileOpenDialog: () => {
     return new Promise((res, rej) => {
       dialog.showOpenDialog({
         filters: [
