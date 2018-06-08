@@ -6,9 +6,13 @@ module.exports = {
 }
 
 function clearList(list) {
-  for (let i in list) {
-    list.remove(i);
-  }
+
+  do {
+    for (let i = 0; i < list.length; i++) {
+      list.remove(i);
+    }
+  } while (list.length > 0);
+
 }
 
 function renderExtensionProps(props, list) {

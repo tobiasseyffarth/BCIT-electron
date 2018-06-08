@@ -22,7 +22,6 @@ module.exports = {
 function replaceITDirect(graph, node, result_graph) {
   let _node = node;
   let predecessors = _node.predecessors().filter('node');
-  let successors = _node.successors().filter('node');
 
   for (let i = 0; i < predecessors.length; i++) {
     let pred = predecessors[i];
@@ -76,7 +75,7 @@ function replaceITTransitive(graph, node, result_graph) {
           let help_suc_node = help_sucs[k];
 
           creategraph.addUniqueNode(result_graph, {node: leave}, 'between'); //push IT predecessor of compliance process
-          creategraph.addUniqueNode(result_graph, {node: help_node}, 'between'); //push compliance process
+          creategraph.addUniqueNode(result_graph, {node: help_node}, 'indirectdemand'); //push compliance process
 
           let node_between = querygraph.getNodesBetween(_node, leave); //add nodes between change element and IT predecessor of business activity
           for (let l = 0; l < node_between.length; l++) {
@@ -132,6 +131,8 @@ function replaceITTransitive(graph, node, result_graph) {
 function deleteITObsolete(graph, node, result_graph) {
   let _node = node;
   let IT_suc = querygraph.getSuccessors(_node, 'infra');
+  let obsolete = [];
+  obsolete.push(_node);
 
   //check obsolete compliance of succeding IT
   for (let i = 0; i < IT_suc.length; i++) {
@@ -146,7 +147,9 @@ function deleteITObsolete(graph, node, result_graph) {
 
         if (addNode) { // if compliance has more than one successor, dont remove it
           creategraph.addUniqueNode(result_graph, {node: IT_component}, 'between'); // add IT component
+          obsolete.push(IT_component);
           creategraph.addUniqueNode(result_graph, {node: help_node}, 'obsolete'); // add compliance (=pred of IT component)
+          obsolete.push(help_node);
           addNodesBetween(_node, IT_component, result_graph); //add nodes between change element and IT
           deleteComplianceObsolete(graph, help_node, result_graph); //check obsolete compliance and add them to result graph
         }
@@ -155,11 +158,36 @@ function deleteITObsolete(graph, node, result_graph) {
   }
   creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
 
-  //todo: check obsolete compliance of precedings IT
-  let pred_IT = querygraph.getPredecessors(_node, 'infra');
+  //check obsolete compliance of precedings IT
+  let preds = querygraph.getPredecessors(_node, 'infra');
 
+  for (let i = 0; i < preds.length; i++) {
+    let it = preds[i];
 
-  //check obsolete Compliance of node
+    let check = false;
+    let dir_sucs = querygraph.getDirectSuccessor(it);
+    check = containNoOtherNode(dir_sucs, obsolete);
+
+    if (check) {
+      let dir_comp = querygraph.getDirectPredecessor(it, 'compliance');
+      creategraph.addUniqueNode(result_graph, {node: it}, 'between');
+      obsolete.push(it);
+
+      for (let j = 0; j < dir_comp.length; j++) {
+        let compliance = dir_comp[j];
+        let dir_suc = querygraph.getDirectSuccessor(compliance);
+        let addNode = containNoOtherNode(dir_suc, obsolete);
+
+        if (addNode) {
+          creategraph.addUniqueNode(result_graph, {node: compliance}, 'obsolete');
+          obsolete.push(compliance);
+          deleteComplianceObsolete(graph, compliance, result_graph); //check obsolete compliance and add them to result graph
+        }
+      }
+    }
+  }
+
+//check obsolete Compliance of node
   let dir_pred = querygraph.getDirectPredecessor(_node);
 
   for (let i = 0; i < dir_pred.length; i++) {
@@ -177,6 +205,7 @@ function deleteITObsolete(graph, node, result_graph) {
 
           if (querygraph.getDirectSuccessor(compliance_pred).length == 1) { //if compliance has no other successor
             creategraph.addUniqueNode(result_graph, {node: compliance_pred}, 'obsolete'); // add pred of compliance
+            deleteComplianceObsolete(graph, compliance_pred, result_graph); //check obsolete compliance and add them to result graph
           }
         }
       }
@@ -244,89 +273,70 @@ function deleteComplianceProcessViolation(graph, node, result_graph) {
     }
   }
   creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
-
-// Suc anschauen, wenn Compliance
-  // -> Compliance violated, Vörgänger der Compliance ebenfalls violated
 }
 
-//final?
+//final
 function deleteComplianceProcessObsolete(graph, node, result_graph) {
   let _node = node;
-  let dir_preds = querygraph.getDirectPredecessor(_node);
+  let obsolete = [];
 
-  for (let i = 0; i < dir_preds.length; i++) {
-    let dir_pred = dir_preds[i];
+  let dir_it = querygraph.getDirectPredecessor(_node, 'infra');
 
-    if (dir_pred.data('nodetype') === 'infra') {
-      let infra = dir_pred;
-      let dir_infra_sucs = querygraph.getDirectSuccessor(infra);
-      let obsolete_infra = []; //save obsolete IT components
+  for (let i = 0; i < dir_it.length; i++) {
+    let infra = dir_it[i];
+    let dir_suc = querygraph.getDirectSuccessor(infra);
 
-      if (dir_infra_sucs.length === 1) { // infra only supports the compliance process (=_node)
-        obsolete_infra.push(infra);
+    if (dir_suc.length === 1) {
+      obsolete.push(infra);
 
-        let infra_preds = querygraph.getPredecessors(infra, 'infra');
+      creategraph.addUniqueNode(result_graph, {node: infra}, 'between');
 
-        for (let j = 0; infra_preds.length; j++) {
-          let infra_helper = infra_preds[j];
+      //check obsolete compliance of preceding it
+      let preds = querygraph.getPredecessors(infra, 'infra');
 
-          if (querygraph.getDirectSuccessor(infra_helper).length === 1) { //get all obsolete IT components
-            obsolete_infra.push(infra_helper);
-          } else {
-            break;
-          }
-        }
+      for (let j = 0; j < preds.length; j++) {
+        let it = preds[j];
+        let check = false;
+        let dir_sucs = querygraph.getDirectSuccessor(it);
+        check = containNoOtherNode(dir_sucs, obsolete);
 
-        for (let j = 0; j < obsolete_infra.length; j++) {
-          let infra = obsolete_infra[j];
-          let compliance_preds = querygraph.getPredecessors(infra, 'compliance');
+        if (check) {
+          let dir_comp = querygraph.getDirectPredecessor(it, 'compliance');
+          creategraph.addUniqueNode(result_graph, {node: it}, 'between');
+          obsolete.push(it);
 
-          for (let k = 0; k < compliance_preds.length; k++) {
-            let compliance_pred = compliance_preds[k];
-
-            //todo: hier die direkten Vorgänger !=compliance anschauen und gegen obsolete_infras pruefen
-            let dir_comp_sucs = querygraph.getDirectSuccessor(compliance_pred);
-            let addNode = true;
-            for (let l = 0; l < dir_comp_sucs.length; l++) {
-              if (dir_comp_sucs[l].data('nodetype') != 'compliance') {
-                addNode = containNoOtherNode(dir_comp_sucs[l], obsolete_infra);
-                if (!addNode) {
-                  break;
-                }
-              }
-            }
+          for (let k = 0; k < dir_comp.length; k++) {
+            let compliance = dir_comp[k];
+            let dir_suc = querygraph.getDirectSuccessor(compliance);
+            let addNode = containNoOtherNode(dir_suc, obsolete);
 
             if (addNode) {
-              let compliance_leafes = querygraph.getLeavesOfType(compliance_pred);
-
-              for (let l = 0; l < compliance_leafes.length; l++) {
-                let compliance_leafe = compliance_leafes[l];
-                let addNode_2 = containNoOtherNode(querygraph.getDirectSuccessor(compliance_leafe), obsolete_infra);
-
-                if (addNode_2) {
-                  creategraph.addUniqueNode(result_graph, {node: infra}, 'between'); //infra
-                  creategraph.addUniqueNode(result_graph, {node: compliance_pred}, 'obsolete');  // compliance_pred
-                  creategraph.addUniqueNode(result_graph, {node: compliance_leafe}, 'obsolete'); //compliance_leafe
-
-                  let nodes_between = querygraph.getNodesBetween(compliance_pred, compliance_leafe);  // between leafe und compliance_pred
-                  for (let m = 0; j < nodes_between.length; m++) {
-                    let node_between = nodes_between[m];
-                    creategraph.addUniqueNode(result_graph, {node: node_between}, 'obsolete');
-                  }
-                }
-              }
+              creategraph.addUniqueNode(result_graph, {node: compliance}, 'obsolete');
+              obsolete.push(compliance);
+              deleteComplianceObsolete(graph, compliance, result_graph); //check obsolete compliance and add them to result graph
             }
           }
+        }
+      }
+
+      //check obsolete compliance of infra
+      let comp_preds = querygraph.getDirectPredecessor(infra, 'compliance');
+
+      for (let i = 0; i < comp_preds.length; i++) {
+        let compliance = comp_preds[i];
+        let dir_suc=querygraph.getDirectSuccessor(compliance);
+        let check=containNoOtherNode(dir_suc, obsolete);
+
+        if(check){
+          creategraph.addUniqueNode(result_graph, {node: compliance}, 'obsolete');
+          obsolete.push(compliance);
+          deleteComplianceObsolete(graph, compliance, result_graph); //check obsolete compliance and add them to result graph
         }
       }
     }
   }
 
   creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
-
-
-  //wenn Vörgänger = IT
-  //IT wird durch Compliance bestimmt und IT erbringt nur diese IT --> Compliance ist obsolete
 }
 
 //final
@@ -356,7 +366,7 @@ function containNoOtherNode(to_check, node_list) {
   return true;
 }
 
-//final?
+//final
 function replaceComplianceProcessDirect(graph, node, result_graph) {
   let _node = node;
   let dir_compliance_sucs = querygraph.getDirectSuccessor(_node, 'compliance'); //get compliance requirements of compliance process
@@ -397,11 +407,18 @@ function replaceProcessTransitive(graph, node, result_graph) {
   creategraph.createEdges(graph, result_graph, 'indirect');
 }
 
-//final?
-function deleteComplianceObsolete(graph, node, result_graph) {
+//final
+function deleteComplianceObsolete(graph, node, result_graph, obsolete) {
   let _node = node;
   let obsolete_compliance = [];
-  obsolete_compliance.push(_node);
+
+  if (obsolete == null) {
+    obsolete_compliance.push(_node);
+  } else {
+    obsolete_compliance = obsolete;
+  }
+
+  console.log(obsolete_compliance);
 
   //consider successors
   let sucs = querygraph.getSuccessors(_node, 'compliance');
@@ -444,11 +461,14 @@ function deleteComplianceObsolete(graph, node, result_graph) {
 
       if (addCP) {
         creategraph.addUniqueNode(result_graph, {node: cp}, 'obsolete');
+        deleteComplianceProcessObsolete(graph, cp, result_graph); // check obsolete Requirements because of obsolete compliance process
       }
     }
   }
 
   creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
+
+  return obsolete_compliance;
 }
 
 //final
@@ -495,10 +515,11 @@ function replaceActivityDirect(graph, node, result_graph) {
   let _node = node;
 
   //add all compliance predecessors
-  let preds=querygraph.getPredecessors(_node, 'compliance');
-  for(let i =0;i<preds.length;i++){
-    let compliance=preds[i];
+  let preds = querygraph.getPredecessors(_node, 'compliance');
+  for (let i = 0; i < preds.length; i++) {
+    let compliance = preds[i];
     creategraph.addUniqueNode(result_graph, {node: compliance}, 'directdemand');
+    creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
   }
 
   //add compliance processes of direct preceding requirements
@@ -511,9 +532,10 @@ function replaceActivityDirect(graph, node, result_graph) {
     for (let j = 0; j < compliance_processes.length; j++) {
       let cp = compliance_processes[j];
       creategraph.addUniqueNode(result_graph, {node: cp}, 'directdemand');
+      creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
+      replaceProcessTransitive(graph, cp, result_graph);
     }
   }
-  creategraph.createEdges(graph, result_graph, 'direct'); //create Edges
 }
 
 //final
@@ -534,11 +556,11 @@ function deleteActivityObsolte(graph, node, result_graph) {
 
   //consider compliance requirements of IT components --> if IT component supports only business activity
   let it_components = querygraph.getDirectPredecessor(_node, 'infra');
-  for(let i=0; i<it_components.length;i++){
-    let it_component=it_components[i];
+  for (let i = 0; i < it_components.length; i++) {
+    let it_component = it_components[i];
 
-    if(querygraph.getDirectSuccessor(it_component).length===1){
-      creategraph.addUniqueNode(result_graph, {node: it_component}, 'obsolete');
+    if (querygraph.getDirectSuccessor(it_component).length === 1) {
+      creategraph.addUniqueNode(result_graph, {node: it_component}, 'between');
       deleteITObsolete(graph, it_component, result_graph); //get obsolete compliance requirements
     }
   }

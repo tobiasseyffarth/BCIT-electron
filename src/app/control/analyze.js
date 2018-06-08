@@ -1,6 +1,7 @@
 import cytoscape from "cytoscape";
 import creategraph from "./creategraph";
 import analyzehelper from "./analyze-helper";
+import rendergraph from "./rendergraph";
 
 module.exports = {
   getGraphReplaceITComponent,
@@ -67,6 +68,8 @@ function getGraphReplaceBusinessActivity(graph, node) {
   analyzehelper.replaceActivityDirect(graph, _node, result_graph);
   analyzehelper.replaceProcessTransitive(graph, _node, result_graph);
 
+  rendergraph.removeActivity(result_graph); //workaround
+
   return result_graph;
 }
 
@@ -89,6 +92,8 @@ function getGraphReplaceComplianceProcess(graph, node) {
 
   analyzehelper.replaceComplianceProcessDirect(graph, _node, result_graph);
   analyzehelper.replaceProcessTransitive(graph, _node, result_graph);
+
+  rendergraph.removeActivity(result_graph); //workaround
 
   return result_graph;
 }

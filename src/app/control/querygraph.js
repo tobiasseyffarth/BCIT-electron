@@ -15,6 +15,16 @@ function getDirectPredecessor(node, nodetype) {
   let helper = [];
   helper = node.incomers();
   let predecessors = [];
+  let exclude;
+  let _nodetype;
+
+  if (nodetype != null && nodetype.includes('!')) {
+    exclude = true;
+    _nodetype = nodetype.replace('!', ''); //remove ! for checking the nodetypes
+  } else {
+    exclude = false;
+    _nodetype = nodetype;
+  }
 
   for (let i = 0; i < helper.length; i++) {
     if (helper[i].isNode()) {
@@ -22,8 +32,12 @@ function getDirectPredecessor(node, nodetype) {
         predecessors.push(helper[i]);
       }
 
-      if (nodetype != null) {
-        if (helper[i].data('nodetype') == nodetype) {
+      if (nodetype != null && exclude === false) {
+        if (helper[i].data('nodetype') === _nodetype) {
+          predecessors.push(helper[i]);
+        }
+      } else if (nodetype != null && exclude === true) {
+        if (helper[i].data('nodetype') !== _nodetype) {
           predecessors.push(helper[i]);
         }
       }
@@ -36,6 +50,16 @@ function getDirectSuccessor(node, nodetype) {
   let helper = [];
   let successor = [];
   helper = node.outgoers();
+  let _nodetype;
+  let exclude;
+
+  if (nodetype != null && nodetype.includes('!')) {
+    exclude = true;
+    _nodetype = nodetype.replace('!', ''); //remove ! for checking the nodetypes
+  } else {
+    exclude = false;
+    _nodetype = nodetype;
+  }
 
   for (let i = 0; i < helper.length; i++) {
     if (helper[i].isNode()) {
@@ -43,8 +67,12 @@ function getDirectSuccessor(node, nodetype) {
         successor.push(helper[i]);
       }
 
-      if (nodetype != null) {
-        if (helper[i].data('nodetype') == nodetype) {
+      if (nodetype != null && exclude === false) {
+        if (helper[i].data('nodetype') === _nodetype) {
+          successor.push(helper[i]);
+        }
+      } else if (nodetype != null && exclude === true) {
+        if (helper[i].data('nodetype') !== _nodetype) {
           successor.push(helper[i]);
         }
       }
@@ -199,6 +227,7 @@ function getPredsOfType(to_check, nodetype, preds) {
 }
 
 function getSuccessors(node, nodetype) {
+  console.log(nodetype);
   let dir_sucs = getDirectSuccessor(node, nodetype);
 
   return getSucsOfType(dir_sucs, nodetype, dir_sucs);

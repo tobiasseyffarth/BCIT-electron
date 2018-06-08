@@ -1,11 +1,11 @@
 import processio from "../../control/processio";
 
-var fastXmlParser = require('../../../helpers/fast-xml-parser');
+const fastXmlParser = require('../../../helpers/fast-xml-parser');
 
 let elements = [];
 
 function getInfra(data) {
-  var jsonObj = fastXmlParser.parse(data, {
+  let jsonObj = fastXmlParser.parse(data, {
     attrPrefix: "@_",
     attrNodeName: "attr",
     textNodeName: "#text",
@@ -27,7 +27,7 @@ function getInfra(data) {
 async function loadXml(url) {
   if (!url) url = './resources/it-architecture/architecture.xml';
   let data = await processio.readFile(url);
-  var jsonObj = fastXmlParser.parse(data, {
+  let jsonObj = fastXmlParser.parse(data, {
     attrPrefix: "@_",
     attrNodeName: "attr",
     textNodeName: "#text",
@@ -35,10 +35,7 @@ async function loadXml(url) {
     ignoreNonTextNodeAttr: false,
     textAttrConversion: true
   });
-  //getArchiElements(jsonObj);
 
-  //var tObj = fastXmlParser.getTraversalObj(data,options);
-  //jsonObj = fastXmlParser.convertToJson(tObj);
   getAttributeRelations(jsonObj);
   getArchiElements(jsonObj);
   getSequenceFlows(jsonObj);
@@ -63,8 +60,16 @@ function getArchiElements(archiObject) {
 
     let props = [];
     if (elem.properties) {
-      for (let k = -1; ++k < elem.properties.property.length;) {
-        let p = elem.properties.property[k];
+      let elem_props=[];
+
+      if(elem.properties.property.length==undefined){ // in case of one property
+        elem_props.push(elem.properties.property);
+      }else{ // in case of more than one property
+        elem_props=elem.properties.property;
+      }
+
+      for (let k = -1; ++k < elem_props.length;) {
+        let p = elem_props[k];
         let propid = p.attr["@_propertyDefinitionRef"];
         props.push({
           id: propid,
@@ -87,7 +92,6 @@ function getAttributeRelations(obj) {
     for (let i = -1; ++i < attrRels.length;) {
       let attrRel = attrRels[i];
       let propid = "";
-      // console.log(attrRel.attr);
       if (attrRel.attr)
         propid = attrRel.attr["@_identifier"];
 
@@ -101,7 +105,14 @@ function getAttributeRelations(obj) {
 let sequenceFlows = [];
 
 function getSequenceFlows(obj) {
-  let rels = obj.model.relationships.relationship;
+  let input = obj.model.relationships.relationship;
+  let rels = [];
+
+  if (input.length === undefined) { // if only one relationship exists in the model
+    rels.push(input);
+  } else { // if more than one relationship exists in the model
+    rels = input;
+  }
 
   for (let i = -1; ++i < rels.length;) {
     let rel = rels[i];

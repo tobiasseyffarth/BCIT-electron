@@ -1,5 +1,3 @@
-import gui from "../../helpers/gui";
-
 const EventEmitter = require('events');
 
 import dialogHelper from "./../../helpers/fileopen_dialogs";
@@ -9,6 +7,8 @@ import queryInfra from './../control/queryInfrastructure';
 import cytoscape from 'cytoscape';
 import graphcreator from './../control/creategraph';
 import log from "./../../helpers/logs";
+import gui from "../../helpers/gui";
+import rendergraph from "./../control/rendergraph";
 
 /*****
  * Basic config
@@ -125,7 +125,6 @@ class infrastructureView extends EventEmitter {
 
   openProject(infra) {
     this.newProject();
-
     this.infra = infra;
     this.renderInfraXml(true);
   }
@@ -135,6 +134,8 @@ class infrastructureView extends EventEmitter {
     let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
     layout.run();
     this.graph.autolock(false); //elements can not be moved by the user
+    rendergraph.resizeGraph(this.graph);
+
     log.info('infra_rendered');
     if (openProject == false || openProject == undefined) { //when loading a new infra model
       this.emit('infra_rendered', {done: true});
@@ -143,7 +144,8 @@ class infrastructureView extends EventEmitter {
 
   clickGraph() { //weitere Events: http://js.cytoscape.org/#events/user-input-device-events
     let _this = this;
-    this.graph.on('tap', function (evt) { //http://js.cytoscape.org/#core/events
+
+    _this.graph.on('tap', function (evt) { //http://js.cytoscape.org/#core/events
       let element = evt.target;
       if (element === _this.graph) {
         //console.log('tap on background');
@@ -166,7 +168,13 @@ class infrastructureView extends EventEmitter {
         }
         //console.log('tap on some element');
       }
+    });
 
+    _this.graph.on('cxttap', function (evt) { //http://js.cytoscape.org/#core/events
+      let element = evt.target;
+      if (element === _this.graph) {
+        rendergraph.resizeGraph(_this.graph);
+      }
     });
   }
 

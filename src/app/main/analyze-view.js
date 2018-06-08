@@ -2,6 +2,7 @@ import log from "./../../helpers/logs";
 import graphcreator from "../control/creategraph";
 import cytoscape from "cytoscape";
 import gui from "./../../helpers/gui";
+import rendergraph from "./../control/rendergraph";
 
 /*****
  * Basic config
@@ -101,12 +102,13 @@ class analyzeView {
     layout.run();
 
     this.graph.autolock(false); //elements can not be moved by the user
-    this.graph.reset();//Groesse anpassen
-    this.graph.fit();// alle KNoten werden im Container angzeigt
-    this.graph.resize();
+    rendergraph.resizeGraph(this.graph);
+
     this.styleNodes();
     this.styleEdges();
-    this.drawGraph();
+
+    rendergraph.updateInfra(this.graph);
+    rendergraph.clearGraph(this.graph);
 
     log.info('graph rendered');
   }
@@ -117,19 +119,31 @@ class analyzeView {
     for (let i = 0; i < nodes.length; i++) {
       let node = nodes[i];
       let nodestyle = node.data('nodestyle');
+      let nodetype=node.data('nodetype');
 
-      if (nodestyle == 'directdemand') {
+      if (nodestyle === 'directdemand') {
         node.style('border-color', 'green');
-      } else if (nodestyle == 'indirectdemand') {
+      } else if (nodestyle === 'indirectdemand') {
         node.style('border-color', 'green');
-      } else if (nodestyle == 'obsolete') {
+      } else if (nodestyle === 'obsolete') {
         node.style('border-color', 'blue');
-      } else if (nodestyle == 'violated') {
+      } else if (nodestyle === 'violated') {
         node.style('border-color', 'red');
-      } else if (nodestyle == 'changedElement') {
+      } else if (nodestyle === 'changedElement') {
         node.style('border-color', 'orange');
-      } else if (nodestyle == 'between') {
+      } else if (nodestyle === 'between') {
         node.style('border-color', 'grey');
+      }
+
+      if(nodetype==='infra'){
+        node.style('shape', 'triangle');
+      }else if(nodetype==='businessprocess'){
+        node.style('shape', 'roundrectangle');
+      }else if(nodetype==='compliance'){
+        node.style('shape', 'rectangle');
+      }else if (nodetype==='complianceprocess'){
+        node.style('shape', 'roundrectangle');
+        node.style('background-color', 'grey');
       }
     }
   }
@@ -143,33 +157,6 @@ class analyzeView {
         edge.style('line-style', 'solid');
       }
     }
-  }
-
-  drawGraph() {
-    let changed_node = this.graph.nodes().filter('node[nodestyle = "changedElement"]')[0];
-    let pred = changed_node.predecessors().filter('node');
-    changed_node.position({x: 270, y: 150});
-
-    // 1. get dir Pred of changedElement
-
-    // 2. determine wether complaince or not
-
-    // determine dir. pred of pred in helper --> dir_pred=helper
-
-
-    let x = changed_node.position('x');
-    let y = changed_node.position('y');
-    console.log(x, y);
-
-
-    for (let i = 0; i < pred.length; i++) {
-      let pred_node = pred[i];
-      let y = changed_node.position('y') + (i + 1) * 60;
-
-      pred_node.position({x: x, y: y});
-    }
-
-
   }
 
   clearGraph() {
@@ -235,6 +222,13 @@ class analyzeView {
           console.log('taped on edge');
         }
         console.log('tap on some element');
+      }
+    });
+
+    _this.graph.on('cxttap', function (evt) { //http://js.cytoscape.org/#core/events
+      let element = evt.target;
+      if (element === _this.graph) {
+        rendergraph.resizeGraph(_this.graph);
       }
     });
   }

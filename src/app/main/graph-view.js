@@ -2,7 +2,7 @@ import log from "./../../helpers/logs";
 import graphcreator from "../control/creategraph";
 import cytoscape from "cytoscape";
 import gui from "./../../helpers/gui";
-import query from "./../control/querygraph";
+import rendergraph from "./../control/rendergraph";
 
 /*****
  * Basic config
@@ -100,10 +100,7 @@ class graphView {
   layoutGraph() {
     let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
     layout.run();
-    this.graph.autolock(false); //elements can not be moved by the user
-    this.graph.reset();//Groesse anpassen
-    this.graph.fit();// alle KNoten werden im Container angzeigt
-    this.graph.resize();
+    rendergraph.resizeGraph(this.graph);
   }
 
   colorNodes() {
@@ -135,22 +132,26 @@ class graphView {
     this.graph.on('tap', function (evt) { //http://js.cytoscape.org/#core/events
       let element = evt.target;
       if (element === _this.graph) {
-        console.log('tap on background');
-        _this.graph.forceRender();
-        _this.graph.reset();//Groesse anpassen
-        _this.graph.fit();// alle KNoten werden im Container angzeigt
-        _this.graph.resize(); //Komplette Container nutzen
+        //console.log('tap on background');
+        _this.clearNodeProps();
       } else {
         if (element.isNode()) {
-          console.log('taped on node');
+          //console.log('taped on node');
           _this.selectedNode = element;
           _this.clearNodeProps();
           _this.renderNodeProps();
         }
         if (element.isEdge()) {
-          console.log('taped on edge');
+          //console.log('taped on edge');
         }
-        console.log('tap on some element');
+        //console.log('tap on some element');
+      }
+    });
+
+    this.graph.on('cxttap', function (evt) { //http://js.cytoscape.org/#core/events
+      let element = evt.target;
+      if (element === _this.graph) {
+        rendergraph.resizeGraph(_this.graph);
       }
     });
   }

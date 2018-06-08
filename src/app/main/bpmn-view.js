@@ -251,13 +251,13 @@ class bpmnViewer extends EventEmitter {
     gui.clearList(this.lstnodeExtension);
   }
 
-  renderProcessExtension() { //
+  renderProcessExtension() { // shoe shape extension in the props menu
     gui.clearList(this.lstnodeExtension);
     let extension = queryprocess.getExtensionOfElement(this.selectedElement);
     gui.renderExtensionProps(extension, this.lstnodeExtension);
   }
 
-  renderComplianceProcess(shape, isCompliance) {
+  renderComplianceProcess(shape, isCompliance) { //color compliance process in model, todo: set direction of sequence between compliance process and DataObjectReference
     let viewer = this.viewer;
 
     if (isCompliance) {

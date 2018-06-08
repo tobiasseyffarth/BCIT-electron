@@ -15,7 +15,8 @@ module.exports = {
   updateComplianceNode,
   updateITDisplayName,
   createEdges,
-  removeModeltypeFromGraph
+  removeModeltypeFromGraph,
+  removeSingleNodes
 };
 
 //final
@@ -331,8 +332,9 @@ function removeComplianceNodes(node) { //only necessary for node of type 'compli
 
   if (modeltype == 'compliance') {
     successors = querygraph.getDirectSuccessor(node);
+    let dir_pred = querygraph.getDirectPredecessor(node, 'complianceprocess')
 
-    if (successors.length == 0) {
+    if (successors.length === 0 && dir_pred.length === 0) {
       let predecessors = node.predecessors().filter('node');
       let dir_predecessor = querygraph.getDirectPredecessor(node);
 
@@ -483,15 +485,37 @@ function createEdges(source_graph, result_graph, edgestyle) {
       // 2. check if direct suc are in result graph
       for (let j = 0; j < suc_nodes.length; j++) {
         let target_node = suc_nodes[j];
-        let con_2 = nodes_result_graph.contains(target_node);
 
-        // 3. get edge and ad to result_graph
-        if (con_2) {
-          let edge = querygraph.getEdge(source_node, target_node);
-          edge.data('edgestyle', edgestyle);
-          result_graph.add(edge);
+        //avoid circles in the analyze graph
+        let type_source = source_node.data('nodetype');
+        let type_target = target_node.data('nodetype');
+
+        if ((type_source !== 'businessprocess' && type_target !== 'complianceprocess') || (type_source !== 'complianceprocess' && type_target !== 'businessprocess')) {
+          let con_2 = nodes_result_graph.contains(target_node);
+
+          // 3. get edge and ad to result_graph
+          if (con_2) {
+            let edge = querygraph.getEdge(source_node, target_node);
+            edge.data('edgestyle', edgestyle);
+            result_graph.add(edge);
+          }
         }
       }
+    }
+  }
+}
+
+function removeSingleNodes(graph) {
+  let _nodes = graph.nodes();
+
+  for (let i = 0; i < _nodes.length; i++) {
+    let node = _nodes[i];
+
+    let incomer = node.incomers();
+    let outgoer = node.outgoers();
+
+    if (incomer.length === 0 && outgoer.length === 0) {
+      node.remove();
     }
   }
 }

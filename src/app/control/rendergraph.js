@@ -1,7 +1,9 @@
 import log from "../../helpers/logs";
 import cytoscape from "cytoscape";
+import querygraph from "./querygraph";
+import creategraph from "./creategraph";
 
-function drawGraph(container){
+function drawGraph(container) {
   let graph = cytoscape({
     container: container,
     elements: [ // list of graph elements to start with
@@ -69,9 +71,158 @@ function renderGraph(g) {
   //this.graphContainer.textContent="hallo welt;"
 }
 
+function resizeGraph(graph) {
+  graph.reset();//Groesse anpassen
+  graph.fit();// alle KNoten werden im Container angzeigt
+  graph.resize(); //Komplette Container nutzen
+}
 
+function clearGraph(graph) {
+  creategraph.removeSingleNodes(graph);
 
+  removeIT(graph);
+}
+
+function removeIT(graph) {
+  let nodes = graph.nodes();
+  let removed;
+
+  for (let i = 0; i < nodes.length; i++) {
+    let node = nodes[i];
+    if (node.data('nodetype') === 'infra') {
+      let dir_pred = querygraph.getDirectPredecessor(node);
+      if (dir_pred.length === 0 && node.data('nodestyle') !== 'changedElement') {
+        node.remove();
+        removed = true;
+      }
+    }
+  }
+
+  if (removed) {
+    removeIT(graph);
+  }
+}
+
+function removeActivity(graph) {
+  let _nodes = graph.nodes();
+
+  for (let i = 0; i < _nodes.length; i++) {
+    let node = _nodes[i];
+    let nodetype = node.data('nodetype');
+    let nodestyle = node.data('nodestyle');
+
+    console.log(nodetype);
+    console.log(nodestyle);
+
+    if (nodetype === 'businessprocess' && nodestyle === 'between') {
+      node.remove();
+    }
+  }
+}
+
+function updateInfra(graph) {
+  let _graph = graph;
+  let changed_node = _graph.nodes().filter('node[nodestyle = "changedElement"]')[0]; //only one change node possible
+
+  changed_node.position({x: 270, y: 150});
+  let x_changed = changed_node.position('x');
+  let y_changed = changed_node.position('y');
+
+  //consider compliance of changed_node
+
+  if (changed_node.data('nodetype') !== 'complianceprocess') {
+    let compliance_preds = querygraph.getPredecessors(changed_node, 'compliance');
+    drawCompliancePreds(changed_node, compliance_preds);
+  }
+
+  if (changed_node.data('nodetype') === 'complianceprocess') {
+    let dir_comp_sucs = querygraph.getDirectSuccessor(changed_node, 'compliance');
+
+    for (let i = 0; i < dir_comp_sucs.length; i++) {
+      let compliance = dir_comp_sucs[i];
+      let x_compliance = x_changed + (i + 1) * 100;
+      let y_compliance = y_changed;
+      compliance.position({x: x_compliance, y: y_compliance});
+
+      let com_preds = querygraph.getPredecessors(compliance, 'compliance');
+      drawCompliancePreds(compliance, com_preds);
+    }
+  }
+
+  //consider infra_preds and its compliance requirements
+  let preds = querygraph.getPredecessors(changed_node, '!compliance');
+
+  for (let i = 0; i < preds.length; i++) {
+    let node = preds[i];
+    let x_node = x_changed;
+    let y_node = y_changed + (i + 1) * 80;
+    node.position({x: x_node, y: y_node});
+
+    let compliance_preds = querygraph.getPredecessors(node, 'compliance');
+
+    drawCompliancePreds(node, compliance_preds);
+  }
+
+  //consider sucs
+  let sucs = querygraph.getSuccessors(changed_node, '!compliance');
+
+  for (let i = 0; i < sucs.length; i++) {
+    let node = sucs[i];
+    let x_node = x_changed;
+    let y_node = y_changed - (i + 1) * 80;
+    node.position({x: x_node, y: y_node});
+
+    if (node.data('nodetype') !== 'complianceprocess') {
+      let compliance_preds = querygraph.getPredecessors(node, 'compliance');
+      drawCompliancePreds(node, compliance_preds);
+    }
+
+    if (node.data('nodetype') === 'complianceprocess') {
+      //consider compliance of compliance process
+      let dir_comp_sucs = querygraph.getDirectSuccessor(node, 'compliance');
+      let x_compliance;
+      let y_compliance;
+
+      for (let j = 0; j < dir_comp_sucs.length; j++) {
+        let compliance = dir_comp_sucs[j];
+        x_compliance = x_node + (j + 1) * 100;
+        y_compliance = y_node;
+        compliance.position({x: x_compliance, y: y_compliance});
+
+        let com_preds = querygraph.getPredecessors(compliance, 'compliance');
+        drawCompliancePreds(compliance, com_preds);
+      }
+    }
+  }
+}
+
+function drawCompliancePreds(node, compliance_preds) {
+  let x_node = node.position('x');
+  let y_node = node.position('y');
+
+  for (let j = 0; j < compliance_preds.length; j++) {
+    let compliance = compliance_preds[j];
+    let x_compliance = x_node + (j + 1) * 100;
+    let y_compliance = y_node;
+    compliance.position({x: x_compliance, y: y_compliance});
+  }
+}
+
+function updateComplianceProcess(graph) {
+
+}
+
+function updateBusinessProcess(graph) {
+
+}
+
+function updateCompliance(graph) {
+
+}
 
 module.exports = {
-  drawGraph
+  resizeGraph,
+  updateInfra,
+  clearGraph,
+  removeActivity
 };
