@@ -102,13 +102,13 @@ class analyzeView {
     layout.run();
 
     this.graph.autolock(false); //elements can not be moved by the user
-    rendergraph.resizeGraph(this.graph);
+
 
     this.styleNodes();
     this.styleEdges();
 
-    rendergraph.updateInfra(this.graph);
-    rendergraph.clearGraph(this.graph);
+    rendergraph.drawAnalyze(this.graph);
+    rendergraph.resizeGraph(this.graph);
 
     log.info('graph rendered');
   }
