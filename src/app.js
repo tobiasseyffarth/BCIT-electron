@@ -55,7 +55,6 @@ bpmnViewer.on('process_rendered', function (data) {
 
 infraViewer.on('infra_rendered', function (data) {
     graphViewer.renderGraph({infra: infraViewer.infra});
-    console.log(infraViewer.infra);
   }
 );
 
@@ -234,6 +233,11 @@ menuViewer.on('saveproject', function (data) {
       complianceView: complianceViewer,
       graphView: graphViewer
     });
+  }
+);
+
+menuViewer.on('showgraph', function (data) {
+    graphViewer.openPopup();
   }
 );
 

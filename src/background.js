@@ -38,7 +38,7 @@ app.on("ready", () => {
     height: 600
   });
 
-  //mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
 
   mainWindow.loadURL(
     url.format({

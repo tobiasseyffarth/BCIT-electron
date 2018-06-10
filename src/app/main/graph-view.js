@@ -94,7 +94,7 @@ class graphView {
 
     this.layoutGraph();
     this.colorNodes();
-    log.info('graph rendered');
+    //log.info('graph rendered');
   }
 
   layoutGraph() {
@@ -124,6 +124,12 @@ class graphView {
 
   closePopup() {
     this.document.getElementById("popGraph").style.left = "-5000px";
+  }
+
+  openPopup(){
+    this.document.getElementById("popGraph").style.left = "0px";
+    this.layoutGraph();
+    this.colorNodes();
   }
 
   clickGraph() { //weitere Events: http://js.cytoscape.org/#events/user-input-device-events

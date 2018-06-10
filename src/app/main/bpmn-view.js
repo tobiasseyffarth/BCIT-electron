@@ -51,33 +51,13 @@ class bpmnViewer extends EventEmitter {
     this.key = null; //get crtl. or alt.
 
     this.initViewer();
-    this.loadBpmn('./resources/process/sample_process.bpmn');
+    //this.loadBpmn('./resources/process/sample_process.bpmn');
   }
 
   initViewer() {
     this.viewer = new BpmnModeler({
       container: this.bpmnContainer
     });
-
-    /*
-     this.viewer = new BpmnModeler({
-       container: this.bpmnContainer,
-       propertiesPanel: {
-         parent: this.propertiesPanel
-       },
-       additionalModules: [
-         propertiesPanelModule,
-         propertiesProviderTobus
-       ]
-     });
- */
-    /*
-    Possible with property panel
-    https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel
-
-    Und extensions dazu
-    https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension
-    */
 
     //File open Dialog anlegen. Ausgewählte Datei wird dann dem Viewer zugeführt
     let uploadBpmn = this.document.querySelector(this.bpmnUploadButton);
@@ -154,9 +134,11 @@ class bpmnViewer extends EventEmitter {
         _this.process = queryprocess.getProcess(_this.viewer);
         _this.bpmnFitViewport();
         _this.hookEventBus();
-        log.info("BPMN file rendered");
+
         if (openProject == false || openProject == undefined) { //when loading a new bpmn model
           _this.emit('process_rendered', {done: true});
+        }else{
+          log.info("BPMN file rendered");
         }
       }
     });

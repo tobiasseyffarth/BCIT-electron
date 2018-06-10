@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
+import log from "./../../helpers/logs";
 
 /*****
  * Basic config
@@ -17,10 +18,10 @@ class menuView extends EventEmitter {
     this.menuButton = this.document.getElementById('menu');
     this.closeButton = this.document.getElementById('btnClose');
     this.btnGraph = this.document.getElementById('btnGraph');
-    this.btnNew=this.document.getElementById('btnNew');
-    this.btnOpen=this.document.getElementById('btnOpen');
-    this.btnSave=this.document.getElementById('btnSave');
-    this.btnAbout=this.document.getElementById('btnAbout');
+    this.btnNew = this.document.getElementById('btnNew');
+    this.btnOpen = this.document.getElementById('btnOpen');
+    this.btnSave = this.document.getElementById('btnSave');
+    this.btnAbout = this.document.getElementById('btnAbout');
 
     this.initMenuView();
   }
@@ -31,8 +32,8 @@ class menuView extends EventEmitter {
     let btnGraph = this.btnGraph;
     let btnNew = this.btnNew;
     let btnOpen = this.btnOpen;
-    let btnSave=this.btnSave;
-    let btnAbout=this.btnAbout;
+    let btnSave = this.btnSave;
+    let btnAbout = this.btnAbout;
     let document = this.document;
 
     if (btnMenu) {
@@ -48,19 +49,19 @@ class menuView extends EventEmitter {
       btnGraph.addEventListener("click", () => this.openGraphPopup());
     }
 
-    if(btnNew){
+    if (btnNew) {
       btnNew.addEventListener("click", () => this.newProject());
     }
 
-    if(btnOpen){
+    if (btnOpen) {
       btnOpen.addEventListener("click", () => this.openProject());
     }
 
-    if(btnSave){
+    if (btnSave) {
       btnSave.addEventListener("click", () => this.saveProject());
     }
 
-    if(btnAbout){
+    if (btnAbout) {
       btnAbout.addEventListener("click", () => this.openAboutPopup());
     }
 
@@ -80,32 +81,33 @@ class menuView extends EventEmitter {
   }
 
   openGraphPopup() {
-    this.document.getElementById('popGraph').style.left = "0px";
+    this.emit('showgraph', {done: true});
     this.closeMenu();
   }
 
-  newProject(){
+  newProject() {
     this.emit('newproject', {done: true});
+    log.info('new project');
     this.closeMenu();
   }
 
-  openProject(){
+  openProject() {
     this.emit('openproject', {done: true});
     this.closeMenu();
   }
 
-  saveProject(){
+  saveProject() {
     this.emit('saveproject', {done: true});
     this.closeMenu();
   }
 
-  openAboutPopup(){
+  openAboutPopup() {
     this.document.getElementById('popAbout').style.left = "0px";
     this.closeMenu();
   }
 
-  onKeyDown(event){
-    if(event.which==27){ //press esc.
+  onKeyDown(event) {
+    if (event.which == 27) { //press esc.
       this.closeMenu();
     }
   }

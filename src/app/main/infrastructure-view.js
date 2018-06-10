@@ -106,9 +106,9 @@ class infrastructureView extends EventEmitter {
     }
 
     //let xml = await processio.readFile('./resources/it-architecture/empty_infra.xml'); //read infra-exchange-file
-    let xml = await processio.readFile('./resources/it-architecture/architecture.xml'); //read infra-exchange-file
-    this.infra = loadInfraKai.getInfra(xml); //parsing infra-exchange-file
-    this.renderInfraXml(); //render infra to gui
+    // let xml = await processio.readFile('./resources/it-architecture/architecture.xml'); //read infra-exchange-file
+    // this.infra = loadInfraKai.getInfra(xml); //parsing infra-exchange-file
+    // this.renderInfraXml(); //render infra to gui
   }
 
   async xmlUploadOnClick() {
@@ -131,14 +131,16 @@ class infrastructureView extends EventEmitter {
 
   renderInfraXml(openProject) {
     graphcreator.createGraphFromInfra(this.graph, this.infra);
-    let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
+    let layout = this.graph.layout({name: 'breadthfirst'}); //more options http://js.cytoscape.org/#layouts
     layout.run();
     this.graph.autolock(false); //elements can not be moved by the user
     rendergraph.resizeGraph(this.graph);
 
-    log.info('infra_rendered');
+
     if (openProject == false || openProject == undefined) { //when loading a new infra model
       this.emit('infra_rendered', {done: true});
+    }else{
+      log.info('infrastructure rendered');
     }
   }
 

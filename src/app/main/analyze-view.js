@@ -109,8 +109,6 @@ class analyzeView {
 
     rendergraph.drawAnalyze(this.graph);
     rendergraph.resizeGraph(this.graph);
-
-    log.info('graph rendered');
   }
 
   styleNodes() {

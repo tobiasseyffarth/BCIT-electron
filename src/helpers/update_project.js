@@ -52,7 +52,6 @@ async function saveProject(viewer) {
   let filename = dir + "/" + processFilename;
   let promise_processxml = await processio.writeFile(filename, processXml);
 
-
   if (promise_json != undefined && promise_processxml != undefined) {
     log.info('Project exported to ' + dir);
   }
@@ -102,6 +101,7 @@ async function openProject(viewer) {
     let graph_infra = infraViewer.graph;
 
     graphcreator.updateITDisplayName(graph_view, graph_infra);
+    log.info('project ' + filePath + ' loaded');
   }
 }
 
