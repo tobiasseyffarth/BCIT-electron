@@ -238,7 +238,6 @@ function updateBusinessProcess(node) {
 
   let dir_comp_preds = querygraph.getDirectPredecessor(changed_node, 'compliance');
   for (let i = 0; i < dir_comp_preds.length; i++) {
-
     let compliance = dir_comp_preds[i];
 
     let x_compliance = x_changed + (i + 1) * 100;
@@ -265,6 +264,19 @@ function updateBusinessProcess(node) {
         drawCompliancePreds(pred, comp_preds);
       }
     }
+  }
+
+  //draw IT preds vertical
+  let it_preds = querygraph.getPredecessors(changed_node, 'infra');
+  for (let i = 0; i < it_preds.length; i++) {
+    let infra = it_preds[i];
+
+    let x_infra = x_changed;
+    let y_infra = y_changed - (i + 1) * 100;
+    infra.position({x: x_infra, y: y_infra});
+    //draw compliance preds horizontal
+    let comp_preds = querygraph.getPredecessors(infra, 'compliance');
+    drawCompliancePreds(infra, comp_preds);
   }
 }
 

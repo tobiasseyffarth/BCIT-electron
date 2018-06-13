@@ -26,13 +26,18 @@ function replaceITDirect(graph, node, result_graph) {
   for (let i = 0; i < predecessors.length; i++) {
     let pred = predecessors[i];
 
-    if (pred.data('nodetype') == 'compliance') {
+    if (pred.data('nodetype') === 'compliance') {
       creategraph.addUniqueNode(result_graph, {node: pred}, 'directdemand');
 
       let nodes_between = querygraph.getNodesBetween(pred, _node);
       for (let j = 0; j < nodes_between.length; j++) {
         let node = nodes_between[j];
-        creategraph.addUniqueNode(result_graph, {node: node}, 'between');
+
+        if (node.data('nodetype') === 'compliance') {
+          creategraph.addUniqueNode(result_graph, {node: node}, 'directdemand');
+        } else {
+          creategraph.addUniqueNode(result_graph, {node: node}, 'between');
+        }
       }
     }
   }
@@ -142,7 +147,7 @@ function deleteITObsolete(graph, node, result_graph) {
     for (let j = 0; j < dir_IT_pred.length; j++) {
       let help_node = dir_IT_pred[j];
 
-      if (help_node.data('modeltype') == 'compliance') {
+      if (help_node.data('modeltype') === 'compliance') {
         let addNode = containNoOtherNode(querygraph.getDirectSuccessor(help_node), IT_suc);
 
         if (addNode) { // if compliance has more than one successor, dont remove it
