@@ -9,7 +9,7 @@ BCIT is a a tool that is able to analyze the interactions between Business Proce
 
 Make sure you have [Node.js](https://nodejs.org) installed, then type the following commands into a terminal:
 ```
-git clone https://github.com/szwacz/electron-boilerplate.git
+git clone https://github.com/tobiasseyffarth/BCIT.git
 cd BCIT
 npm install
 npm run start
