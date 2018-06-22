@@ -62,7 +62,7 @@ function getUUID() {
   let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     let r = (dt + Math.random() * 16) % 16 | 0;
     dt = Math.floor(dt / 16);
-    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
   return uuid;
 }
@@ -75,7 +75,7 @@ async function openProject(viewer) {
 
   let filePath = await dialoghelper.bcitFileOpenDialog(); //path of project data
 
-  if (filePath != undefined) {
+  if (filePath !== undefined) {
     let data = await processio.readFile(filePath);
     let json = JSON.parse(data);
 

@@ -25,6 +25,7 @@ class analyzeView {
     this.nodeName = this.document.getElementById('analyze-node-name'); // get Textfield from Propertypanel Infra
     this.nodeId = this.document.getElementById('analyze-node-id'); // get ID-Field from Propertypanel Infra
     this.nodeProps = this.document.getElementById('analyze-node-props'); // get Props-Field from Propertypanel Infra
+    this.legend = this.document.getElementById('legendanalyze');
 
     this.graph = cytoscape({
       container: this.graphContainer,
@@ -80,6 +81,9 @@ class analyzeView {
     }
 
     this.clickGraph();
+
+    let legend = this.legend;
+    legend.src = './../app/resources/picture/legendAnalyze.jpg';
   }
 
   showAnalyze(graph_data, heading) {
@@ -98,11 +102,7 @@ class analyzeView {
   }
 
   renderGraph() {
-    let layout = this.graph.layout({name: 'breadthfirst'}); //weitere Optionen unter http://js.cytoscape.org/#layouts
-    layout.run();
-
     this.graph.autolock(false); //elements can not be moved by the user
-
 
     this.styleNodes();
     this.styleEdges();
@@ -117,7 +117,7 @@ class analyzeView {
     for (let i = 0; i < nodes.length; i++) {
       let node = nodes[i];
       let nodestyle = node.data('nodestyle');
-      let nodetype=node.data('nodetype');
+      let nodetype = node.data('nodetype');
 
       if (nodestyle === 'directdemand') {
         node.style('border-color', 'green');
@@ -133,13 +133,13 @@ class analyzeView {
         node.style('border-color', 'grey');
       }
 
-      if(nodetype==='infra'){
+      if (nodetype === 'infra') {
         node.style('shape', 'triangle');
-      }else if(nodetype==='businessprocess'){
+      } else if (nodetype === 'businessprocess') {
         node.style('shape', 'roundrectangle');
-      }else if(nodetype==='compliance'){
+      } else if (nodetype === 'compliance') {
         node.style('shape', 'rectangle');
-      }else if (nodetype==='complianceprocess'){
+      } else if (nodetype === 'complianceprocess') {
         node.style('shape', 'roundrectangle');
         node.style('background-color', 'grey');
       }
@@ -205,14 +205,6 @@ class analyzeView {
         if (element.isNode()) {
           //console.log('taped on node');
           _this.selectedNode = element;
-
-          /*
-          console.log(element.data());
-          console.log(element.position());
-          console.log(element.width());
-          console.log(element.height());
-          */
-
           _this.clearNodeProps();
           _this.renderNodeProps();
         }

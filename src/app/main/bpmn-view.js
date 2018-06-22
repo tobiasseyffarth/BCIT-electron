@@ -115,7 +115,7 @@ class bpmnViewer extends EventEmitter {
   }
 
   newProject() {
-    this.loadBpmn('./resources/process/empty_bpmn.bpmn');
+    this.loadBpmn('./app/resources/process/empty_bpmn.bpmn');
     this.clearProcessProps();
   }
 

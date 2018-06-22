@@ -23,6 +23,7 @@ class graphView {
     this.nodeName = this.document.getElementById('node-name'); // get Textfield from Propertypanel Infra
     this.nodeId = this.document.getElementById('node-id'); // get ID-Field from Propertypanel Infra
     this.nodeProps = this.document.getElementById('node-props'); // get Props-Field from Propertypanel Infra
+    this.legend = this.document.getElementById('legendgraph');
 
     this.graph = cytoscape({
       container: this.graphContainer,
@@ -66,6 +67,7 @@ class graphView {
     let close = this.closeButton;
     let btnClear = this.btnClear;
     let document = this.document;
+    let legend = this.legend;
 
     if (close) {
       close.addEventListener("click", () => this.closePopup());
@@ -80,15 +82,17 @@ class graphView {
     }
 
     document.getElementById("myMenu").style.width = "0px";
+
+    legend.src = './../app/resources/picture/legendGraph.jpg';
   }
 
   renderGraph(options) {
     let process = options.process;
     let infra = options.infra;
 
-    if (process != undefined) {
+    if (process !== undefined) {
       graphcreator.createGraphFromProcess(this.graph, process);
-    } else if (infra != undefined) {
+    } else if (infra !== undefined) {
       graphcreator.createGraphFromInfra(this.graph, infra);
     }
 
@@ -126,7 +130,7 @@ class graphView {
     this.document.getElementById("popGraph").style.left = "-5000px";
   }
 
-  openPopup(){
+  openPopup() {
     this.document.getElementById("popGraph").style.left = "0px";
     this.layoutGraph();
     this.colorNodes();

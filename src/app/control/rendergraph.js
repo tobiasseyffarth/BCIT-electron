@@ -90,7 +90,11 @@ function removeIT(graph) {
     let node = nodes[i];
     if (node.data('nodetype') === 'infra') {
       let dir_pred = querygraph.getDirectPredecessor(node);
+      let dir_suc=querygraph.getDirectSuccessor(node);
       if (dir_pred.length === 0 && node.data('nodestyle') !== 'changedElement') {
+        node.remove();
+        removed = true;
+      }else if( node.data('nodestyle') === 'between' && dir_suc.length===0){
         node.remove();
         removed = true;
       }
@@ -110,9 +114,6 @@ function removeActivity(graph) {
     let nodetype = node.data('nodetype');
     let nodestyle = node.data('nodestyle');
 
-    console.log(nodetype);
-    console.log(nodestyle);
-
     if (nodetype === 'businessprocess' && nodestyle === 'between') {
       node.remove();
     }
@@ -125,21 +126,18 @@ function drawAnalyze(graph) {
 
   if (nodetype === 'infra' || nodetype === 'complianceprocess') {
     updateInfraCP(changed_node);
-    clearGraph(graph);
   }
 
   if (nodetype === 'compliance') {
     console.log('update compliance')
     updateCompliance(changed_node);
-    clearGraph(graph);
   }
 
   if (nodetype === 'businessprocess') {
     console.log('update business process');
     updateBusinessProcess(changed_node);
-    clearGraph(graph);
   }
-
+  clearGraph(graph);
 }
 
 function updateInfraCP(node) {
